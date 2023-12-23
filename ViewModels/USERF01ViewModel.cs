@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
-
 using USERFORM.Models;
 using USERFORM.CommonFunctions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace USERFORM.ViewModels
 {
-    public class USERF01ViewModel
+    public class USERF01ViewModel 
     {
         public AtrmsPersonalDtl objAtrmsPersonalDtl { get; set; }
         public List<AtrmsPersonalDtl> listAtrmsPersonalDtl { get; set; }
@@ -46,8 +46,15 @@ namespace USERFORM.ViewModels
 
 
         public RecPostAvailableMsts objRecPostAvailableMsts { get; set; }
-        public string AreaName { get; internal set; }
-        public string SelectedMenu { get; internal set; }
-        public string Status { get; internal set; }
+
+
+        public bool IsAlertBox { get; set; }
+        public string SelectedAction { get; set; }
+        public string AreaName { get; set; }
+        public string SelectedMenu { get; set; }
+        public string Status { get; set; }
+        public string Message { get; internal set; }
+        public string Alert { get; internal set; }
+        public string ErrorMessage { get; internal set; }
     }
 }

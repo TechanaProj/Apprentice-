@@ -6,23 +6,24 @@ using System.Threading.Tasks;
 using Devart.Data.Oracle;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-
-
+using USERFORM.Areas.M1.Controllers;
 
 namespace USERFORM.Models
 {
     public partial class ModelContext : DbContext
     {
-        private string conn;
-
+        readonly string conn;
+       
         public ModelContext()
         {
+
+
         }
 
         public ModelContext(DbContextOptions<ModelContext> options)
             : base(options)
         {
+
         }
 
         public virtual DbSet<AtrmsDocumentsDtlMain> AtrmsDocumentsDtlMain { get; set; }

@@ -1,9 +1,18 @@
 ﻿@model USERFORM.ViewModels.USERF01ViewModel
 @{
     ViewData["Title"] = "Create";
-    // Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
+
+
+@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<script src="~/js/Common.js"></script>
 
 <!-- Add Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -79,6 +88,7 @@
 
         /* Style for the header bar */
         .header-bar {
+            position: fixed;
             background-color: #4CAF50;
             width: 100%;
             height: 90px;
@@ -106,7 +116,7 @@
             border-radius: 1px;
             padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 10px; /* Adjust the margin as needed */
+            margin-top: 110px; /* Adjust the margin as needed */
         }
 
         .container {
@@ -158,15 +168,6 @@
             color: white;
         }
 
-        /* Style for active tab button */
-        /*  .active-button {
-                                                            background-color: #ddd;
-                                                        }*/
-
-        /* Style for the form container */
-        .form-container {
-            margin-top: 10px;
-        }
 
         /*/ Style for the navigation buttons */
         .navigation-buttons {
@@ -188,7 +189,7 @@
         /* Define a CSS class for a row containing three form fields */
 
 
-        /* Add similar styles for other form elements if needed */ */
+        /* Add similar styles for other form elements if needed */
         /* Define a CSS class for an orange button */
         .orange-button {
             background-color: orange;
@@ -204,10 +205,10 @@
             border-radius: 4px; /* Rounded corners */
         }
 
-        /* Style the button on hover */
-        .orange-button:hover {
-            background-color: darkorange; /* Change color on hover */
-        }
+            /* Style the button on hover */
+            .orange-button:hover {
+                background-color: darkorange; /* Change color on hover */
+            }
 
         .sub-heading1.sub-heading2 {
             border: 2px solid skyblue; /* Add a solid sky blue border */
@@ -248,14 +249,14 @@
 
     <div class="tabs-container">
         <div class="tab-button-container">
-            <div class="tab-button active-button" id="tab1-button" onclick="openTab('tab1')">1</div>
+            <div class="tab-button active-button" id="tab1-button" onclick="openTab('tab1')">Click Here To Fill Personal Details</div>
             <div class="line"></div>
-            <div class="tab-button" id="tab2-button" onclick="openTab('tab2')">2</div>
+            <div class="tab-button" id="tab2-button" onclick="openTab('tab2')">Click Here To Fill Qualification Details</div>
             <div class="line"></div>
 
-            <div class="tab-button" id="tab3-button" onclick="openTab('tab3')">3</div>
+            <div class="tab-button" id="tab3-button" onclick="openTab('tab3')">Click Here To Upload Documents</div>
             <div class="line"></div>
-            <div class="tab-button" id="tab4-button" onclick="openTab('tab4')">4</div>
+            <div class="tab-button" id="tab4-button" onclick="openTab('tab4')">Final Submittion</div>
 
         </div>
     </div>
@@ -269,17 +270,24 @@
                     <div class="col-sm-2 col-md-4">
 
                         <label for="PostAppliedDescription">Post Selection</label>
-                        <select class="form-control"  id="PostAppliedDescription" asp-for="objAtrmsPersonalDtl.PostAppliedDescription" asp-items="@(new SelectList(Model.PostdescriptionLOVBind,"Value","Text"))"></select>
+
+
+                        <select class="form-control" id="PostAppliedDescription" asp-for="objAtrmsPersonalDtl.PostAppliedDescription" asp-items="@(new SelectList(Model.PostdescriptionLOVBind,"Value","Text"))"></select>
                         <input type="hidden" id="PostAppliedCode" asp-for="@Model.objAtrmsPersonalDtl.PostAppliedCode" />
                         <input type="hidden" id="RecCode" asp-for="@Model.objAtrmsPersonalDtl.RecCode" />
 
-
                     </div>
                     <div class="col-sm-2 col-md-4">
-                        <label for="Qualification">Hightest Qualification</label>
-                        <input type="text" class="form-control " id="Qualification" placeholder="Enter Your Highest Qualification" asp-for="@Model.objAtrmsPersonalDtl.Qualification" oninput="this.value = this.value.toUpperCase(); validateName(this)">
-
+                        <label for="Qualification">Highest Qualification</label>
+                        <input type="text" class="form-control" id="Qualification" asp-for="@Model.objAtrmsPersonalDtl.Qualification" oninput="this.value = this.value.toUpperCase(); validateName(this)">
+                        @*<select class="form-control" id="highestQualification" onchange="populateEducationDetails()">
+                                <option value="SELECT Qualification" selected>SELECT Qualification</option>
+                                <option value="ITI">ITI</option>
+                                <option value="Diploma">Diploma</option>
+                                <option value="BSc">BSc</option>
+                            </select>*@
                     </div>
+
 
 
                 </div>
@@ -341,15 +349,14 @@
                 <div class="row form-sm">
                     <div class="col-sm-2 col-md-4">
                         <label for="GENDER">Gender</label>
-                        <div class="input-group">
-                            <select class="form-control" id="GENDER" required>
-                                <option value="select" selected>SELECT GENDER</option>
-                                <option value="MALE">MALE</option>
-                                <option value="FEMALE">FEMALE</option>
-                                <option value="OTHER">OTHER</option>
-                            </select>
 
-                        </div>
+                        <select class="form-control" id="GENDER" required>
+                            <option value="select" selected>SELECT GENDER</option>
+                            <option value="MALE">MALE</option>
+                            <option value="FEMALE">FEMALE</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+
                         <div class="text-danger validation-error" id="genderError" style="display: none;">Please Select Gender!</div>
                     </div>
 
@@ -502,6 +509,12 @@
                     </div>
                 </div>
 
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="previousTab()" style="float:none;margin-right: 10px">Previous</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextTab()">Next</button>
+                </div>
+
             </div>
             <div id="tab2" class="tab">
                 <!-- Content for Tab 1 -->
@@ -509,7 +522,7 @@
                     <h3 class="sub-heading1 sub-heading2"><span>EDUCATION DETAILS</span></h3>
                     <div class="m-form-bx">
                         <!-- Education Details Header -->
-                        <table class="table">
+                        <table class="table" id="educationTableBody">
                             <thead>
                                 <tr class="header-row">
                                     <th>Sno</th>
@@ -520,7 +533,7 @@
                                     <th>Marks Obtained</th>
                                     <th>Total Marks</th>
                                     <th>Percentage</th>
-                                    <th><a href="Javascript:void(0);" class="m-btn-1 addnew" onclick="AddNewRowFunc(this);"><i class="material-icons"></i><span style="color: white"> New Row</span></a></th>
+                                    @*<th><a href="Javascript:void(0);" class="m-btn-1 addnew" onclick="AddNewRowFunc(this);"><i class="material-icons"></i><span style="color: white"> New Row</span></a></th>*@
 
 
                                 </tr>
@@ -535,7 +548,7 @@
                                     @foreach (var qualification in Model.listAtrmsQualificationDtl)
                                     {
                                         <tr class="form-row">
-                                            <td><input type="number" class="form-control" id="Sno" asp-for="@Model.listAtrmsQualificationDtl[index].Sno " readonly></td>
+                                            <td id="id_@index"><input type="number" class="form-control" asp-for="@Model.listAtrmsQualificationDtl[index].Sno" readonly></td>
                                             <td><input type="text" class="form-control" id="Qualification" asp-for="@Model.listAtrmsQualificationDtl[index].Qualification" readonly></td>
                                             <td>
                                                 <input type="text" class="form-control" id="Subject" asp-for="@Model.listAtrmsQualificationDtl[index].Subject" oninput="validateName(this)" onkeydown="moveToNextField(event, 'NameOfBoard')" onblur="validateOnBlur(this)">
@@ -567,10 +580,10 @@
                                                 <div id="Percentage_error" class="error-message"></div>
                                             </td>
 
-                                            <td>
-                                                <!-- Remove button without the disabled attribute -->
-                                                <input type="button" value="Remove" onclick="RowRemove(this)" class="btn btn-danger m-btn" style="float:left;margin-right: 4px" />
-                                            </td>
+                                            <!--<td>-->
+                                            <!-- Remove button without the disabled attribute -->
+                                            <!--<input type="button" value="Remove" onclick="RowRemove(this)" class="btn btn-danger m-btn" style="float:left;margin-right: 4px" />
+                                            </td>-->
                                         </tr>
 
                                         index++;
@@ -580,51 +593,103 @@
 
                             </tbody>
                         </table>
+
                     </div>
 
                 </div>
-                <div class="m-form-bx">
-                    <h3 class="sub-heading1 sub-heading2"><span>EXPERIENCE DETAILS</span></h3>
-                    <table class="table" id="experienceTable">
-                        <thead>
-                            <tr class="header-row">
-                                <th>Sno</th>
-                                <th>NAME OF ORGANIZATION</th>
-                                <th>JOB POSITION</th>
-                                <th>JOB DESCRIPTION</th>
-                                <th>PERIOD FROM</th>
-                                <th>PERIOD TO</th>
-                                <th>LAST SALARY DRAWN</th>
-                                <th><button type="button" class="btn btn-success" onclick="addRow()">Add Row</button></th>
-                            </tr>
-                        </thead>
-                        <tbody id="experienceRows">
-                            <!-- Initial hidden row -->
-                            <tr class="form-row hidden-row">
-                                <td>
-                                    <input type="text" class="form-control sno_" id="sno_1" value="1" readonly>
+                <div class="m-form">
+                    <h3 class="sub-heading1 sub-heading2"><span>OTHERS DETAILS</span></h3>
+                    <div class="m-form-bx">
+                        <div class="row form-sm">
+                            <div class="col-sm-1 col-md-2">
+                                <label for="ExApperentice">EX APPRENTICE</label>
+                                <select class="form-control" id="ExApperentice" asp-for="@Model.objAtrmsPersonalDtl.ExApperentice">
+                                    <option value="select" selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
 
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="organization_1">
+                            <div class="col-sm-1 col-md-2">
+                                <label for="LandLoser">LAND LOSER</label>
+                                <select class="form-control" id="LandLoser" asp-for="@Model.objAtrmsPersonalDtl.LandLoser">
+                                    <option value="select" selected>Select</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 col-md-4">
+                                <label for="RegNoEmpExchange">REG NO EMP EXCHANGE</label>
+                                <input type="number" class="form-control" id="RegNoEmpExchange" asp-for="@Model.objAtrmsPersonalDtl.RegNoEmpExchange">
+                            </div>
+                            <div class="col-sm-2 col-md-2">
+                                <label for="NameEmpExchange">NAME EMP EXCHANGE</label>
+                                <input type="text" class="form-control" id="NameEmpExchange" asp-for="@Model.objAtrmsPersonalDtl.NameEmpExchange">
+                            </div>
 
 
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="position_1">
+                        </div>
+                        <br />
+                        <div class="row form-sm">
+                            <div class="col-sm-4 col-md-4">
+                                <label for="MhrdNats">MHRD NATS</label>
+                                <input type="text" class="form-control" id="MhrdNats" asp-for="@Model.objAtrmsPersonalDtl.MhrdNats">
+                            </div>
+                            <div class="col-sm-2 col-md-4">
+                                <label for="RegNumberMhrdNats">REG NUMBER MHRD NATS</label>
+                                <input type="text" class="form-control" id="RegNumberMhrdNats" asp-for="@Model.objAtrmsPersonalDtl.RegNumberMhrdNats">
+                            </div>
 
 
+                        </div>
+                        <br />
 
-                                </td>
-                                <td><input type="text" class="form-control" id="description_1"></td>
-                                <td><input type="date" class="form-control" id="period_from_1" onchange="calculateTotalExperience()"></td>
-                                <td><input type="date" class="form-control" id="period_to_1" onchange="calculateTotalExperience()"></td>
-                                <td><input type="text" class="form-control" id="salary_drawn_1"></td>
-                                <td><button type="button" class="btn btn-danger" onclick="removeRow_(this)">Remove</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div>Total Experience: <span id="totalExperience">0 years</span></div>
+                        <h3 class="sub-heading1 sub-heading2"><span>RELATIVE DETAILS</span></h3>
+                        <div class="m-form-bx">
+                            <div class="row form-sm">
+                                <div class="col-sm-1 col-md-2">
+                                    <label for="IffcoEmployee">IF SON/DAUGHTER OF EMPLOYEE OR EX-EMPLOYEE OF IFFCO</label>
+                                    <select class="form-control" id="IffcoEmployee" asp-for="@Model.objAtrmsPersonalDtl.IffcoEmployee">
+                                        <option value="select" selected>Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <table class="table" id="relativeTable" style="display: none;">
+                                <thead>
+                                    <tr class="header-row">
+                                        <th>RELATIVE_EMP_ID</th>
+                                        <th>RELATIVE_NAME</th>
+                                        <th>RELATIVE_UNIT</th>
+                                        <th>RELATIVE_POST</th>
+                                        <th>RELATIVE_RELATION</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="relativeRows">
+                                    <!-- Initial Row -->
+                                    <tr class="form-row">
+                                        <td><input type="text" class="form-control" id="RelativeEmpId" asp-for="@Model.objAtrmsPersonalDtl.RelativeEmpId" /></td>
+                                        <td><input type="text" class="form-control" id="RelativeName" asp-for="@Model.objAtrmsPersonalDtl.RelativeName" /></td>
+                                        <td><input type="text" class="form-control" id="RelativeUnit" asp-for="@Model.objAtrmsPersonalDtl.RelativeUnit" /></td>
+                                        <td><input type="text" class="form-control" id="RelativePost" asp-for="@Model.objAtrmsPersonalDtl.RelativePost" /></td>
+                                        <td><input type="text" class="form-control" id="RelativeRelation" asp-for="@Model.objAtrmsPersonalDtl.RelativeRelation" /></td>
+                                    </tr>
+                                    <!-- Additional Rows can be added dynamically using JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="previousTab()" style="float:none;margin-right: 10px">Previous</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextTab()">Next</button>
                 </div>
 
 
@@ -640,24 +705,24 @@
                         <div class="row form-sm">
                             <div class="col-sm-2 col-md-5">
                                 <div class="m-form-bx">
-                                    <div>
-                                        <div class="alert alert-warning alert-dismissible show" role="alert">
-                                            <strong>File Upload Guidelines!</strong>
-                                            <ul>
-                                                <li>Only .pdf, .png, .jpeg files will be accepted.</li>
-                                                <li>Files must not exceed 2 MB.</li>
-                                                <li>Files cannot be password protected.</li>
-                                                <li>If you have large files, <a href="https://www.compress2go.com/" target="_blank" class="alert-link">Click here</a> to compress them. </li>
-                                            </ul>
-                                        </div>
+
+                                    <div class="alert alert-warning alert-dismissible show" role="alert">
+                                        <strong>File Upload Guidelines!</strong>
+                                        <ul>
+                                            <li>Only .pdf, .png, .jpeg files will be accepted.</li>
+                                            <li>Files must not exceed 2 MB.</li>
+                                            <li>Files cannot be password protected.</li>
+                                            <li>If you have large files, <a href="https://www.compress2go.com/" target="_blank" class="alert-link">Click here</a> to compress them. </li>
+                                        </ul>
                                     </div>
+
 
                                     <!-- Add the file input for uploading PDF -->
                                     <div class="row">
                                         <div class="form-group">
                                             <label for="imageFile">Choose Image</label>
                                             @*<input type="file"accept=".jpg, .png" style="border:none" id="Attachments" name="Attachments11" />*@
-                                            <input type="File" accept=".jpg, .png" class="form-control" id="imageFile" required>
+                                            <input type="File" accept=".jpg, .png" class="form-control" id="imageFile" required onchange="previewImage(event)">
                                             <div class="text-danger validation-error" id="imageError" style="display: none;">Please select ImageFile!</div>
                                             <small class="text-muted">Max size: 3MB</small>
                                         </div>
@@ -715,8 +780,15 @@
                     </div>
 
 
+
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="previousTab()" style="float:none;margin-right: 10px">Previous</button>
+                    <button class="btn btn-primary btn-lg" onclick="nextTab()">Next</button>
                 </div>
             </div>
+
             <div id="tab4" class="tab">
                 <!-- Content for Tab 4 -->
                 <div class="m-form-bx">
@@ -759,32 +831,365 @@
                             </div>
                         </div>
 
-                        <div class="btn-area-fixed" align="center">
-                            <div class="btn-area-fixed" align="center">
-                                <div>
-                                    <input type="button" id="createid" value="save" class="m-btn-1 save" style="float:none;margin-right: 4px" />
-                                    <button class="m-btn-1 close1" type="button" onclick="GetIndex('M1/RECFSC02/Index')">Close</button>
-                                </div>
-                            </div>
-                        </div>
+
                         <div>
                         </div>
                     </div>
 
                 </div>
 
-
                 <div class="navigation-buttons">
                     <button class="btn btn-primary btn-lg" onclick="previousTab()" style="float:none;margin-right: 10px">Previous</button>
-                    <button class="btn btn-primary btn-lg" onclick="nextTab()">Next</button>
+                    <button type="button" class="btn btn-primary btn-lg" onclick="togglePreview()" style="float:none;margin-right: 10px; background-color:  darkgoldenrod;">Preview</button>
+
                 </div>
+
+
+            </div>
 
         </form>
 
+
+        <div class="preview-container" id="previewContainer" style="display: none;">
+            <img src="~/images/iffcoGImg.jpg" alt="Header Image" class="header-image">
+            <div style="text-align: center; font-size: 1.5em; margin-bottom: 10px;"><strong>APPLICATION FORM PREVIEW</strong></div>
+
+            <div style="max-width: 100%; text-align: center;">
+                <img id="previewImage" src="" alt="Preview Image" style="max-width: 100%; max-height: 150px;">
+            </div>
+
+            <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; background-color: bisque">
+                <!-- Display the preview image -->
+                <!-- Personal Information Section -->
+
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center"><strong>Personal Details</strong></td>
+                </tr>
+
+
+
+                <tr>
+                    <td><strong>First Name:</strong></td>
+                    <td colspan="3" id="previewFirstName"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Middle Name:</strong></td>
+                    <td colspan="3" id="previewMiddleName"></td>
+                </tr>
+                <tr>
+                    <td><strong>Last Name:</strong></td>
+                    <td colspan="3" id="previewLastName"></td>
+                </tr>
+                <tr>
+                    <td><strong>Father's Name:</strong></td>
+                    <td colspan="3" id="previewFATHER_NAME"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Father's Occupation:</strong></td>
+                    <td colspan="3" id="previewFATHER_OCCUPATION"></td>
+                </tr>
+                <tr>
+                    <td><strong>Mother's Name:</strong></td>
+                    <td colspan="3" id="previewMOTHER_NAME"></td>
+                </tr>
+                <tr>
+                    <td><strong>Mother's Occupation:</strong></td>
+                    <td colspan="3" id="previewMOTHER_OCCUPATION"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Date of Birth:</strong></td>
+                    <td colspan="3" id="previewDATE_OF_BIRTH"></td>
+                </tr>
+                <tr>
+                    <td><strong>Birth Place:</strong></td>
+                    <td colspan="3" id="previewBIRTH_PLACE"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Gender:</strong></td>
+                    <td colspan="3" id="previewGENDER"></td>
+                </tr>
+                <tr>
+                    <td><strong>Category:</strong></td>
+                    <td colspan="3" id="previewCATEGORY"></td>
+                </tr>
+                <tr>
+                    <td><strong>Nationality:</strong></td>
+                    <td colspan="3" id="previewNATIONALITY"></td>
+                </tr>
+                <tr>
+                    <td><strong>Identification Mark:</strong></td>
+                    <td colspan="3" id="previewIDENTIFICATION_MARK"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Aadhar Number:</strong></td>
+                    <td colspan="3" id="previewAADHAR_NO"></td>
+                </tr>
+                <tr>
+                    <td><strong>Marital Status:</strong></td>
+                    <td colspan="3" id="previewMARITAL_STATUS"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center"><strong>Contact Details</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Email Id:</strong></td>
+                    <td colspan="3" id="previewEMAIL_ID"></td>
+                </tr>
+                <tr>
+                    <td><strong>Alternet Email Id:</strong></td>
+                    <td colspan="3" id="previewALTERNATE_EMAIL_ID"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Mobile Number:</strong></td>
+                    <td colspan="3" id="previewMOBILE_NUMBER"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Alternate Mobile Number:</strong></td>
+                    <td colspan="3" id="previewALTERNATE_NUMBER"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;"><strong>Address Details:</strong></td>
+                </tr>
+
+                <tr>
+                    <td><strong>House No:</strong></td>
+                    <td colspan="3" id="previewHOUSE_NO"></td>
+                </tr>
+
+
+                <tr>
+                    <td><strong>Street:</strong></td>
+                    <td colspan="3" id="previewSTREET"></td>
+                </tr>
+                <tr>
+                    <td><strong>Area:</strong></td>
+                    <td colspan="3" id="previewAREA"></td>
+                </tr>
+                <tr>
+                    <td><strong>Permanent Address:</strong></td>
+                    <td colspan="3" id="previewP_ADDRESS"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Current Address:</strong></td>
+                    <td colspan="3" id="previewC_ADDRESS"></td>
+                </tr>
+
+
+                <tr>
+                    <td><strong>City:</strong></td>
+                    <td colspan="3" id="previewCITY"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Hometown:</strong></td>
+                    <td colspan="3" id="previewHOMETOWN"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Pincode:</strong></td>
+                    <td colspan="3" id="previewPINCODE"></td>
+                </tr>
+                <tr>
+                    <td><strong>Country:</strong></td>
+                    <td colspan="3" id="previewCOUNTRY"></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;"><strong>Qualification Details:</strong></td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;"><strong>Other Details:</strong></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Ex Apperentice:</strong></td>
+                    <td colspan="3" id="previewExApperentice"></td>
+                </tr>
+                <tr>
+                    <td><strong>Ex Apperentice:</strong></td>
+                    <td colspan="3" id="previewLandLoser"></td>
+                </tr>
+                <tr>
+                    <td><strong>Reg No Employee Exchange:</strong></td>
+                    <td colspan="3" id="previewRegNoEmpExchange"></td>
+                </tr>
+                <tr>
+                    <td><strong>Name of Employee Exchange:</strong></td>
+                    <td colspan="3" id="previewNameEmpExchange"></td>
+                </tr>
+                <tr>
+                    <td><strong>Mhrd Nats:</strong></td>
+                    <td colspan="3" id="previewMhrdNats"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Registration Number Mhrd Nats:</strong></td>
+                    <td colspan="3" id="previewRegNumberMhrdNats"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;"><strong>Relative Details:</strong></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Iffco Employee:</strong></td>
+                    <td colspan="3" id="previewIffcoEmployee"></td>
+                </tr>
+                <tr>
+                    <td><strong>Relative Emp Id:</strong></td>
+                    <td colspan="3" id="previewRelativeEmpId"></td>
+                </tr>
+                <tr>
+                    <td><strong>Relative Name:</strong></td>
+                    <td colspan="3" id="previewRelativeName"></td>
+                </tr>
+                <tr>
+                    <td><strong>Relative Unit:</strong></td>
+                    <td colspan="3" id="previewRelativeUnit"></td>
+                </tr>
+                <tr>
+                    <td><strong>Relative Post:</strong></td>
+                    <td colspan="3" id="previewRelativePost"></td>
+                </tr>
+                <tr>
+                    <td><strong>Relative Relation:</strong></td>
+                    <td colspan="3" id="previewRelativeRelation"></td>
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;"><strong>Declaration Details:</strong></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4" style="background-color: #f2f2f2; text-align: center;">
+
+                        <button type="button" class="btn btn-primary btn-lg" onclick="togglePreview()" style="background-color: orangered;">Edit</button>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="printData()" style="background-color: slategray;">Print</button>
+                        <input type="button" id="createid" value="Save" class="m-btn-1 save btn btn-primary btn-lg" style="background-color: green;" />
+
+                    </td>
+                </tr>
+
+
+
+
+
+            </table>
+
+
+
+
+
+
+        </div>
     </div>
 
 
     <script>
+
+
+
+
+
+
+
+
+        function togglePreview() {
+            var form = document.getElementById("CreateForm");
+            var previewContainer = document.getElementById("previewContainer");
+
+            // Toggle visibility of form and preview
+            form.style.display = form.style.display === "none" ? "block" : "none";
+            previewContainer.style.display = previewContainer.style.display === "none" ? "block" : "none";
+
+            // If transitioning to preview, update preview values
+            if (previewContainer.style.display === "block") {
+                document.getElementById("previewFirstName").innerText = form.elements.txtName.value;
+                document.getElementById("previewMiddleName").innerText = form.elements.MIDDLE_NAME.value;
+                document.getElementById("previewLastName").innerText = form.elements.txtLASTNAME.value;
+                document.getElementById("previewFATHER_NAME").innerText = form.elements.FATHER_NAME.value;
+                document.getElementById("previewFATHER_OCCUPATION").innerText = form.elements.FATHER_OCCUPATION.value;
+                document.getElementById("previewMOTHER_NAME").innerText = form.elements.MOTHER_NAME.value;
+                document.getElementById("previewMOTHER_OCCUPATION").innerText = form.elements.MOTHER_OCCUPATION.value;
+                document.getElementById("previewDATE_OF_BIRTH").innerText = form.elements.DATE_OF_BIRTH.value;
+                document.getElementById("previewBIRTH_PLACE").innerText = form.elements.BIRTH_PLACE.value;
+                document.getElementById("previewGENDER").innerText = form.elements.GENDER.value;
+                document.getElementById("previewCATEGORY").innerText = form.elements.CATEGORY.value;
+                document.getElementById("previewNATIONALITY").innerText = form.elements.NATIONALITY.value;
+                document.getElementById("previewIDENTIFICATION_MARK").innerText = form.elements.IDENTIFICATION_MARK.value;
+                document.getElementById("previewAADHAR_NO").innerText = form.elements.AADHAR_NO.value;
+                document.getElementById("previewEMAIL_ID").innerText = form.elements.EMAIL_ID.value;
+                document.getElementById("previewALTERNATE_EMAIL_ID").innerText = form.elements.ALTERNATE_EMAIL_ID.value;
+                document.getElementById("previewMOBILE_NUMBER").innerText = form.elements.MOBILE_NUMBER.value;
+                document.getElementById("previewALTERNATE_NUMBER").innerText = form.elements.ALTERNATE_NUMBER.value;
+                document.getElementById("previewMARITAL_STATUS").innerText = form.elements.MARITAL_STATUS.value;
+                document.getElementById("previewHOUSE_NO").innerText = form.elements.HOUSE_NO.value;
+                document.getElementById("previewSTREET").innerText = form.elements.STREET.value;
+                document.getElementById("previewAREA").innerText = form.elements.AREA.value;
+                document.getElementById("previewP_ADDRESS").innerText = form.elements.P_ADDRESS.value;
+                document.getElementById("previewC_ADDRESS").innerText = form.elements.C_ADDRESS.value;
+                document.getElementById("previewCITY").innerText = form.elements.CITY.value;
+                document.getElementById("previewHOMETOWN").innerText = form.elements.HOMETOWN.value;
+                document.getElementById("previewPINCODE").innerText = form.elements.PINCODE.value;
+                document.getElementById("previewCOUNTRY").innerText = form.elements.COUNTRY.value;
+                document.getElementById("previewExApperentice").innerText = form.elements.ExApperentice.value;
+                document.getElementById("previewLandLoser").innerText = form.elements.LandLoser.value;
+                document.getElementById("previewRegNoEmpExchange").innerText = form.elements.RegNoEmpExchange.value;
+                document.getElementById("previewIffcoEmployee").innerText = form.elements.IffcoEmployee.value;
+
+                var iffcoEmployeeValue = form.elements.IffcoEmployee.value;
+
+                // Conditional display based on the value of "IffcoEmployee"
+                if (iffcoEmployeeValue === "yes") {
+                    document.getElementById("previewRelativeEmpId").innerText = form.elements.RelativeEmpId.value;
+                    document.getElementById("previewRelativeName").innerText = form.elements.RelativeName.value;
+                    document.getElementById("previewRelativeUnit").innerText = form.elements.RelativeUnit.value;
+                    document.getElementById("previewRelativePost").innerText = form.elements.RelativePost.value;
+                    document.getElementById("previewRelativeRelation").innerText = form.elements.RelativeRelation.value;
+                } else {
+                    // If "IffcoEmployee" is not "yes", hide the relative details
+                    document.getElementById("previewRelativeEmpId").innerText = "";
+                    document.getElementById("previewRelativeName").innerText = "";
+                    document.getElementById("previewRelativeUnit").innerText = "";
+                    document.getElementById("previewRelativePost").innerText = "";
+                    document.getElementById("previewRelativeRelation").innerText = "";
+                }
+
+
+                var imageInput = document.getElementById("imageFile");
+                var previewImage = document.getElementById("previewImage");
+                if (imageInput.files && imageInput.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = "block";
+                    };
+                    reader.readAsDataURL(imageInput.files[0]);
+                }
+
+
+
+
+
+            }
+        }
+
 
         var uploadedFiles = { image: null, pdf: null };
 
@@ -844,388 +1249,485 @@
             }
         });
 
-        document.getElementById("sameAsPermanent").addEventListener("change", function () {
-            if (this.checked) {
-                // If checkbox is checked, copy values from permanent address to correspondence address
-                document.getElementById("C_ADDRESS").value = document.getElementById("P_ADDRESS").value;
-                // Add additional fields if needed
-            } else {
-                // Clear correspondence address fields
-                document.getElementById("C_ADDRESS").value = "";
-                // Clear additional fields if needed
-            }
-        });
+        //$("#PostAppliedDescription").on("change", function () {
+        //var selectedOption = $(this).find("option:selected");
+        //var optionValues = selectedOption.val().split(',');
 
+        //// Update hidden fields
+        //$("#PostAppliedCode").val(optionValues[0]);
+        //$("#RecCode").val(optionValues[1]);
 
-        $(document).ready(function () {
-            // Function to toggle the style based on the checkbox state
-            function toggleAddressStyle() {
-                var isSameAsPermanent = $("#sameAsPermanent").is(":checked");
+        //// Serialize form data
+        //var formData = $("form").serialize();
 
-                if (isSameAsPermanent) {
-                    // Apply your desired styling when checked
-                    $("#C_ADDRESS").addClass("same-as-permanent");
-                } else {
-                    // Remove the styling when unchecked
-                    $("#C_ADDRESS").removeClass("same-as-permanent");
-                }
-            }
-
-            // Initial call to set the style based on the checkbox state
-            toggleAddressStyle();
-
-            // Bind the function to the checkbox change event
-            $("#sameAsPermanent").change(function () {
-                toggleAddressStyle();
-            });
-        });
-
-
-
-
-        // Attach event listeners for name inputs
-        document.getElementById("txtName").addEventListener("input", function () {
-            validateNameInput("txtName", "nameError");
-        });
-
-        document.getElementById("MIDDLE_NAME").addEventListener("input", function () {
-            validateNameInput("MIDDLE_NAME", "middlenameError");
-        });
-
-        document.getElementById("txtLASTNAME").addEventListener("input", function () {
-            validateNameInput("txtLASTNAME", "lastnameError");
-        });
-        document.getElementById("txtPlace").addEventListener("input", function () {
-            validateNameInput("txtPlace", "placeError");
-        });
-
-        function validateNameInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Remove non-alphabetic characters from the input value
-            var cleanedValue = input.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
-
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
-
-            // Check if the cleaned value is not empty
-            if (cleanedValue.trim() === '') {
-                error.style.display = "none";
-            } else {
-                error.style.display = "none";
-            }
-        }
-
-
-        // Attach event listeners for other inputs
-        document.getElementById("FATHER_NAME").addEventListener("input", function () {
-            validateOtherInput("FATHER_NAME", "fathernameError");
-        });
-
-        document.getElementById("FATHER_OCCUPATION").addEventListener("input", function () {
-            validateOtherInput("FATHER_OCCUPATION", "fatheroccupationError");
-        });
-
-        document.getElementById("MOTHER_NAME").addEventListener("input", function () {
-            validateOtherInput("MOTHER_NAME", "mothernameError");
-        });
-
-        document.getElementById("MOTHER_OCCUPATION").addEventListener("input", function () {
-            validateOtherInput("MOTHER_OCCUPATION", "motheroccupationError");
-        });
-
-        document.getElementById("CATEGORY").addEventListener("input", function () {
-            validateOtherInput("CATEGORY", "categoryError");
-        });
-
-        document.getElementById("BIRTH_PLACE").addEventListener("input", function () {
-            validateOtherInput("BIRTH_PLACE", "birthplaceError");
-        });
-
-
-        document.getElementById("NATIONALITY").addEventListener("input", function () {
-            validateOtherInput("NATIONALITY", "nationalityError");
-        });
-        document.getElementById("IDENTIFICATION_MARK").addEventListener("input", function () {
-            validateOtherInput("IDENTIFICATION_MARK", "identificationmarkError");
-        });
-
-
-        document.getElementById("STREET").addEventListener("input", function () {
-            validateOtherInput("STREET", "streetError");
-        });
-        document.getElementById("AREA").addEventListener("input", function () {
-            validateOtherInput("AREA", "areaError");
-        });
-
-        document.getElementById("CITY").addEventListener("input", function () {
-            validateOtherInput("CITY", "cityError");
-        });
-
-        document.getElementById("HOMETOWN").addEventListener("input", function () {
-            validateOtherInput("HOMETOWN", "hometownError");
-        });
-
-        document.getElementById("COUNTRY").addEventListener("input", function () {
-            validateOtherInput("COUNTRY", "countryError");
-        });
-        // Validation for names (allowing spaces)
-        function validateOtherInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Preserve leading and trailing spaces
-            var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
-
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
-
-            // Check if the cleaned value is not empty
-            if (cleanedValue.trim() === '') {
-                error.style.display = "none";
-            } else {
-                error.style.display = "none";
-            }
-        }
-
-
-
-        document.getElementById("MOBILE_NUMBER").addEventListener("input", function () {
-            validatemobInput("MOBILE_NUMBER", "mobileNumberError");
-        });
-
-
-        //document.getElementById("ALTERNATE_NUMBER").addEventListener("input", function () {
-        //    validatemobInput("ALTERNATE_NUMBER", "altmobileNumberError");
+        //// Make AJAX request
+        //$.ajax({
+        //type: "POST",
+        //url: '/M1/USERF01/AddNewRow',
+        //data: formData,
+        //dataType: "json", // assuming the response is in JSON format
+        //success: function (response) {
+        //handleAjaxSuccess(response);
+        //},
+        //error: function (xhr, status, error) {
+        //console.error("AJAX request failed:", status, error);
+        //}
+        //});
         //});
 
-        function validatemobInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
 
-            // Remove non-numeric characters from the input value
-            var cleanedValue = input.value.replace(/\D/g, '');
 
-            // Limit the cleaned value to the first 10 characters
-            cleanedValue = cleanedValue.slice(0, 10);
 
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
 
-            // Update the display of the error element based on the cleaned value
-            if (cleanedValue.length === 10) {
-                error.style.display = "none";
+
+
+        //function handleAjaxSuccess(response) {
+        //$(".modalLoader").css("display", "none");
+
+        //if (response.isAlertBox) {
+        //if (response.errorMessage !== "") {
+        //CommonAlert("Error", response.message, SubmitPopup, null, "error");
+        //} else {
+        //CommonAlert(response.alert, response.message, SubmitPopup, null, "alert", "create");
+        //}
+        //} else {
+        //// Redirect to the specified URL
+        //var url = `/${response.areaName}/${response.selectedMenu}/${response.selectedAction}`;
+        //window.location.href = url;
+        //}
+        //}
+
+
+
+
+
+        //$(document).ready(function () {
+        //    $("#PostAppliedDescription").on("change", function () {
+        //        // Get the selected option
+        //        var selectedOption = $(this).find("option:selected");
+
+        //        // Split the value of the selected option by comma
+        //        var optionValues = selectedOption.val().split(',');
+
+        //        // Update the hidden fields with the selected values
+        //        $("#PostAppliedCode").val(optionValues[0]);
+        //        $("#RecCode").val(optionValues[1]);
+
+        //        // Serialize the form and set the form action
+        //        var form = $(this).closest('form');
+        //        form.attr('action', '/M1/USERF01/AddNewRow');
+        //        var formData = form.serialize();
+
+        //        // Call the CommonSubmit function
+        //        CommonSubmit(formData, form, event);
+        //    });
+        //});
+
+
+
+
+        // Get the select element
+        var iffcoEmployeeSelect = document.getElementById("IffcoEmployee");
+
+        // Get the table element
+        var relativeTable = document.getElementById("relativeTable");
+
+        // Add an event listener to the select element
+        iffcoEmployeeSelect.addEventListener("change", function () {
+            // Check if "Yes" is selected
+            if (iffcoEmployeeSelect.value === "yes") {
+                // Show the table
+                relativeTable.style.display = "table";
             } else {
-                error.style.display = "block";  // Adjust to your preferred display style
+                // Hide the table
+                relativeTable.style.display = "none";
             }
-        }
-
-        document.getElementById("AADHAR_NO").addEventListener("input", function () {
-            validateAadharInput("AADHAR_NO", "aadharnoError");
         });
 
+       
 
-        function validateAadharInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Remove non-numeric characters from the input value
-            var cleanedValue = input.value.replace(/\D/g, '');
-
-            // Limit the cleaned value to the first 12 characters
-            cleanedValue = cleanedValue.slice(0, 12);
-
-            // Format the Aadhar number as "0000-0000-0000-0000"
-            var formattedValue = cleanedValue.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, '$1-$2-$3-$4');
-
-            // Update the input value with the formatted value
-            input.value = formattedValue;
-
-            // Update the display of the error element based on the cleaned value
-            if (cleanedValue.length === 12) {
-                error.style.display = "none";
-            } else {
-                error.style.display = "block";  // Adjust to your preferred display style
-            }
-        }
-
-        document.getElementById("PINCODE").addEventListener("input", function () {
-            validatepincodeInput("PINCODE", "pincodeError");
-        });
-
-        function validatepincodeInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Remove non-numeric characters from the input value
-            var cleanedValue = input.value.replace(/\D/g, '');
-
-            // Limit the cleaned value to the first 10 characters
-            cleanedValue = cleanedValue.slice(0, 6);
-
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
-
-            // Update the display of the error element based on the cleaned value
-            if (cleanedValue.length === 6) {
-                error.style.display = "none";
-            } else {
-                error.style.display = "block";  // Adjust to your preferred display style
-            }
-        }
+        //document.getElementById("sameAsPermanent").addEventListener("change", function () {
+        //    if (this.checked) {
+        //        // If checkbox is checked, copy values from permanent address to correspondence address
+        //        document.getElementById("C_ADDRESS").value = document.getElementById("P_ADDRESS").value;
+        //        // Add additional fields if needed
+        //    } else {
+        //        // Clear correspondence address fields
+        //        document.getElementById("C_ADDRESS").value = "";
+        //        // Clear additional fields if needed
+        //    }
+        //});
 
 
-        document.getElementById("C_ADDRESS").addEventListener("input", function () {
-            validatelocationInput("C_ADDRESS", "caddressError");
-        });
+        //$(document).ready(function () {
+        //    // Function to toggle the style based on the checkbox state
+        //    function toggleAddressStyle() {
+        //        var isSameAsPermanent = $("#sameAsPermanent").is(":checked");
 
-        document.getElementById("P_ADDRESS").addEventListener("input", function () {
-            validatelocationInput("P_ADDRESS", "paddressError");
-        });
+        //        if (isSameAsPermanent) {
+        //            // Apply your desired styling when checked
+        //            $("#C_ADDRESS").addClass("same-as-permanent");
+        //        } else {
+        //            // Remove the styling when unchecked
+        //            $("#C_ADDRESS").removeClass("same-as-permanent");
+        //        }
+        //    }
 
-        document.getElementById("STREET").addEventListener("input", function () {
-            validatelocationInput("STREET", "streetError");
-        });
+        //    // Initial call to set the style based on the checkbox state
+        //    toggleAddressStyle();
 
-        document.getElementById("AREA").addEventListener("input", function () {
-            validatelocationInput("AREA", "areaError");
-        });
-
-        document.getElementById("HOUSE_NO").addEventListener("keyup", function () {
-            validatelocationInput("HOUSE_NO", "housenoError");
-        });
-
-        document.getElementById("DATE_OF_BIRTH").addEventListener("keyup", function () {
-            validatelocationInput("DATE_OF_BIRTH", "dateofbirthError");
-        });
-
-
-        function validatelocationInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Preserve leading and trailing spaces, allowing letters and numbers
-            var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
-
-            // Update the input value with the cleaned value
-            input.value = cleanedValue;
-
-            // Check if the cleaned value is not empty
-            if (cleanedValue.trim() === '') {
-                error.style.display = "none";
-            } else {
-                error.style.display = "none";
-            }
-        }
-
-        document.getElementById("EMAIL_ID").addEventListener("keyup", function () {
-            validateemailInput("EMAIL_ID", "emailidError");
-        });
-
-        function validateemailInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
-
-            // Get the input value
-            var inputValue = input.value;
-
-            // Update the input value with the trimmed value
-            input.value = inputValue.trim();
-
-            // Check if the trimmed value is empty
-            if (inputValue === '') {
-                error.style.display = "block"; // show error
-            } else {
-                error.style.display = "none"; // hide error
-            }
-        }
+        //    // Bind the function to the checkbox change event
+        //    $("#sameAsPermanent").change(function () {
+        //        toggleAddressStyle();
+        //    });
+        //});
 
 
-        document.getElementById("organization_1").addEventListener("keyup", function () {
-            validateorgInput("organization_1", "orgError");
-        });
-        document.getElementById("position_1").addEventListener("keyup", function () {
-            validateorgInput("position_1", "positionError");
-        });
-        document.getElementById("description_1").addEventListener("keyup", function () {
-            validateorgInput("description_1", "descriptionError");
-        });
 
 
-        function validateorgInput
-            (inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
+        //// Attach event listeners for name inputs
+        //document.getElementById("txtName").addEventListener("input", function () {
+        //    validateNameInput("txtName", "nameError");
+        //});
 
-            // Preserve leading and trailing spaces
-            var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
+        //document.getElementById("MIDDLE_NAME").addEventListener("input", function () {
+        //    validateNameInput("MIDDLE_NAME", "middlenameError");
+        //});
 
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
+        //document.getElementById("txtLASTNAME").addEventListener("input", function () {
+        //    validateNameInput("txtLASTNAME", "lastnameError");
+        //});
+        //document.getElementById("txtPlace").addEventListener("input", function () {
+        //    validateNameInput("txtPlace", "placeError");
+        //});
 
-            // Check if the cleaned value is not empty
-            if (cleanedValue.trim() === '') {
-                error.style.display = "none";
-            } else {
-                error.style.display = "none";
-            }
-        }
+        //function validateNameInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
 
-        document.getElementById("salary_drawn_1").addEventListener("keyup", function () {
-            validatesalInput("salary_drawn_1", "salaryError");
-        });
-        function validatesalInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
+        //    // Remove non-alphabetic characters from the input value
+        //    var cleanedValue = input.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
 
-            // Preserve leading and trailing spaces, allow only numbers
-            var cleanedValue = input.value.replace(/[^0-9 ]/g, '');
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
 
-            // Update the input value with cleaned value
-            input.value = cleanedValue;
+        //    // Check if the cleaned value is not empty
+        //    if (cleanedValue.trim() === '') {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "none";
+        //    }
+        //}
 
-            // Check if the cleaned value is not empty
-            if (cleanedValue.trim() === '') {
-                error.style.display = "none";
-            } else {
-                error.style.display = "none";
-            }
-        }
-        document.getElementById("imageFile").addEventListener("keyup", function () {
-            validatesalInput("imageFile", "imageError");
-        });
-        function validateImageInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
 
-            var selectedFile = input.files[0];
+        //// Attach event listeners for other inputs
+        //document.getElementById("FATHER_NAME").addEventListener("input", function () {
+        //    validateOtherInput("FATHER_NAME", "fathernameError");
+        //});
 
-            if (selectedFile && isImageFile(selectedFile)) {
-                error.style.display = "none";
-            } else {
-                error.style.display = "block";
-                error.innerHTML = "Invalid image file. Please choose a valid image.";
-                input.value = ""; // Clear the file input value
-            }
-        }
-        document.getElementById("txtSubmitDate").addEventListener("input", function () {
-            validatesalInput("txtSubmitDate", "submitdateError");
-        });
+        //document.getElementById("FATHER_OCCUPATION").addEventListener("input", function () {
+        //    validateOtherInput("FATHER_OCCUPATION", "fatheroccupationError");
+        //});
 
-        function validatesalInput(inputId, errorId) {
-            var input = document.getElementById(inputId);
-            var error = document.getElementById(errorId);
+        //document.getElementById("MOTHER_NAME").addEventListener("input", function () {
+        //    validateOtherInput("MOTHER_NAME", "mothernameError");
+        //});
 
-            // Check if the input value is not empty
-            if (input.value.trim() === '') {
-                // Show the error message if the input value is empty
-                error.style.display = "block";
-            } else {
-                // Hide the error message if the input value is not empty
-                error.style.display = "none";
-            }
-        }
+        //document.getElementById("MOTHER_OCCUPATION").addEventListener("input", function () {
+        //    validateOtherInput("MOTHER_OCCUPATION", "motheroccupationError");
+        //});
+
+        //document.getElementById("CATEGORY").addEventListener("input", function () {
+        //    validateOtherInput("CATEGORY", "categoryError");
+        //});
+
+        //document.getElementById("BIRTH_PLACE").addEventListener("input", function () {
+        //    validateOtherInput("BIRTH_PLACE", "birthplaceError");
+        //});
+
+
+        //document.getElementById("NATIONALITY").addEventListener("input", function () {
+        //    validateOtherInput("NATIONALITY", "nationalityError");
+        //});
+        //document.getElementById("IDENTIFICATION_MARK").addEventListener("input", function () {
+        //    validateOtherInput("IDENTIFICATION_MARK", "identificationmarkError");
+        //});
+
+
+        //document.getElementById("STREET").addEventListener("input", function () {
+        //    validateOtherInput("STREET", "streetError");
+        //});
+        //document.getElementById("AREA").addEventListener("input", function () {
+        //    validateOtherInput("AREA", "areaError");
+        //});
+
+        //document.getElementById("CITY").addEventListener("input", function () {
+        //    validateOtherInput("CITY", "cityError");
+        //});
+
+        //document.getElementById("HOMETOWN").addEventListener("input", function () {
+        //    validateOtherInput("HOMETOWN", "hometownError");
+        //});
+
+        //document.getElementById("COUNTRY").addEventListener("input", function () {
+        //    validateOtherInput("COUNTRY", "countryError");
+        //});
+        //// Validation for names (allowing spaces)
+        //function validateOtherInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Preserve leading and trailing spaces
+        //    var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Check if the cleaned value is not empty
+        //    if (cleanedValue.trim() === '') {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "none";
+        //    }
+        //}
+
+
+
+        //document.getElementById("MOBILE_NUMBER").addEventListener("input", function () {
+        //    validatemobInput("MOBILE_NUMBER", "mobileNumberError");
+        //});
+
+
+        ////document.getElementById("ALTERNATE_NUMBER").addEventListener("input", function () {
+        ////    validatemobInput("ALTERNATE_NUMBER", "altmobileNumberError");
+        ////});
+
+        //function validatemobInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Remove non-numeric characters from the input value
+        //    var cleanedValue = input.value.replace(/\D/g, '');
+
+        //    // Limit the cleaned value to the first 10 characters
+        //    cleanedValue = cleanedValue.slice(0, 10);
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Update the display of the error element based on the cleaned value
+        //    if (cleanedValue.length === 10) {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "block";  // Adjust to your preferred display style
+        //    }
+        //}
+
+        //document.getElementById("AADHAR_NO").addEventListener("input", function () {
+        //    validateAadharInput("AADHAR_NO", "aadharnoError");
+        //});
+
+
+        //function validateAadharInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Remove non-numeric characters from the input value
+        //    var cleanedValue = input.value.replace(/\D/g, '');
+
+        //    // Limit the cleaned value to the first 12 characters
+        //    cleanedValue = cleanedValue.slice(0, 12);
+
+        //    // Format the Aadhar number as "0000-0000-0000-0000"
+        //    var formattedValue = cleanedValue.replace(/(\d{4})(\d{4})(\d{4})(\d{4})/, '$1-$2-$3-$4');
+
+        //    // Update the input value with the formatted value
+        //    input.value = formattedValue;
+
+        //    // Update the display of the error element based on the cleaned value
+        //    if (cleanedValue.length === 12) {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "block";  // Adjust to your preferred display style
+        //    }
+        //}
+
+        //document.getElementById("PINCODE").addEventListener("input", function () {
+        //    validatepincodeInput("PINCODE", "pincodeError");
+        //});
+
+        //function validatepincodeInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Remove non-numeric characters from the input value
+        //    var cleanedValue = input.value.replace(/\D/g, '');
+
+        //    // Limit the cleaned value to the first 10 characters
+        //    cleanedValue = cleanedValue.slice(0, 6);
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Update the display of the error element based on the cleaned value
+        //    if (cleanedValue.length === 6) {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "block";  // Adjust to your preferred display style
+        //    }
+        //}
+
+
+        //document.getElementById("C_ADDRESS").addEventListener("input", function () {
+        //    validatelocationInput("C_ADDRESS", "caddressError");
+        //});
+
+        //document.getElementById("P_ADDRESS").addEventListener("input", function () {
+        //    validatelocationInput("P_ADDRESS", "paddressError");
+        //});
+
+        //document.getElementById("STREET").addEventListener("input", function () {
+        //    validatelocationInput("STREET", "streetError");
+        //});
+
+        //document.getElementById("AREA").addEventListener("input", function () {
+        //    validatelocationInput("AREA", "areaError");
+        //});
+
+        //document.getElementById("HOUSE_NO").addEventListener("keyup", function () {
+        //    validatelocationInput("HOUSE_NO", "housenoError");
+        //});
+
+        //document.getElementById("DATE_OF_BIRTH").addEventListener("keyup", function () {
+        //    validatelocationInput("DATE_OF_BIRTH", "dateofbirthError");
+        //});
+
+
+        //function validatelocationInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Preserve leading and trailing spaces, allowing letters and numbers
+        //    var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+
+        //    // Update the input value with the cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Check if the cleaned value is not empty
+        //    if (cleanedValue.trim() === '') {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "none";
+        //    }
+        //}
+
+        //document.getElementById("EMAIL_ID").addEventListener("keyup", function () {
+        //    validateemailInput("EMAIL_ID", "emailidError");
+        //});
+
+        //function validateemailInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Get the input value
+        //    var inputValue = input.value;
+
+        //    // Update the input value with the trimmed value
+        //    input.value = inputValue.trim();
+
+        //    // Check if the trimmed value is empty
+        //    if (inputValue === '') {
+        //        error.style.display = "block"; // show error
+        //    } else {
+        //        error.style.display = "none"; // hide error
+        //    }
+        //}
+
+
+        //document.getElementById("organization_1").addEventListener("keyup", function () {
+        //    validateorgInput("organization_1", "orgError");
+        //});
+        //document.getElementById("position_1").addEventListener("keyup", function () {
+        //    validateorgInput("position_1", "positionError");
+        //});
+        //document.getElementById("description_1").addEventListener("keyup", function () {
+        //    validateorgInput("description_1", "descriptionError");
+        //});
+
+
+        //function validateorgInput
+        //    (inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Preserve leading and trailing spaces
+        //    var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Check if the cleaned value is not empty
+        //    if (cleanedValue.trim() === '') {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "none";
+        //    }
+        //}
+
+        //document.getElementById("salary_drawn_1").addEventListener("keyup", function () {
+        //    validatesalInput("salary_drawn_1", "salaryError");
+        //});
+        //function validatesalInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Preserve leading and trailing spaces, allow only numbers
+        //    var cleanedValue = input.value.replace(/[^0-9 ]/g, '');
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+        //    // Check if the cleaned value is not empty
+        //    if (cleanedValue.trim() === '') {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "none";
+        //    }
+        //}
+        //document.getElementById("imageFile").addEventListener("keyup", function () {
+        //    validatesalInput("imageFile", "imageError");
+        //});
+        //function validateImageInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    var selectedFile = input.files[0];
+
+        //    if (selectedFile && isImageFile(selectedFile)) {
+        //        error.style.display = "none";
+        //    } else {
+        //        error.style.display = "block";
+        //        error.innerHTML = "Invalid image file. Please choose a valid image.";
+        //        input.value = ""; // Clear the file input value
+        //    }
+        //}
+        //document.getElementById("txtSubmitDate").addEventListener("input", function () {
+        //    validatesalInput("txtSubmitDate", "submitdateError");
+        //});
+
+        //function validatesalInput(inputId, errorId) {
+        //    var input = document.getElementById(inputId);
+        //    var error = document.getElementById(errorId);
+
+        //    // Check if the input value is not empty
+        //    if (input.value.trim() === '') {
+        //        // Show the error message if the input value is empty
+        //        error.style.display = "block";
+        //    } else {
+        //        // Hide the error message if the input value is not empty
+        //        error.style.display = "none";
+        //    }
+        //}
 
 
 
@@ -1299,59 +1801,7 @@
         //    }
         //});
 
-        function AddNewRowFunc(row) {
-            debugger;
-            //$('#RefDate').val(Dateformate($('#RefDate').val())).removeClass("datetime");
-            //$('#DIDate').val(Dateformate($('#DIDate').val()));
-            CommonSubmit($(row).parents('form').serialize(), $(row).parents('form').attr('action', '/USERF01/AddNewRow').attr('action'), event);
-        }
 
-        function RowRemove(row) {
-            $(row).parent().parent().remove();
-        }
-
-        function AddNewRow() {
-            var markup = '<tr>';
-            markup += '<td>#</td>';
-            markup += '<td><input type="number" id="Sno" class="form-control" ></td>';
-            markup += '<td><select id="Qualification" class="form-control"></select></td>';
-            markup += '<td><input type="text" id="Subject" class="form-control"></td>';
-            markup += '<td><input type="text" id="NameOfBoard" class="form-control" ></td>';
-            markup += '<td><input type="number" id="YearOfPassing" class="form-control" ></td>';
-            markup += '<td><input type="number" id="MarksObtained" class="form-control"></td>';
-            markup += '<td><input type="number" id="TotalMarks"class="form-control"></td>';
-            markup += '<td><input type="number" id="Percentage" class="form-control"  readonly></td>';
-            markup += '<td><input type="button" value="remove" onclick="RowRemove(this)"></td>';
-            markup += '</tr>';
-
-            $('#tbodypop').append(markup);
-        }
-        function AddNewRowFunc_ex(row) {
-            debugger;
-            //$('#RefDate').val(Dateformate($('#RefDate').val())).removeClass("datetime");
-            //$('#DIDate').val(Dateformate($('#DIDate').val()));
-            CommonSubmit($(row).parents('form').serialize(), $(row).parents('form').attr('action', '/USERF01/AddNewRow').attr('action'), event);
-        }
-
-        function RowRemove_ex(row) {
-            $(row).parent().parent().remove();
-        }
-
-        function AddNewRow_ex() {
-            var markup = '<tr>';
-            markup += '<td>#</td>';
-            markup += '<td><input type="number" id="Sno" class="form-control" ></td>';
-            markup += '<td><input type="text" id="NameOfOrganization" class="form-control"></td>';
-            markup += '<td><input type="text" id="JobPosition" class="form-control"></td>';
-            markup += '<td><input type="text" id="JobDescription" class="form-control" ></td>';
-            markup += '<td><input type="date" id="PeriodFrom" class="form-control" ></td>';
-            markup += '<td><input type="date" id="PeriodTo" class="form-control"></td>';
-            markup += '<td><input type="number" id="LastSalaryDrawn"class="form-control"></td>';
-            markup += '<td><input type="button" value="remove" onclick="RowRemove(this)"></td>';
-            markup += '</tr>';
-
-            $('#tbodypop').append(markup);
-        }
 
 
 
@@ -1372,96 +1822,96 @@
         //    // Handle form submission (e.g., AJAX request or form submit)
         //    // You can add your submission logic here
         //});
-        document.getElementById("btnSubmit").addEventListener("click", function () {
-            debugger;
-            var submitDate = document.getElementById("txtSubmitDate").value;
-            var place = document.getElementById("txtPlace").value;
-            var name = document.getElementById("txtName").value;
-            var lastName = document.getElementById("txtLASTNAME").value;
-            var fatherName = document.getElementById("FATHER_NAME").value;
-            var fatherOccupation = document.getElementById("FATHER_OCCUPATION").value;
-            var motherName = document.getElementById("MOTHER_NAME").value;
-            var dateOfBirth = document.getElementById("DATE_OF_BIRTH").value;
-            var birthPlace = document.getElementById("BIRTH_PLACE").value;
-            var gender = document.getElementById("GENDER").value;
-            var category = document.getElementById("CATEGORY").value;
-            var nationality = document.getElementById("NATIONALITY").value;
+        //document.getElementById("btnSubmit").addEventListener("click", function () {
+        //    debugger;
+        //    var submitDate = document.getElementById("txtSubmitDate").value;
+        //    var place = document.getElementById("txtPlace").value;
+        //    var name = document.getElementById("txtName").value;
+        //    var lastName = document.getElementById("txtLASTNAME").value;
+        //    var fatherName = document.getElementById("FATHER_NAME").value;
+        //    var fatherOccupation = document.getElementById("FATHER_OCCUPATION").value;
+        //    var motherName = document.getElementById("MOTHER_NAME").value;
+        //    var dateOfBirth = document.getElementById("DATE_OF_BIRTH").value;
+        //    var birthPlace = document.getElementById("BIRTH_PLACE").value;
+        //    var gender = document.getElementById("GENDER").value;
+        //    var category = document.getElementById("CATEGORY").value;
+        //    var nationality = document.getElementById("NATIONALITY").value;
 
-            var aadharNo = document.getElementById("AADHAR_NO").value;
-            var emailId = document.getElementById("EMAIL_ID").value;
-            var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
-            //var altmobileNumber = document.getElementById("ALTERNATE_NUMBER").value;
-            var maritalStatus = document.getElementById("MARITAL_STATUS").value;
-            var cAddress = document.getElementById("C_ADDRESS").value;
-            var pAddress = document.getElementById("P_ADDRESS").value;
+        //    var aadharNo = document.getElementById("AADHAR_NO").value;
+        //    var emailId = document.getElementById("EMAIL_ID").value;
+        //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+        //    //var altmobileNumber = document.getElementById("ALTERNATE_NUMBER").value;
+        //    var maritalStatus = document.getElementById("MARITAL_STATUS").value;
+        //    var cAddress = document.getElementById("C_ADDRESS").value;
+        //    var pAddress = document.getElementById("P_ADDRESS").value;
 
-            var houseNo = document.getElementById("HOUSE_NO").value;
-            var city = document.getElementById("CITY").value;
-            var pincode = document.getElementById("PINCODE").value;
-            var country = document.getElementById("COUNTRY").value;
-            var image = document.getElementById("imageFile").value;
-            var pdf = document.getElementById("pdfFile").value;
-
-
+        //    var houseNo = document.getElementById("HOUSE_NO").value;
+        //    var city = document.getElementById("CITY").value;
+        //    var pincode = document.getElementById("PINCODE").value;
+        //    var country = document.getElementById("COUNTRY").value;
+        //    var image = document.getElementById("imageFile").value;
+        //    var pdf = document.getElementById("pdfFile").value;
 
 
 
-            // Validation logic (you can customize this)
-            if (!submitDate || !place || !name || !lastName || !fatherName || !fatherOccupation || !motherName || !dateOfBirth || !birthPlace || !gender || !category || !nationality || !aadharNo || !emailId || !mobileNumber || !maritalStatus || !cAddress || !pAddress || !houseNo || !city || !pincode || !country || !image || !pdf) {
-                document.getElementById("submitdateError").style.display = submitDate ? "none" : "block";
-                document.getElementById("placeError").style.display = place ? "none" : "block";
-                document.getElementById("nameError").style.display = name ? "none" : "block";
-                document.getElementById("lastnameError").style.display = lastName ? "none" : "block";
-                document.getElementById("fathernameError").style.display = fatherName ? "none" : "block";
-                document.getElementById("fatheroccupationError").style.display = fatherOccupation ? "none" : "block";
-                document.getElementById("mothernameError").style.display = motherName ? "none" : "block";
-                document.getElementById("dateofbirthError").style.display = dateOfBirth ? "none" : "block";
-                document.getElementById("birthplaceError").style.display = birthPlace ? "none" : "block";
-                document.getElementById("genderError").style.display = gender ? "none" : "block";
-                document.getElementById("categoryError").style.display = category ? "none" : "block";
-                document.getElementById("nationalityError").style.display = nationality ? "none" : "block";
-                document.getElementById("aadharnoError").style.display = aadharNo ? "none" : "block";
-                document.getElementById("emailidError").style.display = emailId ? "none" : "block";
-                document.getElementById("mobileNumberError").style.display = mobileNumber ? "none" : "block";
-                // document.getElementById("altmobileNumberError").style.display = altmobileNumber ? "none" : "block";
-                document.getElementById("maritalstatusError").style.display = maritalStatus ? "none" : "block";
-                document.getElementById("caddressError").style.display = cAddress ? "none" : "block";
-                document.getElementById("paddressError").style.display = pAddress ? "none" : "block";
-                document.getElementById("housenoError").style.display = houseNo ? "none" : "block";
-                document.getElementById("cityError").style.display = city ? "none" : "block";
-                document.getElementById("pincodeError").style.display = pincode ? "none" : "block";
-                document.getElementById("countryError").style.display = country ? "none" : "block";
-                document.getElementById("imageError").style.display = image ? "none" : "block";
-                document.getElementById("pdfError").style.display = pdf ? "none" : "block";
+
+
+        //    // Validation logic (you can customize this)
+        //    if (!submitDate || !place || !name || !lastName || !fatherName || !fatherOccupation || !motherName || !dateOfBirth || !birthPlace || !gender || !category || !nationality || !aadharNo || !emailId || !mobileNumber || !maritalStatus || !cAddress || !pAddress || !houseNo || !city || !pincode || !country || !image || !pdf) {
+        //        document.getElementById("submitdateError").style.display = submitDate ? "none" : "block";
+        //        document.getElementById("placeError").style.display = place ? "none" : "block";
+        //        document.getElementById("nameError").style.display = name ? "none" : "block";
+        //        document.getElementById("lastnameError").style.display = lastName ? "none" : "block";
+        //        document.getElementById("fathernameError").style.display = fatherName ? "none" : "block";
+        //        document.getElementById("fatheroccupationError").style.display = fatherOccupation ? "none" : "block";
+        //        document.getElementById("mothernameError").style.display = motherName ? "none" : "block";
+        //        document.getElementById("dateofbirthError").style.display = dateOfBirth ? "none" : "block";
+        //        document.getElementById("birthplaceError").style.display = birthPlace ? "none" : "block";
+        //        document.getElementById("genderError").style.display = gender ? "none" : "block";
+        //        document.getElementById("categoryError").style.display = category ? "none" : "block";
+        //        document.getElementById("nationalityError").style.display = nationality ? "none" : "block";
+        //        document.getElementById("aadharnoError").style.display = aadharNo ? "none" : "block";
+        //        document.getElementById("emailidError").style.display = emailId ? "none" : "block";
+        //        document.getElementById("mobileNumberError").style.display = mobileNumber ? "none" : "block";
+        //        // document.getElementById("altmobileNumberError").style.display = altmobileNumber ? "none" : "block";
+        //        document.getElementById("maritalstatusError").style.display = maritalStatus ? "none" : "block";
+        //        document.getElementById("caddressError").style.display = cAddress ? "none" : "block";
+        //        document.getElementById("paddressError").style.display = pAddress ? "none" : "block";
+        //        document.getElementById("housenoError").style.display = houseNo ? "none" : "block";
+        //        document.getElementById("cityError").style.display = city ? "none" : "block";
+        //        document.getElementById("pincodeError").style.display = pincode ? "none" : "block";
+        //        document.getElementById("countryError").style.display = country ? "none" : "block";
+        //        document.getElementById("imageError").style.display = image ? "none" : "block";
+        //        document.getElementById("pdfError").style.display = pdf ? "none" : "block";
 
 
 
-                event.preventDefault();
+        //        event.preventDefault();
 
-                if (!submitDate) {
-                    document.getElementById("txtSubmitDate").focus();
-                } else if (!place) {
-                    document.getElementById("txtPlace").focus();
-                } else if (!name) {
-                    document.getElementById("txtName").focus();
-                } else if (!lastName) {
-                    document.getElementById("txtLASTNAME").focus();
-                } else {
-                    document.getElementById("tab1-button").focus();
-                }
+        //        if (!submitDate) {
+        //            document.getElementById("txtSubmitDate").focus();
+        //        } else if (!place) {
+        //            document.getElementById("txtPlace").focus();
+        //        } else if (!name) {
+        //            document.getElementById("txtName").focus();
+        //        } else if (!lastName) {
+        //            document.getElementById("txtLASTNAME").focus();
+        //        } else {
+        //            document.getElementById("tab1-button").focus();
+        //        }
 
-                return;
-            }
+        //        return;
+        //    }
 
-            // If all fields are filled, hide the error messages
-            document.getElementById("submitdateError").style.display = "none";
-            document.getElementById("placeError").style.display = "none";
-            document.getElementById("nameError").style.display = "none";
-            document.getElementById("lastnameError").style.display = "none";
+        //    // If all fields are filled, hide the error messages
+        //    document.getElementById("submitdateError").style.display = "none";
+        //    document.getElementById("placeError").style.display = "none";
+        //    document.getElementById("nameError").style.display = "none";
+        //    document.getElementById("lastnameError").style.display = "none";
 
-            // Handle form submission (e.g., AJAX request or form submit)
-            // You can add your submission logic here
-        });
+        //    // Handle form submission (e.g., AJAX request or form submit)
+        //    // You can add your submission logic here
+        //});
 
 
 
@@ -1469,7 +1919,8 @@
 
         // JavaScript to toggle between tabs
         function openTab(tabName) {
-            // Hide all tabs
+
+
             const tabs = document.getElementsByClassName("tab");
             for (let i = 0; i < tabs.length; i++) {
                 tabs[i].style.display = "none";
@@ -1522,137 +1973,6 @@
             });
         }
 
-        function AddNewRowFunc() {
-            const educationRows = document.getElementById("educationRows");
-            const newRow = document.createElement("tr");
-            newRow.classList.add("form-row");
-
-            // Increment the row counter and set Sno value
-            rowCounter++;
-            newRow.innerHTML = `
-                                                                <td><input type="text" class="form-control sno" name="sno_${rowCounter}" value="${rowCounter}" readonly></td>
-                                                                <td>
-                                                                    <select class="form-control" name="course_${rowCounter}" required>
-                                                                        <option value="select" selected>--Course--</option>
-                                                                        <option value="ITI">ITI</option>
-                                                                        <option value="DIPLOMA">DIPLOMA</option>
-                                                                        <option value="BSC">BSc</option>
-                                                                        <option value="Bcom">BCom</option>
-                                                                        <option value="BCA">BCA</option>
-                                                                        <option value="CA">CA</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td><input type="text" class="form-control" name="subjects_${rowCounter}" required></td>
-                                                                <td><input type="text" class="form-control" name="university_${rowCounter}"></td>
-                                                                <td><input type="text" class="form-control" name="year_${rowCounter}"></td>
-                                                                <td><input type="text" class="form-control" name="marks_obtained_${rowCounter}"></td>
-                                                                <td><input type="text" class="form-control" name="total_marks_${rowCounter}"></td>
-                                                                <td><input type="text" class="form-control" name="percentage_${rowCounter}"></td>
-                                                                <td><button type="button" class="btn btn-danger" onclick="removeRowEDU(this)">Remove</button></td>
-                                                            `;
-
-            educationRows.appendChild(newRow);
-
-            // Update the serial numbers
-            updateSerialNumbers();
-        }
-
-        function removeRowEDU(button) {
-            const row = button.closest(".form-row");
-            row.remove();
-
-            // Update the serial numbers after removing a row
-            updateSerialNumbers();
-        }
-
-        let rowCounter_ = 1;
-
-        function calculateTotalExperience() {
-            const rows = document.querySelectorAll(".hidden-row:not(.hidden-row)");
-            let totalMonths = 0;
-
-            rows.forEach((row) => {
-                const periodFromInput = row.querySelector(`[name^="period_from_"]`).value.trim();
-                const periodToInput = row.querySelector(`[name^="period_to_"]`).value.trim();
-
-                if (isValidDate(periodFromInput) && isValidDate(periodToInput)) {
-                    const periodFrom = new Date(periodFromInput);
-                    const periodTo = new Date(periodToInput);
-
-                    const diffMonths = calculateMonthDifference(periodFrom, periodTo);
-                    totalMonths += diffMonths;
-                }
-            });
-
-            const { years, months } = calculateYearsAndMonths(totalMonths);
-
-            const totalExperienceElement = document.getElementById("totalExperience");
-            totalExperienceElement.textContent = `${years} years ${months} months`;
-
-            function isValidDate(dateString) {
-                const date = new Date(dateString);
-                return !isNaN(date) && date instanceof Date;
-            }
-
-            function calculateMonthDifference(startDate, endDate) {
-                const diffTime = Math.abs(endDate - startDate);
-                return Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30.44)); // Approximate months in a year
-            }
-
-            function calculateYearsAndMonths(totalMonths) {
-                const years = Math.floor(totalMonths / 12);
-                const months = totalMonths % 12;
-                return { years, months };
-            }
-        }
-
-
-
-
-        function updateSerialNumbers_() {
-            const serialNumberElements = document.querySelectorAll(".sno_");
-            serialNumberElements.forEach((element, index) => {
-                element.value = index + 1;
-            });
-
-        }
-
-        function addRow() {
-            const experienceRows = document.getElementById("experienceRows");
-
-            // Remove the initial hidden row if it exists
-            const hiddenRow = experienceRows.querySelector(".hidden-row");
-            if (hiddenRow) {
-                hiddenRow.remove();
-            }
-
-            rowCounter_++;
-
-            const newRow = document.createElement("tr");
-            newRow.classList.add("form-row_");
-            newRow.innerHTML = `
-                                                                <td><input type="text" class="form-control sno_" name="sno_${rowCounter_}" value="${rowCounter_}" readonly></td>
-                                                                <td><input type="text" class="form-control" name="organization_${rowCounter_}"></td>
-                                                                <td><input type="text" class="form-control" name="position_${rowCounter_}"></td>
-                                                                <td><input type="text" class="form-control" name="description_${rowCounter_}"></td>
-                                                                <td><input type="date" class="form-control" name="period_from_${rowCounter_}" onchange="calculateTotalExperience()"></td>
-                                                                <td><input type="date" class="form-control" name="period_to_${rowCounter_}" onchange="calculateTotalExperience()"></td>
-                                                                <td><input type="text" class="form-control" name="salary_drawn_${rowCounter_}"></td>
-                                                                <td><button type="button" class="btn btn-danger" onclick="removeRow_(this)">Remove</button></td>
-                                                            `;
-            experienceRows.appendChild(newRow);
-            updateSerialNumbers_();
-        }
-
-        function removeRow_(button) {
-            const row = button.closest(".form-row_");
-            row.remove();
-            //calculateTotalExperience();
-
-            updateSerialNumbers_();
-        }
-
-
 
         // JavaScript to display the uploaded image
         const imageFileInput = document.getElementById('imageFile');
@@ -1686,7 +2006,7 @@
             debugger;
             var StateCd = $("#StateName-" + val).val();
             $.ajax({
-                url: '/USERF01/ddl1',
+                url: 'M1/USERF01/ddl1',
                 type: 'get',
                 contentType: "application/json;charset=utf-8",
                 datatype: "json",
@@ -1714,33 +2034,7 @@
             $(id).select2();
         }
 
-         $(document).ready(function ()
-         {
-             $("#PostAppliedDescription").on("change", function ()
-             {
-                 // Get the selected option
-                 var selectedOption = $(this).find("option:selected");
-                 console.log("Selected Option:", selectedOption.text());
-                  debugger;
-                 // Split the value of the selected option by comma
-                 var optionValues = selectedOption.val().split(',');
 
-                 // Update the hidden fields with the selected values
-                 $("#PostAppliedCode").val(optionValues[0]);
-                 $("#RecCode").val(optionValues[1]);
-
-                 // Serialize the form and set the form action
-                 var form = $(this).closest('form');
-                 form.attr('action', 'M1/USERF01/AddNewRow');
-                 var formData = form.serialize();
-
-                 console.log("Form Data:", formData);
-
-                 // Call the CommonSubmit function
-                 console.log("Calling CommonSubmit function");
-                 CommonSubmit(formData, form.attr('action'), event);
-             });
-         });
 
 
 
@@ -1776,19 +2070,18 @@
         $('.save').on("click", function () {
             // Replace 'true' with your actual condition to check if the form is valid
             if (true) {
-                $(".modalLoader").css("display", "block");
 
-                var rECFSC02ViewModel = JSON.stringify({
+                var USERF01ViewModel = JSON.stringify({
                     'objAtrmsPersonalDtl': PersonalDtlArray(),
                     'listAtrmsQualificationDtl': QualificationListArray(),
-                    'listAtrmsExperienceDtl': ExperienceListArray(),
+
                     'listAtrmsDocumentsDtlMain': AttachmentListArray()
                 });
 
                 $.ajax({
                     type: "POST",
                     url: "M1/USERF01/Create",
-                    data: rECFSC02ViewModel,
+                    data: USERF01ViewModel,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json"
                 })
@@ -1884,76 +2177,80 @@
             return IDs
         }
 
-        @*function QualificationListArray()
-            {
-            var qualifications = []; // Create an array to store qualifications
 
-            $("#qualificationRows tr.form-row").each(function () {
-            var row = $(this);
+        function QualificationListArray() {
+            var qualifications = [];
 
-
-            if (true) {
-            var qualification = {
-            sno: row.find('td:eq(0) input').val(),
-            courseDegree: row.find('td:eq(1) input').val(),
-            subjects: row.find('td:eq(2) input').val(),
-            nameOfBoardUniversity: row.find('td:eq(3) input').val(),
-            yearOfPassing: row.find('td:eq(4) input').val(),
-            marksObtained: row.find('td:eq(5) input').val(),
-            totalMarks: row.find('td:eq(6) input').val(),
-            percentage: row.find('td:eq(7) input').val()
-            };
-
-            qualifications.push(qualification);
-            }
-            });
-
-            return qualifications;
-            }*@
-
-            function QualificationListArray() {
-                var qualifications = [];
-
-                $("#nav-PendingDIDestination .form-row").each(function () {
-                    var row = $(this);
-
-                    var qualification = {
-                        sno: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Sno"]').val(),
-                        qualification: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Qualification"]').val(),
-                        subject: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Subject"]').val(),
-                        nameOfBoard: row.find('input[name^="listAtrmsQualificationDtl"][name$=".NameOfBoard"]').val(),
-                        yearOfPassing: row.find('input[name^="listAtrmsQualificationDtl"][name$=".YearOfPassing"]').val(),
-                        marksObtained: row.find('input[name^="listAtrmsQualificationDtl"][name$=".MarksObtained"]').val(),
-                        totalMarks: row.find('input[name^="listAtrmsQualificationDtl"][name$=".TotalMarks"]').val(),
-                        percentage: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Percentage"]').val()
-                    };
-
-                    qualifications.push(qualification);
-                });
-
-                return qualifications;
-            }
-
-        function ExperienceListArray() {
-            var experiences = [];
-
-            $("#experienceRows tr.form-row").each(function () {
+            $("#tab2 .form-row").each(function () {
                 var row = $(this);
-                var experience = {
-                    sno: row.find('td:eq(0) input').val(),
-                    nameOfOrganization: row.find('td:eq(1) input').val(),
-                    jobPosition: row.find('td:eq(2) input').val(),
-                    jobDescription: row.find('td:eq(3) input').val(),
-                    periodFrom: row.find('td:eq(4) input').val(),
-                    periodTo: row.find('td:eq(5) input').val(),
-                    lastSalaryDrawn: row.find('td:eq(6) input').val()
+                debugger;
+                var qualification = {
+
+                    sno: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Sno"]').val(),
+                    qualification: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Qualification"]').val(),
+                    subject: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Subject"]').val(),
+                    nameOfBoard: row.find('input[name^="listAtrmsQualificationDtl"][name$=".NameOfBoard"]').val(),
+                    yearOfPassing: row.find('input[name^="listAtrmsQualificationDtl"][name$=".YearOfPassing"]').val(),
+                    marksObtained: row.find('input[name^="listAtrmsQualificationDtl"][name$=".MarksObtained"]').val(),
+                    totalMarks: row.find('input[name^="listAtrmsQualificationDtl"][name$=".TotalMarks"]').val(),
+                    percentage: row.find('input[name^="listAtrmsQualificationDtl"][name$=".Percentage"]').val()
                 };
 
-                experiences.push(experience);
+                qualifications.push(qualification);
             });
+            console.log(qualifications)
 
-            return experiences;
+            return qualifications;
         }
+        //function QualificationListArray()
+        //    {
+        //    var qualifications = []; // Create an array to store qualifications
+
+        //    $("#qualificationRows tr.form-row").each(function () {
+        //    var row = $(this);
+
+
+        //    if (true) {
+        //    var qualification = {
+        //    sno: row.find('td:eq(0) input').val(),
+        //    courseDegree: row.find('td:eq(1) input').val(),
+        //    subjects: row.find('td:eq(2) input').val(),
+        //    nameOfBoardUniversity: row.find('td:eq(3) input').val(),
+        //    yearOfPassing: row.find('td:eq(4) input').val(),
+        //    marksObtained: row.find('td:eq(5) input').val(),
+        //    totalMarks: row.find('td:eq(6) input').val(),
+        //    percentage: row.find('td:eq(7) input').val()
+        //    };
+
+        //    qualifications.push(qualification);
+        //    }
+        //    });
+
+        //    return qualifications;
+        //    }
+
+
+
+        //function ExperienceListArray() {
+        //    var experiences = [];
+
+        //    $("#experienceRows tr.form-row").each(function () {
+        //        var row = $(this);
+        //        var experience = {
+        //            sno: row.find('td:eq(0) input').val(),
+        //            nameOfOrganization: row.find('td:eq(1) input').val(),
+        //            jobPosition: row.find('td:eq(2) input').val(),
+        //            jobDescription: row.find('td:eq(3) input').val(),
+        //            periodFrom: row.find('td:eq(4) input').val(),
+        //            periodTo: row.find('td:eq(5) input').val(),
+        //            lastSalaryDrawn: row.find('td:eq(6) input').val()
+        //        };
+
+        //        experiences.push(experience);
+        //    });
+
+        //    return experiences;
+        //}
 
         function AttachmentListArray() {
             var IDs = new Array();
@@ -1979,6 +2276,98 @@
             return IDs
         }
 
+
+
+        //document.addEventListener("DOMContentLoaded", function () {
+        //    //Call your function to get the populated array
+        //    var qualifications = QualificationListArray();
+        //    console.log(qualifications);
+        //});
+
+
+
+        ////Function to add a new row to the table
+        //function addRow(Sno, Qualification, Subject, NameOfBoard, YearOfPassing, MarksObtained, TotalMarks, Percentage) {
+        //    var tableBody = document.querySelector('.table tbody');
+        //    var newRow = tableBody.insertRow();
+
+        //    // Add cells with corresponding values
+        //    newRow.innerHTML = `
+        //    <td>${Sno}</td>
+        //    <td>${Qualification}</td>
+        //    <td><input type="text" class="form-control" id="subject" value="${Subject}" /></td>
+        //    <td><input type="text" class="form-control" value="${NameOfBoard}" /></td>
+        //    <td><input type="number" class="form-control" value="${YearOfPassing}" /></td>
+        //    <td><input type="number" class="form-control marks-obtained" value="${MarksObtained}" /></td>
+        //    <td><input type="number" class="form-control total-marks" value="${TotalMarks}" /></td>
+        //    <td><input type="number" class="form-control percentage" value="${Percentage}" readonly /></td>
+        //    `;
+
+        //}
+
+        //// Function to calculate percentage
+        //function calculatePercentage(obtained, total) {
+        //    if (total > 0) {
+        //        return ((obtained / total) * 100).toFixed(2);
+        //    } else {
+        //        return "";
+        //    }
+        //}
+
+
+        //function populateEducationDetails() {
+        //    var selectedQualification = document.getElementById("highestQualification").value;
+
+
+        //    var tableBody = document.querySelector('.table tbody');
+        //    tableBody.innerHTML = '';
+
+
+        //    if (selectedQualification === "ITI") {
+        //        addRow(1, "ITI", "", "", "", "", "", "");
+        //    } else if (selectedQualification === "Diploma") {
+        //        addRow(1, "10th", "", "", "", "", "", "");
+        //        addRow(2, "12th", "", "", "", "", "", "");
+        //        addRow(3, "Diploma", "", "", "", "", "", "");
+        //    } else {
+        //        addRow(1, "10th", "", "", "", "", "", "");
+        //        addRow(2, "12th", "", "", "", "", "", "");
+        //        addRow(3, "BSc", "", "", "", "", "", "");
+        //    }
+
+
+        //    var inputFields = document.querySelectorAll('.table tbody input');
+        //    inputFields.forEach(function (input) {
+        //        input.disabled = selectedQualification === "" ? true : false;
+        //    });
+        //}
+
+
+        //document.querySelector('.table tbody').addEventListener('input', function (event) {
+        //    var target = event.target;
+        //    if (target.classList.contains('marks-obtained') || target.classList.contains('total-marks')) {
+        //        var row = target.closest('tr');
+        //        var obtained = parseFloat(row.querySelector('.marks-obtained').value);
+        //        var total = parseFloat(row.querySelector('.total-marks').value);
+        //        var percentageInput = row.querySelector('.percentage');
+        //        percentageInput.value = calculatePercentage(obtained, total);
+        //    }
+        //});
+
+
+        function printData() {
+            // Clone the preview container to create a copy without the buttons
+            var clonedContainer = document.getElementById('previewContainer').cloneNode(true);
+
+            // Create a new window or tab
+            var printWindow = window.open('', '_blank');
+
+            // Append the cloned container to the new window/tab
+            printWindow.document.body.appendChild(clonedContainer);
+
+            // Print the content
+            printWindow.print();
+        }
 
     </script>
 

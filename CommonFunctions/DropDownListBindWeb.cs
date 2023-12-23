@@ -260,7 +260,7 @@ namespace USERFORM.CommonFunctions
                 .Select(x => new SelectListItem
                 {
                     Text = string.Concat(x.PostAppliedDescription),
-                    Value = x.PostAppliedCode.ToString() + "," + x.RecCode.ToString()
+                    Value = x.PostAppliedCode.ToString()
                 })
                 .ToList();
 

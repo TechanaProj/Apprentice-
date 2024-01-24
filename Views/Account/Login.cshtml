@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('IFFCO.in') center center fixed; /* Replace 'background_image.jpg' with your image URL */
+            background-size: cover;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #3498db;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 400px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .user-logo {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #2980b9;
+            border-radius: 4px;
+            outline: none;
+            color: #333;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background-color: #27ae60;
+            }
+
+        .otp-input-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .otp-input {
+            width: calc(16.66% - 10px);
+            padding: 15px;
+            box-sizing: border-box;
+            border: 2px solid #2980b9;
+            border-radius: 4px;
+            outline: none;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .verify-button {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+            .verify-button:hover {
+                background-color: #c0392b;
+            }
+
+        .message {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            color: #2ecc71;
+        }
+
+        .error-message {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <img class="user-logo" src="user_logo.png" alt="User Logo" width="100">
+        <h1>Login with OTP</h1>
+        <input type="text" id="mobileNumber" placeholder="Enter your phone number">
+        <button onclick="openOTPPage()">Login with OTP</button>
+
+        <div class="otp-input-container" id="otpSection" style="display: none;">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 0)" onkeydown="handleBackspace(event, 0)">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 1)" onkeydown="handleBackspace(event, 1)">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 2)" onkeydown="handleBackspace(event, 2)">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 3)" onkeydown="handleBackspace(event, 3)">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 4)" onkeydown="handleBackspace(event, 4)">
+            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 5)" onkeydown="handleBackspace(event, 5)">
+        </div>
+        <button class="verify-button" onclick="verifyOTP()" style="display: none;">Verify OTP</button>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        function openOTPPage() {
+            const mobileNumber = document.getElementById('mobileNumber').value.trim();
+
+            // Validate the mobile number using a regular expression
+            const mobileNumberRegex = /^\d{10}$/;
+            if (!mobileNumberRegex.test(mobileNumber)) {
+                showMessage('error', 'Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            document.getElementById('otpSection').style.display = 'flex';
+            document.querySelector('.verify-button').style.display = 'block';
+            document.querySelector('.otp-input').focus();
+        }
+
+        function handleOTPInput(event, index) {
+            const input = event.target;
+            const maxLength = parseInt(input.getAttribute('maxlength'), 10);
+
+            if (input.value.length === maxLength) {
+                const nextInput = document.querySelectorAll('.otp-input')[index + 1];
+
+                if (nextInput) {
+                    nextInput.focus();
+                } else {
+                    // If this is the last input, trigger OTP verification
+                    verifyOTP();
+                }
+            }
+        }
+
+        function handleBackspace(event, index) {
+            const BACKSPACE_KEY = 8;
+            const input = event.target;
+
+            if (event.keyCode === BACKSPACE_KEY && input.value === '') {
+                const prevInput = document.querySelectorAll('.otp-input')[index - 1];
+
+                if (prevInput) {
+                    prevInput.focus();
+                }
+            }
+        }
+
+        function verifyOTP() {
+            const enteredOTP = document.querySelectorAll('.otp-input');
+            const userEnteredOTP = Array.from(enteredOTP).map(input => input.value).join('');
+
+            // Replace with actual OTP from your backend
+            const userOTP = '123456';
+
+            if (userEnteredOTP === userOTP) {
+                showMessage('success', 'OTP Verified! Welcome.');
+            } else {
+                showMessage('error', 'Invalid OTP. Please try again.');
+            }
+        }
+
+        function showMessage(type, text) {
+            if (type === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: text,
+                    showConfirmButton: false,
+                    timer: 3000
+                }).then(() => {
+                    // Redirect or perform additional actions on success
+                });
+            } else if (type === 'error') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: text
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

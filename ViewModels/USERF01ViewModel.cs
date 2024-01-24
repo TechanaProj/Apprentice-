@@ -33,9 +33,22 @@ namespace USERFORM.ViewModels
         public string DisttCd { get; set; }
         public string DisttName { get; set; }
 
+        public string AtId { get; set; }
+
+        public string Report { get; set; }
+
+        public List<SelectListItem> HighestqualificationLOVBind { get; set; }
+
+        public string HighestqualificationLOV { get; set; }
+
+        public string POSTLOV { get; set; }
+
+        public string PostAppliedCode { get; set; }
+
+        public string PostAppliedDescription { get; set; }
 
         public List<SelectListItem> POSTAPPLIEDDESCRIPTION { get; set; }
-        public string PostAppliedCode { get; set; }
+        //public string PostAppliedCode { get; set; }
         public List<SelectListItem> POSTAPPLIEDCODE { get; set; }
 
         public List<SelectListItem> POSTAPPLIEDCODERECCODE { get; set; }
@@ -47,13 +60,19 @@ namespace USERFORM.ViewModels
 
         public RecPostAvailableMsts objRecPostAvailableMsts { get; set; }
 
+        public RecOtpDetails objRecOtpDetails { get; set; }
+        public RecOtpDetails listRecOtpDetails { get; set; }
 
+        public string QualDesc { get; set; }
+       
         public bool IsAlertBox { get; set; }
         public string SelectedAction { get; set; }
         public string AreaName { get; set; }
         public string SelectedMenu { get; set; }
         public string Status { get; set; }
         public string Message { get; internal set; }
+    
+
         public string Alert { get; internal set; }
         public string ErrorMessage { get; internal set; }
     }

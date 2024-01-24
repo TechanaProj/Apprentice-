@@ -13,18 +13,24 @@ using USERFORM.ViewModels;
 using ModelContext = USERFORM.Models.ModelContext;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using IFFCO.Web;
+using System.Net.Http;
+using System.Text;
+using System.Net;
+using System.IO;
 
 namespace USERFORM.Areas.M1.Controllers
 {
     [Area("M1")]
     public class USERF01Controller : Controller
     {
-
         private readonly ModelContext _context;
         private readonly DropDownListBindWeb dropDownListBindWeb = null;
         private readonly ATRMSCommonService aTRMSCommonService;
         private readonly PrimaryKeyGen primaryKeyGen = null;
+        //private object _httpClient;
 
+       // public bool SomeCondition { get; private set; }
 
         public USERF01Controller(ModelContext context)
         {
@@ -34,6 +40,50 @@ namespace USERFORM.Areas.M1.Controllers
             primaryKeyGen = new PrimaryKeyGen();
 
         }
+
+
+
+        public IActionResult Index(string AtId)
+        {
+            try
+            {
+                USERF01ViewModel obj = new USERF01ViewModel();
+
+
+                obj = _context.AtrmsPersonalDtl
+                    .Where(x => x.AtId == AtId)
+                    .Select(x => new USERF01ViewModel
+                    {
+                        AtId = x.AtId,
+                        // Populate other properties as needed based on your model
+
+                        // Add more properties here...
+                        listAtrmsQualificationDtl = _context.AtrmsQualificationDtl
+                            .Where(q => q.AtId == AtId)
+                            .ToList()
+                    })
+                    .FirstOrDefault();
+
+                if (obj == null)
+                {
+                    // Handle the case where no data is found for the given AtId
+                    return RedirectToAction("Error");
+                }
+
+                return View(obj);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                // Handle the exception as needed
+                return RedirectToAction("Error");
+            }
+        }
+
+
+
+
+
         public JsonResult ddl1(string StateCd)
         {
             var DistrictLOV = _context.RecDistrictMsts.Where(X => X.StateCd == StateCd).Select(x => new SelectListItem
@@ -49,48 +99,67 @@ namespace USERFORM.Areas.M1.Controllers
             disttCDLOV = dropDownListBindWeb.ListDistrictBind(StateCd);
             return disttCDLOV;
         }
-        
+
+
+        public JsonResult ddl2(string QualCode)
+        {
+            var POSTLOV = _context.RecPostAvailableMsts.Where(X => X.QualCode.ToString() == QualCode).Select(x => new SelectListItem
+            {
+                Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+                Value = x.PostAppliedCode.ToString() + "," + x.RecCode
+            }).ToList();
+            return Json(POSTLOV);
+        }
+
+        public List<SelectListItem> POSTLOVBinddJSON(string QualCode)
+        {
+            List<SelectListItem> POSTLOV = new List<SelectListItem>();
+            POSTLOV = dropDownListBindWeb.ListPOSTBind(QualCode);
+            return POSTLOV;
+        }
+
+
         public IActionResult AddNewRow(USERF01ViewModel uSERF01ViewModel)
         {
-            var commonViewModel = new USERF01ViewModel();
+            var obj = new USERF01ViewModel();
 
             try
             {
-                commonViewModel = uSERF01ViewModel;
-                commonViewModel.listAtrmsQualificationDtl = RowPopulate(uSERF01ViewModel);
+                obj = uSERF01ViewModel;
+                obj.listAtrmsQualificationDtl = RowPopulate(uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedCode);
 
-                commonViewModel.IsAlertBox = false;
-                commonViewModel.SelectedAction = "AddNewRowSearch";
-                commonViewModel.PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind();
-                commonViewModel.AreaName = this.ControllerContext.RouteData.Values["area"].ToString();
-                commonViewModel.SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString();
-                TempData["CommonViewModel"] = JsonConvert.SerializeObject(commonViewModel);
+                //    commonViewModel.IsAlertBox = false;
+                //    commonViewModel.SelectedAction = "AddNewRowSearch";
+                //    commonViewModel.PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind();
+                //    commonViewModel.AreaName = this.ControllerContext.RouteData.Values["area"].ToString();
+                //    commonViewModel.SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString();
+                //    TempData["CommonViewModel"] = JsonConvert.SerializeObject(commonViewModel);
             }
             catch (Exception ex)
             {
                 // Handle exceptions
             }
 
-            return Json(commonViewModel);
+            return Json(obj);
         }
 
 
 
-        public List<AtrmsQualificationDtl> RowPopulate(USERF01ViewModel uSERF01ViewModel)
+        public List<AtrmsQualificationDtl> RowPopulate(string PostAppliedCode)
         {
 
             var CommonViewModel = new USERF01ViewModel();
 
             try
             {
-                CommonViewModel = uSERF01ViewModel;
+                //CommonViewModel = uSERF01ViewModel;
 
 
 
-                RecPostAvailableMsts obj = _context.RecPostAvailableMsts.Where(x => x.PostAppliedCode == uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedCode).FirstOrDefault();
+                RecPostAvailableMsts obj = _context.RecPostAvailableMsts.Where(x => x.PostAppliedCode == PostAppliedCode).FirstOrDefault();
 
 
-                //CommonViewModel.listAtrmsQualificationDtl = (CommonViewModel.listAtrmsQualificationDtl == null) ? new List<AtrmsQualificationDtl>() : CommonViewModel.listAtrmsQualificationDtl;
+                CommonViewModel.listAtrmsQualificationDtl = (CommonViewModel.listAtrmsQualificationDtl == null) ? new List<AtrmsQualificationDtl>() : CommonViewModel.listAtrmsQualificationDtl;
                 CommonViewModel.listAtrmsQualificationDtl = new List<AtrmsQualificationDtl>();
                 if (true)
                 {
@@ -108,8 +177,6 @@ namespace USERFORM.Areas.M1.Controllers
                             CommonViewModel.listAtrmsQualificationDtl.Add(new AtrmsQualificationDtl() { Sno = 3, Qualification = obj.QualDesc2 });
                         }
                     }
-
-
                 }
 
             }
@@ -118,31 +185,11 @@ namespace USERFORM.Areas.M1.Controllers
             {
 
             }
-            return ( CommonViewModel.listAtrmsQualificationDtl);
+            return (CommonViewModel.listAtrmsQualificationDtl);
         }
 
 
-     
-        public IActionResult AddNewRowSearch(USERF01ViewModel uSERF01ViewModel)
-        {
-            // Ensure that HttpContext.Session is not null before accessing it
-            if (HttpContext.Session == null)
-            {
-                return RedirectToAction("Error");
-            }
 
-            USERF01ViewModel commonViewModel = new USERF01ViewModel();
-
-            if (TempData["CommonViewModel"] != null)
-            {
-               
-                commonViewModel = JsonConvert.DeserializeObject<USERF01ViewModel>(TempData["CommonViewModel"].ToString());
-                commonViewModel.StateLOV = dropDownListBindWeb.StateLOVBind();
-                commonViewModel.DistrictLOV = dropDownListBindWeb.DistrictLOVBind();
-            }
-         
-            return View("Create", commonViewModel);
-        }
 
         // GET: RController/CREATE
         [HttpGet]
@@ -153,13 +200,19 @@ namespace USERFORM.Areas.M1.Controllers
             var CommonViewModel = new USERF01ViewModel
 
             {
+
                 listRecPostAvailableMsts = new List<RecPostAvailableMsts>(),
-                PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind(),
+                //PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind(),
+                HighestqualificationLOVBind = dropDownListBindWeb.HighestqualificationLOVBind(),
+
+
                 listAtrmsQualificationDtl = new List<AtrmsQualificationDtl>(),
                 listAtrmsExperienceDtl = new List<AtrmsExperienceDtl>(),
                 listAtrmsDocumentsDtlMain = new List<AtrmsDocumentsDtlMain>(),
 
-            };
+
+
+        };
             // The rest of the code remains unchanged.
 
             CommonViewModel.listAtrmsPersonalDtl = _context.AtrmsPersonalDtl.ToList();
@@ -168,7 +221,9 @@ namespace USERFORM.Areas.M1.Controllers
             CommonViewModel.listAtrmsQualificationDtl = new List<AtrmsQualificationDtl>();
             CommonViewModel.listAtrmsExperienceDtl = new List<AtrmsExperienceDtl>();
             CommonViewModel.listRecPostAvailableMsts = new List<RecPostAvailableMsts>();
-            CommonViewModel.PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind();
+            //CommonViewModel.PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind();
+
+
             CommonViewModel.StateLOV = dropDownListBindWeb.StateLOVBind();
             CommonViewModel.DistrictLOV = dropDownListBindWeb.DistrictLOVBind();
             CommonViewModel.AreaName = this.ControllerContext.RouteData.Values["area"].ToString();
@@ -178,6 +233,8 @@ namespace USERFORM.Areas.M1.Controllers
             return View("Create", CommonViewModel);
 
         }
+
+
 
 
         // POST: RECFSC02Controller/Create
@@ -190,54 +247,99 @@ namespace USERFORM.Areas.M1.Controllers
             try
             {
 
-                // Retrieve session values
+
                 int unit = 3;
 
 
-                if (uSERF01ViewModel.objAtrmsPersonalDtl != null && uSERF01ViewModel.listAtrmsQualificationDtl.Any())
+                //var stateCode = uSERF01ViewModel.objAtrmsPersonalDtl.State;
 
+
+
+
+                //var stateName = _context.RecStateMsts.Where(x => x.stateCode == x.stateCode).Select(x => x.StateName).FirstOrDefault();
+                var stateCode = uSERF01ViewModel.objAtrmsPersonalDtl.State.Trim(); // Trim any leading or trailing whitespaces
+
+                var stateName = _context.RecStateMsts
+                    .Where(x => x.stateCode.Trim().Equals(stateCode, StringComparison.OrdinalIgnoreCase)) // Case-insensitive and trimmed comparison
+                    .Select(x => x.StateName)
+                    .FirstOrDefault();
+
+                var disstCode = uSERF01ViewModel.objAtrmsPersonalDtl.District.Trim();
+
+                var disstName = _context.RecDistrictMsts
+                    .Where(x => x.DisttCd.Trim().Equals(disstCode, StringComparison.OrdinalIgnoreCase)) // Case-insensitive and trimmed comparison
+                    .Select(x => x.DisttName)
+                    .FirstOrDefault();
+
+                var someQualCode = uSERF01ViewModel.objAtrmsPersonalDtl.Qualification.Trim();
+
+                var qualificationName = _context.RecQualificationMsts
+                    .Where(x => x.QualCode.Trim().Equals(someQualCode, StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.QualDesc)
+                    .FirstOrDefault();
+
+
+                var somePostAppliedCodes = uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription?.Trim().Split(',');
+
+                var postAppDescription = _context.RecPostAvailableMsts
+               .Where(x => somePostAppliedCodes.Contains(x.PostAppliedCode.Trim(), StringComparer.OrdinalIgnoreCase) &&
+                           somePostAppliedCodes.Contains(x.RecCode.Trim(), StringComparer.OrdinalIgnoreCase))
+               .Select(x => x.PostAppliedDescription)
+               .FirstOrDefault();
+
+
+                var existingRecord = _context.AtrmsPersonalDtl.FirstOrDefault(x => x.AadharNo == uSERF01ViewModel.objAtrmsPersonalDtl.AadharNo);
+
+                if (existingRecord != null)
+                {
+                    CommonViewModel.Message = "Aadhar number already exists. Please provide a unique Aadhar number.";
+                    CommonViewModel.ErrorMessage = "Aadhar number already exists. Please provide a unique Aadhar number.";
+                    CommonViewModel.Alert = "Warning";
+                    CommonViewModel.Status = "Warning";
+                    return Json(CommonViewModel);
+
+
+                }
+
+
+                if (uSERF01ViewModel.objAtrmsPersonalDtl != null && uSERF01ViewModel.listAtrmsQualificationDtl.Any())
                 {
 
                     // Generate a unique AtId
                     string AtId = primaryKeyGen.Get_EnrolledATCode_PK(unit);
 
+
                     uSERF01ViewModel.objAtrmsPersonalDtl.AtId = AtId;
                     uSERF01ViewModel.objAtrmsPersonalDtl.UnitCode = unit;
 
-                    string RecCodeForPersonal = uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription.Split(",")[1];
-                    string PostCodeForPersonal = uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription.Split(",")[0];
-                    uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription = _context.RecPostAvailableMsts.FirstOrDefault(x => x.PostAppliedCode == PostCodeForPersonal && x.RecCode == RecCodeForPersonal).PostAppliedDescription;
+
+                    uSERF01ViewModel.objAtrmsPersonalDtl.State = stateName;
+                    uSERF01ViewModel.objAtrmsPersonalDtl.District = disstName;
+                    uSERF01ViewModel.objAtrmsPersonalDtl.Qualification = qualificationName;
+                    uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription = postAppDescription;
+
+
+
+
+
+                    //string RecCodeForPersonal = uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription.Split(",")[1];
+                    //string PostCodeForPersonal = uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription.Split(",")[0];
+                    //uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription = _context.RecPostAvailableMsts.FirstOrDefault(x => x.PostAppliedCode == PostCodeForPersonal && x.RecCode == RecCodeForPersonal).PostAppliedDescription;
 
                     _context.AtrmsPersonalDtl.Add(uSERF01ViewModel.objAtrmsPersonalDtl);
 
 
-                    await _context.SaveChangesAsync();
-
-                    // Loop through qualifications and add them
                     foreach (var qualification in uSERF01ViewModel.listAtrmsQualificationDtl)
                     {
 
                         qualification.AtId = AtId;
+                        qualification.RecCode = uSERF01ViewModel.objAtrmsPersonalDtl.RecCode;
                         qualification.UnitCode = unit; // Set AtId for qualification
                         qualification.RecCode = qualification.RecCode;
                         qualification.CreatedOn = DateTime.Now;
                         _context.AtrmsQualificationDtl.Add(qualification);
                     }
 
-                    if (uSERF01ViewModel.listAtrmsExperienceDtl != null && uSERF01ViewModel.listAtrmsExperienceDtl.Any())
-                    {
-
-                        foreach (var experience in uSERF01ViewModel.listAtrmsExperienceDtl)
-                        {
-
-                            experience.AtId = AtId;
-                            experience.RecCode = experience.RecCode;
-                            experience.CreatedOn = DateTime.Now;
-
-
-                            _context.AtrmsExperienceDtl.Add(experience);
-                        }
-                    }
 
                     if (uSERF01ViewModel.listAtrmsDocumentsDtlMain != null && uSERF01ViewModel.listAtrmsDocumentsDtlMain.Any())
                     {
@@ -253,6 +355,7 @@ namespace USERFORM.Areas.M1.Controllers
                                     {
 
                                         AtId = AtId,
+                                        RecCode = uSERF01ViewModel.objAtrmsPersonalDtl.RecCode,
                                         Sno = serialNumber,
                                         Uploadfile = attachobj.Uploadfile,
                                         Name = attachobj.Name,
@@ -263,10 +366,10 @@ namespace USERFORM.Areas.M1.Controllers
 
                                     };
                                     _context.AtrmsDocumentsDtlMain.Add(NewObj);
-                                    await _context.SaveChangesAsync();
+
                                     serialNumber++;
 
-
+                                    await _context.SaveChangesAsync();
                                 }
 
                             }
@@ -277,7 +380,18 @@ namespace USERFORM.Areas.M1.Controllers
 
                     }
 
+                    if (AtId != null)
+                    {
+                        string QueryString = string.Empty;
+                        var Reportname = "APPLICANT_FORM.aspx";
+                        QueryString = "AT_ID=" + AtId;
+                        var AreaName = "RECRUITER";
+                        GenerateRdlcReportLink ReportObj = new GenerateRdlcReportLink();
+                        var report = ReportObj.GenerateLink(Reportname, QueryString, AreaName);
+                        CommonViewModel.Report = report;
+                    }
 
+                    CommonViewModel.AtId = AtId;
                     CommonViewModel.Message = "ENROLLED " + AtId;
                     CommonViewModel.Alert = "Create";
                     CommonViewModel.Status = "Create";
@@ -288,15 +402,19 @@ namespace USERFORM.Areas.M1.Controllers
 
                     CommonViewModel.Message = "Invalid Post Details. Try Again!";
                     CommonViewModel.ErrorMessage = "Invalid Post Details. Try Again!";
+
                     CommonViewModel.Alert = "Warning";
                     CommonViewModel.Status = "Warning";
                 }
 
+
+
             }
             catch (Exception ex)
             {
+
                 // Handle the exception and log it
-                // commonException.GetCommonExcepton(CommonViewModel, ex);
+                //commonException.GetCommonExcepton(CommonViewModel, ex);
 
                 CommonViewModel.AreaName = this.ControllerContext.RouteData.Values["area"].ToString();
                 CommonViewModel.SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString();
@@ -308,8 +426,186 @@ namespace USERFORM.Areas.M1.Controllers
             return Json(CommonViewModel);
         }
 
+        //[HttpPost]
+
+        //public async Task<IActionResult>sendOTP(string MobileNumber)
+        //{
+        //    // ... (previous code)
+        //    USERF01ViewModel uSERF01ViewModel = new USERF01ViewModel();
+        //    if (!string.IsNullOrEmpty(MobileNumber))
+        //    {
+        //        // Assume some condition where you set the status code
+        //        string statusCode = "S";
+
+        //        int newSerialNo = GenerateUniqueSerialNumber();
+        //        string otp = GenerateOTP();
+        //        string smsContents = $"Your One-Time Password is {otp}, valid for 30 minutes only. Please do not share your OTP.";
+
+        //        var otpDetail = new RecOtpDetails()
+        //        {
+        //            Sno = newSerialNo,
+        //            Mobileemail = MobileNumber,
+        //            Otp = otp,
+        //            Otpdate = DateTime.Now,
+        //            Statuscode = statusCode,
+        //        };
+
+        //        _context.RecOtpDetails.Add(otpDetail);
+        //        _context.SaveChanges();
+
+        //        // Call SendSmsAsync asynchronously
+        //        bool smsSentSuccessfully = await SendSmsAsync(MobileNumber, smsContents);
+
+        //        if (smsSentSuccessfully)
+        //        {
+        //            return Ok(new { Message = "OTP sent successfully.", StatusCode = 200 });
+        //        }
+        //        else
+        //        {
+        //            return BadRequest("Failed to send OTP.");
+        //        }
+
+
+
+
+        //    }
+        //}
+
+
+        [HttpPost]
+        public async Task<IActionResult> sendOTP(string MobileNumber)
+        {
+            USERF01ViewModel uSERF01ViewModel = new USERF01ViewModel();
+
+            if (!string.IsNullOrEmpty(MobileNumber))
+            {
+                // Validate if the MobileNumber has exactly 10 digits
+                if (MobileNumber.Length == 10 && MobileNumber.All(char.IsDigit))
+                {
+                    // Check the number of OTPs sent for the given mobile number in the last 24 hours
+                    int maxAttemptsPerDay = 3;
+                    DateTime twentyFourHoursAgo = DateTime.Now.AddHours(-24);
+
+                    int sentOtpsCount = _context.RecOtpDetails
+                        .Count(o => o.Mobileemail == MobileNumber && o.Otpdate >= twentyFourHoursAgo);
+
+                    if (sentOtpsCount >= maxAttemptsPerDay)
+                    {
+                        return BadRequest(new { Message = "Exceeded OTP sending limit for the day. Only 3 SMS allowed." });
+                    }
+
+                    string statusCode = "S";
+                    int newSerialNo = GenerateUniqueSerialNumber();
+                    string otp = GenerateOTP();
+                    string smsContents = $"Your One-Time Password is {otp}, valid for 30 minutes only. Please do not share your OTP.";
+
+                    // Create an instance without Smsapiresponse initially
+                    var otpDetail = new RecOtpDetails()
+                    {
+                        Sno = newSerialNo,
+                        Mobileemail = MobileNumber,
+                        Otp = otp,
+                        Otpdate = DateTime.Now,
+                        Statuscode = statusCode,
+                    };
+
+                    // Add the instance to the context without Smsapiresponse
+                    _context.RecOtpDetails.Add(otpDetail);
+                    _context.SaveChanges();
+
+                    string URL = "http://hindit.biz/api/pushsms?user=Iffco&authkey=92QZpEbhUypU6&sender=IFFCOA&mobile=" + otpDetail.Mobileemail + "&text=" + otpDetail.Otp + "%20is%20the%20verification%20code%20generated%20for%20IFFCO%27s%20Recruitment%20Portal%20.%20Do%20not%20share%20this%20with%20anyone.%20IFFCO%20Paradeep&unicode=0&rpt=1&summary=1&output=json&entityid=1001232689878836835&templateid=1007596580560256423";
+
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
+                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                    StreamReader sr = new StreamReader(resp.GetResponseStream());
+                    string results = sr.ReadToEnd();
+                    sr.Close();
+
+                    // Update the instance with Smsapiresponse and save changes
+                    otpDetail.Smsapiresponse = results;
+                    _context.SaveChanges();
+
+                    return Ok(new { Message = "OTP sent successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Mobile number should have 10 digits." });
+                }
+            }
+            else
+            {
+                return BadRequest(new { Message = "Failed to send OTP." });
+            }
+        }
+
+
+
+        private string GenerateOTP()
+        {
+            // Implement your OTP generation logic here
+            // Example: Generate a random 6-digit OTP
+            Random rnd = new Random();
+            int otp = rnd.Next(100000, 999999);
+            return otp.ToString();
+        }
+        private int GenerateUniqueSerialNumber()
+        {
+            // Query the maximum serial number from the database
+            int maxSerialNo = _context.RecOtpDetails.Max(r => (int?)r.Sno) ?? 0;
+
+            // Increment the maximum serial number
+            int newSerialNo = maxSerialNo + 1;
+
+            return newSerialNo;
+        }
+
+        [HttpPost]
+        public IActionResult verifyOTP(string MobileNumber, string enteredOTP)
+        {
+            if (!string.IsNullOrEmpty(MobileNumber) && !string.IsNullOrEmpty(enteredOTP))
+            {
+                // Retrieve the latest OTP details for the given MobileNumber from the database
+                var latestOtpDetail = _context.RecOtpDetails
+                    .Where(otp => otp.Mobileemail == MobileNumber)
+                    .OrderByDescending(otp => otp.Otpdate)
+                    .FirstOrDefault();
+
+                if (latestOtpDetail != null && latestOtpDetail.Otp == enteredOTP)
+                {
+                    // Check if the OTP is still valid (within 5 minutes)
+                    var currentTime = DateTime.Now;
+
+                    // Ensure that latestOtpDetail.Otpdate is a DateTime object
+                    if (latestOtpDetail.Otpdate is DateTime otpTimestamp)
+                    {
+                        if ((currentTime - otpTimestamp).TotalMinutes <= 5)
+                        {
+                            // Valid OTP, you can perform additional actions here
+                            return Ok("OTP verification successful.");
+                        }
+                        else
+                        {
+                            // Expired OTP
+                            return BadRequest("OTP has expired.");
+                        }
+                    }
+                    else
+                    {
+                        // Handle the case where Otpdate is not a DateTime
+                        return BadRequest("Invalid timestamp for OTP.");
+                    }
+                }
+
+                return BadRequest("Invalid OTP.");
+            }
+
+            return BadRequest("Mobile number and OTP are required.");
+        }
+
+
+
+
 
     }
 }
-
 

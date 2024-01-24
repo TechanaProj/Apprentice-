@@ -1,0 +1,47 @@
+﻿@model USERFORM.ViewModels.USERF01ViewModel
+@{
+    ViewData["Title"] = "";
+
+}
+
+
+
+@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!-- _AgeInformation.cshtml -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Age as on 01.10.2022</th>
+            <th>Min (Years)</th>
+            <th>Max (Years)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="generalAge">
+            <td>General</td>
+            <td>18</td>
+            <td>27</td>
+        </tr>
+        <tr id="obcAge">
+            <td>OBC</td>
+            <td>18</td>
+            <td>30</td>
+        </tr>
+        <tr id="scStAge">
+            <td>SC / ST</td>
+            <td>18</td>
+            <td>32</td>
+        </tr>
+        <tr id="iffcoAge">
+            <td>IFFCO deceased Emp / Land Loser</td>
+            <td>18</td>
+            <td>3 years relaxation to the above</td>
+        </tr>
+    </tbody>
+</table>

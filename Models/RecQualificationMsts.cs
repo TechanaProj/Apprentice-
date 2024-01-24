@@ -5,7 +5,7 @@ namespace USERFORM.Models
 {
     public partial class RecQualificationMsts
     {
-        public long QualCode { get; set; }
+        public string QualCode { get; set; }
         public string QualDesc { get; set; }
         public string Status { get; set; }
         public int CreatedBy { get; set; }

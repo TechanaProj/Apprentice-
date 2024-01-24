@@ -11,7 +11,7 @@ namespace USERFORM.Models
             RecUniversityMsts = new HashSet<RecUniversityMsts>();
         }
 
-        public string StateCd { get; set; }
+        public string stateCode { get; set; }
         public string StateName { get; set; }
         public string Status { get; set; }
         public DateTime? CreationDate { get; set; }
@@ -21,5 +21,6 @@ namespace USERFORM.Models
 
         public ICollection<RecDistrictMsts> RecDistrictMsts { get; set; }
         public ICollection<RecUniversityMsts> RecUniversityMsts { get; set; }
+        public string StateCd { get; internal set; }
     }
 }

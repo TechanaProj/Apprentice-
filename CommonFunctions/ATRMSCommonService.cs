@@ -30,7 +30,7 @@ namespace USERFORM.CommonFunctions
             dtDTL_VALUE = _context.GetSQLQuery(sqlquery);
             List<RecCategoryMsts> DTL_VALUE = new List<RecCategoryMsts>();
             DTL_VALUE = (from DataRow dr in dtDTL_VALUE.Rows
-                         select new RecCategoryMsts() 
+                         select new RecCategoryMsts()
                          {
                              CategoryCode = Convert.ToString(dr["CATEGORY_CODE"]),
                              Category = Convert.ToString(dr["CATEGORY"]),
@@ -81,32 +81,32 @@ namespace USERFORM.CommonFunctions
 
         }
 
-            public List<RecCategoryMsts> GetCategoryMsts()
-            {
-                string sqlquery = "SELECT DISTINCT  CATEGORY_CODE, CATEGORY, DECEASED, LANDLOSER, EX_APP, MIN_AGE, MAX_AGE FROM REC_CATEGORY_MSTS ORDER BY CATEGORY_CODE ASC ";
+        public List<RecCategoryMsts> GetCategoryMsts()
+        {
+            string sqlquery = "SELECT DISTINCT  CATEGORY_CODE, CATEGORY, DECEASED, LANDLOSER, EX_APP, MIN_AGE, MAX_AGE FROM REC_CATEGORY_MSTS ORDER BY CATEGORY_CODE ASC ";
 
-                DataTable dtDTL_VALUE = new DataTable();
-                dtDTL_VALUE = _context.GetSQLQuery(sqlquery);
-                List<RecCategoryMsts> DTL_VALUE = new List<RecCategoryMsts>();
-                DTL_VALUE = (from DataRow dr in dtDTL_VALUE.Rows
-                             select new RecCategoryMsts()
-                             {
-                                 CategoryCode = Convert.ToString(dr["CATEGORY_CODE"]),
-                                 Category = Convert.ToString(dr["CATEGORY"]),
-                                 Deceased = Convert.ToString(dr["DECEASED"]),
-                                 Landloser = Convert.ToString(dr["LANDLOSER"]),
-                                 ExApp = Convert.ToString(dr["EX_APP"]),
-                                 MinAge = Convert.ToInt32(dr["MIN_AGE"]),
-                                 MaxAge = Convert.ToInt32(dr["MAX_AGE"]),
-                             }).ToList();
+            DataTable dtDTL_VALUE = new DataTable();
+            dtDTL_VALUE = _context.GetSQLQuery(sqlquery);
+            List<RecCategoryMsts> DTL_VALUE = new List<RecCategoryMsts>();
+            DTL_VALUE = (from DataRow dr in dtDTL_VALUE.Rows
+                         select new RecCategoryMsts()
+                         {
+                             CategoryCode = Convert.ToString(dr["CATEGORY_CODE"]),
+                             Category = Convert.ToString(dr["CATEGORY"]),
+                             Deceased = Convert.ToString(dr["DECEASED"]),
+                             Landloser = Convert.ToString(dr["LANDLOSER"]),
+                             ExApp = Convert.ToString(dr["EX_APP"]),
+                             MinAge = Convert.ToInt32(dr["MIN_AGE"]),
+                             MaxAge = Convert.ToInt32(dr["MAX_AGE"]),
+                         }).ToList();
 
-                return DTL_VALUE;
+            return DTL_VALUE;
 
 
 
-            }
+        }
 
-    
+
 
 
 

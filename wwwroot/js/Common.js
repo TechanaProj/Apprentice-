@@ -454,25 +454,25 @@ function GetTableJsonList(table) {
 //    control.makeTransliteratable(['txtHindiContent']);
 //}
 
-$(document).ready(function () {
-    $(".edit").removeAttr("data-toggle");
-    $(".Details").removeAttr("data-toggle");
+//$(document).ready(function () {
+//    $(".edit").removeAttr("data-toggle");
+//    $(".Details").removeAttr("data-toggle");
 
-    $(".addnewitem").click(function (e) {        
-        e.preventDefault();
-        localStorage.setItem("currentUrl", $(this).attr('href'));
-        document.getElementById("page-wrapper").innerHTML = "";
-        $('#page-wrapper').load($(this).attr('href'));
-    });
-    //BindGrid();
-    //$(".selected-ar > a").click(function (e) {        
-    //    e.preventDefault();           
-    //        document.getElementById("page-wrapper").innerHTML = "";
-    //        $('#page-wrapper').load($(this).attr('href'));
-    //        $(".top-head").text($(this).text());
+//    $(".addnewitem").click(function (e) {        
+//        e.preventDefault();
+//        localStorage.setItem("currentUrl", $(this).attr('href'));
+//        document.getElementById("page-wrapper").innerHTML = "";
+//        $('#page-wrapper').load($(this).attr('href'));
+//    });
+//    //BindGrid();
+//    //$(".selected-ar > a").click(function (e) {        
+//    //    e.preventDefault();           
+//    //        document.getElementById("page-wrapper").innerHTML = "";
+//    //        $('#page-wrapper').load($(this).attr('href'));
+//    //        $(".top-head").text($(this).text());
 
-    //});    
-});
+//    //});    
+//});
 
 
 function CommonAlert(Title, Message, fn, data, type, msgType) {    

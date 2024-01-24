@@ -161,11 +161,53 @@ namespace USERFORM.CommonFunctions
         {
             var listState = _context.RecStateMsts.OrderBy(x => x.StateName).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.StateCd, " - ", x.StateName),
-                Value = x.StateCd.ToString()
+                Text = string.Concat(x.stateCode, " - ", x.StateName),
+                Value = x.stateCode.ToString()
             }).ToList();
             return listState;
         }
+        
+        public List<SelectListItem> HighestqualificationLOVBind()
+        {
+            var HighestqualificationLOV = _context.RecQualificationMsts
+                .Where(x => x.Status == "A")
+                .OrderBy(x => x.QualCode)
+                .Select(x => new SelectListItem
+                {
+                    Text = string.Concat(x.QualCode, " - ", x.QualDesc),
+                    Value = x.QualCode.ToString()
+                })
+                .ToList();
+
+            return HighestqualificationLOV;
+        }
+
+
+        public List<SelectListItem> POSTLOVBind()
+        {
+            var POSTLOV = _context.RecPostAvailableMsts.OrderBy(x => x.PostAppliedCode).Select(x => new SelectListItem
+            {
+                Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+                Value = x.PostAppliedCode.ToString()+ "," + x.PostAppliedDescription.ToString()
+ 
+            }).ToList();
+
+
+
+            return POSTLOV;
+        }
+
+
+        public List<SelectListItem> ListPOSTBind(string QualCode)
+        {
+            var ListPOST = _context.RecPostAvailableMsts.Where(x => x.QualCode.ToString() == QualCode).OrderBy(x => x.PostAppliedDescription).Select(x => new SelectListItem
+            {
+                Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+                Value = x.PostAppliedCode.ToString()
+            }).ToList();
+            return ListPOST;
+        }
+
 
 
 
@@ -173,8 +215,8 @@ namespace USERFORM.CommonFunctions
         {
             var StateLOV = _context.RecStateMsts.OrderBy(x => x.StateName).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.StateCd, " - ", x.StateName),
-                Value = x.StateCd.ToString()
+                Text = string.Concat(x.stateCode, " - ", x.StateName),
+                Value = x.stateCode.ToString()
 
 
 
@@ -252,27 +294,28 @@ namespace USERFORM.CommonFunctions
 
             return POSTAPPLIEDCODERECCODE;
         }
+        
+          
+        //public List<SelectListItem> PostdescriptionLOVBind()
+        //{
+        //    var POSTDESCRIPTION = _context.RecPostAvailableMsts
+        //        .Where(x => x.RecStatus == "A")
+        //        .Select(x => new SelectListItem
+        //        {
+        //            Text = string.Concat(x.PostAppliedDescription),
+        //            Value = x.PostAppliedCode.ToString()
+        //        })
+        //        .ToList();
 
-        public List<SelectListItem> PostdescriptionLOVBind()
-        {
-            var POSTDESCRIPTION = _context.RecPostAvailableMsts
-                .Where(x => x.RecStatus == "A")
-                .Select(x => new SelectListItem
-                {
-                    Text = string.Concat(x.PostAppliedDescription),
-                    Value = x.PostAppliedCode.ToString()
-                })
-                .ToList();
+        //    // Add a "Select" item at the beginning of the list
+        //    POSTDESCRIPTION.Insert(0, new SelectListItem
+        //    {
+        //        Text = "Select",
+        //        Value = ""  // You can set the value to an appropriate default value or leave it empty
+        //    });
 
-            // Add a "Select" item at the beginning of the list
-            POSTDESCRIPTION.Insert(0, new SelectListItem
-            {
-                Text = "Select",
-                Value = ""  // You can set the value to an appropriate default value or leave it empty
-            });
-
-            return POSTDESCRIPTION;
-        }
+        //    return POSTDESCRIPTION;
+        //}
 
 
         public List<AtrmsPersonalDtl> GetFilteredDataGendCate(string selectedGender, string selectedCategory)

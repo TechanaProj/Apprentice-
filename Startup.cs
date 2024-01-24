@@ -5,11 +5,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using USERFORM.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using USERFORM.Models;
 
 namespace USERFORM
 {
@@ -20,35 +18,25 @@ namespace USERFORM
             Configuration = configuration;
         }
 
-
-
-
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddSession();
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
             services.AddScoped<ModelContext>();
             services.AddScoped<ModelContext>();
-
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             app.UseSession();
             if (env.IsDevelopment())
             {
@@ -60,21 +48,26 @@ namespace USERFORM
                 app.UseHsts();
             }
 
-           
             app.UseStaticFiles();
             app.UseCookiePolicy();
-           
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=USERF01}/{action=Create}/{id?}");
                 routes.MapRoute(
                     name: "default",
                     template: "{area=M1}/{controller=USERF01}/{action=Create}/{id?}"
-);
+                );
             });
 
-
-
+            // Add a new route for handling OTP generation
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "sendOTPRoute",
+                    template: "{area=M1}/{controller=USERF01}/{action=SendOTP}/{id?}"
+                );
+            });
         }
     }
 }

@@ -21,5 +21,6 @@ namespace USERFORM.Models
 
         public RecStateMsts StateCdNavigation { get; set; }
         public ICollection<RecUniversityMsts> RecUniversityMsts { get; set; }
+        public string StateName { get; internal set; }
     }
 }

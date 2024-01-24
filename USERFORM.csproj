@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\Common.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap-theme.css.map" />
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap-theme.min.css.map" />
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap.css.map" />
@@ -1615,7 +1619,6 @@
     <None Include="wwwroot\js\bootstrap-datepicker.min.js" />
     <None Include="wwwroot\js\bootstrap.min.js" />
     <None Include="wwwroot\js\canvasjs.min.js" />
-    <None Include="wwwroot\js\Common.js" />
     <None Include="wwwroot\js\CommonMessage.js" />
     <None Include="wwwroot\js\custom-select.js" />
     <None Include="wwwroot\js\custom.js" />

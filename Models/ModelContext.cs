@@ -13,7 +13,7 @@ namespace USERFORM.Models
     public partial class ModelContext : DbContext
     {
         readonly string conn;
-       
+
         public ModelContext()
         {
 
@@ -37,6 +37,7 @@ namespace USERFORM.Models
         public virtual DbSet<RecDistrictMsts> RecDistrictMsts { get; set; }
         public virtual DbSet<RecEventStatusMsts> RecEventStatusMsts { get; set; }
         public virtual DbSet<RecInstituteMsts> RecInstituteMsts { get; set; }
+        public virtual DbSet<RecOtpDetails> RecOtpDetails { get; set; }
         public virtual DbSet<RecPostAvailableMsts> RecPostAvailableMsts { get; set; }
         public virtual DbSet<RecPostMsts> RecPostMsts { get; set; }
         public virtual DbSet<RecPostStatusMsts> RecPostStatusMsts { get; set; }
@@ -106,6 +107,11 @@ namespace USERFORM.Models
                 var Message = ex.Message;
                 return null;
             }
+        }
+
+        internal DataTable GetSQLQuery(string sqlquery)
+        {
+            throw new NotImplementedException();
         }
 
         public int ExecuteProcedure(string procedure, params object[] parameters)
@@ -203,6 +209,7 @@ namespace USERFORM.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseOracle("SERVICE NAME=ORACLE;Direct=true; License Key=vEyr8GdnIarOKlEHQKxi+4E0HlXN85PVGHI096M18fHO05syciZT/8xvOeNbTwuMbqdZkRZ1qbdPjO13mrnBnlMUyskKr9qbBNMTzJAp5+R858T7YUZaTY5rodcDl7pDutJBeuYiwHG+xtXnywKMPX+9u82fR1AMT9EailpEiBp1OAn6IbJ55eXY15+rsAfDDwUuIv/js610S6cy9vLt37IL4PcZ8Wx/MrQlA38Z+kEH9Wztcv+NSWFVRz2wnVRDtIowaySSKk30sA+MBbg2IIUI+/MgDUp6w53NCxQSsuM=; User Id=RECAN;Password=recan_dev; Data Source= iffcoexadr-92rdq-scan.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com:1521/ifppdbdev.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com;");
+                optionsBuilder.EnableSensitiveDataLogging();
             }
         }
 
@@ -391,7 +398,7 @@ namespace USERFORM.Models
                     .HasColumnName("REQUEST_DATETIME")
                     .HasColumnType("date");
 
-                entity.Property(e => e.RollNo).HasColumnName("ROLL_NO");
+                //entity.Property(e => e.RollNo).HasColumnName("ROLL_NO");
 
                 entity.Property(e => e.SendingDatetime)
                     .HasColumnName("SENDING_DATETIME")
@@ -819,7 +826,13 @@ namespace USERFORM.Models
                     .HasColumnName("YEAR_OF_PASSING")
                     .HasColumnType("varchar2")
                     .HasMaxLength(50);
+
+                entity.Property(e => e.RollNo)
+                  .HasColumnName("ROLL_NO")
+                  .HasColumnType("varchar2")
+                  .HasMaxLength(15);
             });
+
 
             modelBuilder.Entity<RecCategoryMsts>(entity =>
             {
@@ -1084,6 +1097,42 @@ namespace USERFORM.Models
                     .HasColumnName("UNIVERSITY_ID")
                     .HasColumnType("varchar2")
                     .HasMaxLength(30);
+            });
+
+            modelBuilder.Entity<RecOtpDetails>(entity =>
+            {
+                entity.HasKey(e => e.Sno);
+
+                entity.ToTable("REC_OTP_DETAILS", "RECAN");
+
+                entity.HasIndex(e => e.Sno)
+                    .HasName("SYS_C0050578")
+                    .IsUnique();
+
+                entity.Property(e => e.Sno).HasColumnName("SNO");
+
+                entity.Property(e => e.Mobileemail)
+                    .HasColumnName("MOBILEEMAIL")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Otp)
+                    .HasColumnName("OTP")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Otpdate).HasColumnName("OTPDATE");
+
+                entity.Property(e => e.Statuscode)
+                    .HasColumnName("STATUSCODE")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(1);
+
+                entity.Property(e => e.Smsapiresponse)
+                    .HasColumnName("SMSAPIRESPONSE")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(1000);
+
             });
 
             modelBuilder.Entity<RecPostAvailableMsts>(entity =>
@@ -1359,19 +1408,21 @@ namespace USERFORM.Models
                     .HasColumnName("STATUS")
                     .HasColumnType("varchar2")
                     .HasMaxLength(10);
+
+
             });
 
             modelBuilder.Entity<RecStateMsts>(entity =>
             {
-                entity.HasKey(e => e.StateCd);
+                entity.HasKey(e => e.stateCode);
 
                 entity.ToTable("REC_STATE_MSTS", "RECAN");
 
-                entity.HasIndex(e => e.StateCd)
+                entity.HasIndex(e => e.stateCode)
                     .HasName("PK_REC_STATE_MSTS")
                     .IsUnique();
 
-                entity.Property(e => e.StateCd)
+                entity.Property(e => e.stateCode)
                     .HasColumnName("STATE_CD")
                     .HasColumnType("varchar2")
                     .HasMaxLength(10);
@@ -1455,9 +1506,6 @@ namespace USERFORM.Models
             });
         }
 
-        internal DataTable GetSQLQuery(string sqlquery)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

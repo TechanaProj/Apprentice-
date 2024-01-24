@@ -13,9 +13,12 @@ namespace USERFORM.Models
         public string Subject { get; set; }
         public string NameOfBoard { get; set; }
         public string YearOfPassing { get; set; }
+        public string RollNo { get; set; }
+
         public string MarksObtained { get; set; }
         public string TotalMarks { get; set; }
         public double? Percentage { get; set; }
+        
         public DateTime? CreatedOn { get; set; }
     }
 }

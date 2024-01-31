@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace USERFORM.ViewModels
 {
-    public class USERF01ViewModel 
+    public class USERF01ViewModel
     {
         public AtrmsPersonalDtl objAtrmsPersonalDtl { get; set; }
         public List<AtrmsPersonalDtl> listAtrmsPersonalDtl { get; set; }
@@ -62,6 +62,12 @@ namespace USERFORM.ViewModels
 
         public RecOtpDetails objRecOtpDetails { get; set; }
         public RecOtpDetails listRecOtpDetails { get; set; }
+        public RecCodeGenerationMsts objRecCodeGenerationMsts { get; set; }
+        public RecCodeGenerationMsts listRecCodeGenerationMsts { get; set; }
+
+
+        public string enteredOTP{get;set;}
+        public string MobileNumber{get;set;}
 
         public string QualDesc { get; set; }
        

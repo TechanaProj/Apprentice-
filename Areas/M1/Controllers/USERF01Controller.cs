@@ -30,7 +30,7 @@ namespace USERFORM.Areas.M1.Controllers
         private readonly PrimaryKeyGen primaryKeyGen = null;
         //private object _httpClient;
 
-       // public bool SomeCondition { get; private set; }
+        // public bool SomeCondition { get; private set; }
 
         public USERF01Controller(ModelContext context)
         {
@@ -188,52 +188,53 @@ namespace USERFORM.Areas.M1.Controllers
             return (CommonViewModel.listAtrmsQualificationDtl);
         }
 
-
-
-
         // GET: RController/CREATE
         [HttpGet]
         public ActionResult Create(DropDownListBindWeb dropDownListBindWeb)
         {
             var ObjCat = new AtrmsPersonalDtl();
             var Objdoc = new AtrmsDocumentsDtlMain();
+
+            // Assuming you have a context for the REC_CODE_GEN table
+            var recCodeGen = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.LastDate).FirstOrDefault(); // Adjust the query as needed
+
             var CommonViewModel = new USERF01ViewModel
-
             {
-
                 listRecPostAvailableMsts = new List<RecPostAvailableMsts>(),
-                //PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind(),
                 HighestqualificationLOVBind = dropDownListBindWeb.HighestqualificationLOVBind(),
-
-
                 listAtrmsQualificationDtl = new List<AtrmsQualificationDtl>(),
                 listAtrmsExperienceDtl = new List<AtrmsExperienceDtl>(),
                 listAtrmsDocumentsDtlMain = new List<AtrmsDocumentsDtlMain>(),
+                listAtrmsPersonalDtl = _context.AtrmsPersonalDtl.ToList(),
+                objAtrmsPersonalDtl = ObjCat,
+                objAtrmsDocumentsDtlMain = Objdoc,
 
+                StateLOV = dropDownListBindWeb.StateLOVBind(),
+                DistrictLOV = dropDownListBindWeb.DistrictLOVBind(),
+                AreaName = this.ControllerContext.RouteData.Values["area"].ToString(),
+                SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString(),
+                Status = "Create"
+            };
 
+           
+            if (recCodeGen != null && recCodeGen <= DateTime.Now)
 
-        };
-            // The rest of the code remains unchanged.
+            {
 
-            CommonViewModel.listAtrmsPersonalDtl = _context.AtrmsPersonalDtl.ToList();
-            CommonViewModel.objAtrmsPersonalDtl = ObjCat;
-            CommonViewModel.objAtrmsDocumentsDtlMain = Objdoc;
-            CommonViewModel.listAtrmsQualificationDtl = new List<AtrmsQualificationDtl>();
-            CommonViewModel.listAtrmsExperienceDtl = new List<AtrmsExperienceDtl>();
-            CommonViewModel.listRecPostAvailableMsts = new List<RecPostAvailableMsts>();
-            //CommonViewModel.PostdescriptionLOVBind = dropDownListBindWeb.PostdescriptionLOVBind();
+                return View("DateOver", CommonViewModel);
 
+            }
+            else
+            {
+                
 
-            CommonViewModel.StateLOV = dropDownListBindWeb.StateLOVBind();
-            CommonViewModel.DistrictLOV = dropDownListBindWeb.DistrictLOVBind();
-            CommonViewModel.AreaName = this.ControllerContext.RouteData.Values["area"].ToString();
-            CommonViewModel.SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString();
+                return View("Create", CommonViewModel);
+            }
+        
+            
 
-            CommonViewModel.Status = "Create";
-            return View("Create", CommonViewModel);
-
+            //return View("Create", CommonViewModel);
         }
-
 
 
 
@@ -247,14 +248,10 @@ namespace USERFORM.Areas.M1.Controllers
             try
             {
 
-
                 int unit = 3;
 
 
                 //var stateCode = uSERF01ViewModel.objAtrmsPersonalDtl.State;
-
-
-
 
                 //var stateName = _context.RecStateMsts.Where(x => x.stateCode == x.stateCode).Select(x => x.StateName).FirstOrDefault();
                 var stateCode = uSERF01ViewModel.objAtrmsPersonalDtl.State.Trim(); // Trim any leading or trailing whitespaces
@@ -317,8 +314,6 @@ namespace USERFORM.Areas.M1.Controllers
                     uSERF01ViewModel.objAtrmsPersonalDtl.District = disstName;
                     uSERF01ViewModel.objAtrmsPersonalDtl.Qualification = qualificationName;
                     uSERF01ViewModel.objAtrmsPersonalDtl.PostAppliedDescription = postAppDescription;
-
-
 
 
 
@@ -389,6 +384,8 @@ namespace USERFORM.Areas.M1.Controllers
                         GenerateRdlcReportLink ReportObj = new GenerateRdlcReportLink();
                         var report = ReportObj.GenerateLink(Reportname, QueryString, AreaName);
                         CommonViewModel.Report = report;
+
+                       
                     }
 
                     CommonViewModel.AtId = AtId;
@@ -426,50 +423,7 @@ namespace USERFORM.Areas.M1.Controllers
             return Json(CommonViewModel);
         }
 
-        //[HttpPost]
 
-        //public async Task<IActionResult>sendOTP(string MobileNumber)
-        //{
-        //    // ... (previous code)
-        //    USERF01ViewModel uSERF01ViewModel = new USERF01ViewModel();
-        //    if (!string.IsNullOrEmpty(MobileNumber))
-        //    {
-        //        // Assume some condition where you set the status code
-        //        string statusCode = "S";
-
-        //        int newSerialNo = GenerateUniqueSerialNumber();
-        //        string otp = GenerateOTP();
-        //        string smsContents = $"Your One-Time Password is {otp}, valid for 30 minutes only. Please do not share your OTP.";
-
-        //        var otpDetail = new RecOtpDetails()
-        //        {
-        //            Sno = newSerialNo,
-        //            Mobileemail = MobileNumber,
-        //            Otp = otp,
-        //            Otpdate = DateTime.Now,
-        //            Statuscode = statusCode,
-        //        };
-
-        //        _context.RecOtpDetails.Add(otpDetail);
-        //        _context.SaveChanges();
-
-        //        // Call SendSmsAsync asynchronously
-        //        bool smsSentSuccessfully = await SendSmsAsync(MobileNumber, smsContents);
-
-        //        if (smsSentSuccessfully)
-        //        {
-        //            return Ok(new { Message = "OTP sent successfully.", StatusCode = 200 });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest("Failed to send OTP.");
-        //        }
-
-
-
-
-        //    }
-        //}
 
 
         [HttpPost]
@@ -482,6 +436,7 @@ namespace USERFORM.Areas.M1.Controllers
                 // Validate if the MobileNumber has exactly 10 digits
                 if (MobileNumber.Length == 10 && MobileNumber.All(char.IsDigit))
                 {
+
                     // Check the number of OTPs sent for the given mobile number in the last 24 hours
                     int maxAttemptsPerDay = 3;
                     DateTime twentyFourHoursAgo = DateTime.Now.AddHours(-24);
@@ -513,7 +468,7 @@ namespace USERFORM.Areas.M1.Controllers
                     _context.RecOtpDetails.Add(otpDetail);
                     _context.SaveChanges();
 
-                    string URL = "http://hindit.biz/api/pushsms?user=Iffco&authkey=92QZpEbhUypU6&sender=IFFCOA&mobile=" + otpDetail.Mobileemail + "&text=" + otpDetail.Otp + "%20is%20the%20verification%20code%20generated%20for%20IFFCO%27s%20Recruitment%20Portal%20.%20Do%20not%20share%20this%20with%20anyone.%20IFFCO%20Paradeep&unicode=0&rpt=1&summary=1&output=json&entityid=1001232689878836835&templateid=1007596580560256423";
+                    string URL = "http://hindit.biz/api/pushsms?user=Iffco&authkey=92QZpEbhUypU6&sender=IFFCOA&mobile=" + otpDetail.Mobileemail + "&text=" + otpDetail.Otp + "%20is%20the%20verification%20code%20generated%20for%20IFFCO%27s%20Recruitment%20Portal%20.%20Do%20not%20share%20this%20with%20anyone.%20IFFCO%20Aonla%20Unit&unicode=0&rpt=1&summary=1&output=json&entityid=1001232689878836835&templateid=1007642358221818606";
 
                     HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
                     HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
@@ -580,7 +535,6 @@ namespace USERFORM.Areas.M1.Controllers
                     {
                         if ((currentTime - otpTimestamp).TotalMinutes <= 5)
                         {
-                            // Valid OTP, you can perform additional actions here
                             return Ok("OTP verification successful.");
                         }
                         else
@@ -601,7 +555,6 @@ namespace USERFORM.Areas.M1.Controllers
 
             return BadRequest("Mobile number and OTP are required.");
         }
-
 
 
 

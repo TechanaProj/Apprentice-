@@ -51,11 +51,19 @@ namespace USERFORM
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute("areaRoute", "{area:exists}/{controller=Account}/{action=Login}/{id?}");
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Account}/{action=Login}/{id?}"
+            //    );
+            //});
             app.UseMvc(routes =>
             {
                 routes.MapRoute("areaRoute", "{area:exists}/{controller=USERF01}/{action=Create}/{id?}");
                 routes.MapRoute(
-                    name: "default",
+                    name: "createRoute",
                     template: "{area=M1}/{controller=USERF01}/{action=Create}/{id?}"
                 );
             });

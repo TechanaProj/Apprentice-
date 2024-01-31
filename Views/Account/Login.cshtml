@@ -1,15 +1,28 @@
-﻿<!DOCTYPE html>
+﻿
+@model USERFORM.ViewModels.USERF01ViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('IFFCO.in') center center fixed; /* Replace 'background_image.jpg' with your image URL */
+            background: rgba(0, 0, 0, 0.5); 
+           
+            background-image: url('../images/Aonla-new.jpg');
+            background-position: center center;
+            background-attachment: fixed;
             background-size: cover;
             margin: 0;
             display: flex;
@@ -18,12 +31,15 @@
             height: 100vh;
         }
 
+
+
+
         .login-container {
-            background-color: #3498db;
+            background-color: darkblue;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-            width: 400px;
+            padding: 20px;
+            width: 300px;
             text-align: center;
             color: #fff;
         }
@@ -110,107 +126,184 @@
         .error-message {
             color: #e74c3c;
         }
+
+        .bold-red-message {
+            font-weight: bold;
+            color: red;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="login-container">
-        <img class="user-logo" src="user_logo.png" alt="User Logo" width="100">
-        <h1>Login with OTP</h1>
-        <input type="text" id="mobileNumber" placeholder="Enter your phone number">
-        <button onclick="openOTPPage()">Login with OTP</button>
-
-        <div class="otp-input-container" id="otpSection" style="display: none;">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 0)" onkeydown="handleBackspace(event, 0)">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 1)" onkeydown="handleBackspace(event, 1)">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 2)" onkeydown="handleBackspace(event, 2)">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 3)" onkeydown="handleBackspace(event, 3)">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 4)" onkeydown="handleBackspace(event, 4)">
-            <input class="otp-input" type="text" maxlength="1" oninput="handleOTPInput(event, 5)" onkeydown="handleBackspace(event, 5)">
+       
+        <div style="background-color: green;">
+            <img class="user-logo" src="~/images/iffcoGImg.jpg" alt="User Logo" width="200">
         </div>
-        <button class="verify-button" onclick="verifyOTP()" style="display: none;">Verify OTP</button>
-        <p class="message" id="message"></p>
+
+
+        <h1>Login with OTP</h1>
+
+        <div class="col-sm-2">
+            <label for="MOBILE_NUMBER">Mobile Number</label>
+            <input type="text" class="form-control" id="MOBILE_NUMBER" placeholder="Enter Mobile No." required>
+            <button type="button" class="btn btn-primary btn-sm" id="sendOTPButton" onclick="sendOTP()">Send OTP</button>
+            <button type="button" class="btn btn-primary btn-sm" id="resendOTPButton" style="display: none;"
+                    onclick="resendOTP()">
+                Resend OTP
+            </button>
+            <div class="text-danger validation-error" id="mobileNumberError"
+                 style="display: none;">Please Enter Valid 10 digit Mobile No!</div>
+            <div id="otpMessage" class="bold-red-message" style="display: none;"></div>
+        </div>
+
+        <form asp-controller="Account" asp-action="verifyOTP">
+            <div class="col-md-4" id="otpSection" style="display: none;">
+                <label for="OTP">Enter OTP</label>
+                <div class="otp-input-container">
+                    <input type="hidden" id="HidMobileNo" asp-for="@Model.MobileNumber" />
+                    <input type="text" class="form-control" asp-for="@Model.enteredOTP" id="OTP" placeholder="Enter OTP" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Verify OTP</button>
+                <div class="text-danger validation-error" id="otpError" style="display: none;">Please Enter Valid OTP!</div>
+                <div id="countdownMessage" class="bold-red-message" style="display: none;"></div>
+            </div>
+        </form>
     </div>
 
     <script>
-        function openOTPPage() {
-            const mobileNumber = document.getElementById('mobileNumber').value.trim();
+        var otpTimer;
+        var maskedNumber; // Declare maskedNumber as a global variable
 
-            // Validate the mobile number using a regular expression
-            const mobileNumberRegex = /^\d{10}$/;
-            if (!mobileNumberRegex.test(mobileNumber)) {
-                showMessage('error', 'Please enter a valid 10-digit mobile number.');
+        function sendOTP() {
+            var mobileNumber = $('#MOBILE_NUMBER').val();
+            $('#HidMobileNo').val(mobileNumber);
+            // Validate mobile number
+            if (mobileNumber.length !== 10 || !(/^\d+$/.test(mobileNumber))) {
+                // Display validation error message
+                $('#mobileNumberError').show();
                 return;
+            } else {
+                // Hide any previous validation error messages
+                $('#mobileNumberError').hide();
+                $('#otpSection').show();
             }
 
-            document.getElementById('otpSection').style.display = 'flex';
-            document.querySelector('.verify-button').style.display = 'block';
-            document.querySelector('.otp-input').focus();
+            // Display message about waiting for OTP
+            maskedNumber = mobileNumber.substr(0, mobileNumber.length - 4) + "****" + mobileNumber.substr(mobileNumber.length - 2);
+
+            // Show the OTP message in the designated div with bold red styling
+            $('#otpMessage').html('Send OTP in this No: <span class="bold-red-message">' + maskedNumber +
+                '</span>. Please wait for 1 minute for OTP or click on Resend OTP.');
+            $('#otpMessage').show();
+
+            // Show the countdown message in the new div
+            $('#countdownMessage').html('Time remaining: 5m 0s');
+            $('#countdownMessage').show();
+
+            // Toggle the visibility of the "Send OTP" and "Resend OTP" buttons
+            $('#sendOTPButton').hide();
+            $('#resendOTPButton').show();
+
+            // AJAX POST request
+            $.ajax({
+                url: 'Account/sendOTP', // Replace with your server-side endpoint URL
+                type: 'POST',
+                data: {
+                    MobileNumber: mobileNumber,
+                },
+                success: function (response) {
+                    // Display messages on success
+                    alert(response.message);
+                    $('#HidMobileNo').val(mobileNumber);
+                    // Start the 5-minute countdown
+                    startOTPCountdown();
+
+                    // Hide the OTP message upon successful OTP verification
+                },
+                error: function (error) {
+                    // Display messages on error
+                    alert(error.responseJSON.message);
+                }
+            });
         }
 
-        function handleOTPInput(event, index) {
-            const input = event.target;
-            const maxLength = parseInt(input.getAttribute('maxlength'), 10);
+        function startOTPCountdown() {
+            var countdown = 5 * 60; // 5 minutes in seconds
 
-            if (input.value.length === maxLength) {
-                const nextInput = document.querySelectorAll('.otp-input')[index + 1];
+            otpTimer = setInterval(function () {
+                if (countdown <= 0) {
+                    clearInterval(otpTimer);
+                    $('#otpMessage').html('OTP expired. Please click on Resend OTP to receive a new OTP.');
+                    $('#otpMessage').show();
+                    $('#sendOTPButton').hide();
+                    $('#resendOTPButton').show();
 
-                if (nextInput) {
-                    nextInput.focus();
+                    // Hide the countdown message when the countdown is over
+                    $('#countdownMessage').hide();
                 } else {
-                    // If this is the last input, trigger OTP verification
-                    verifyOTP();
+                    var minutes = Math.floor(countdown / 60);
+                    var seconds = countdown % 60;
+                    var timeRemaining = 'Time remaining: ' + minutes + 'm ' + seconds + 's';
+                    $('#countdownMessage').html(timeRemaining);
+                    countdown--;
                 }
-            }
+            }, 1000);
         }
 
-        function handleBackspace(event, index) {
-            const BACKSPACE_KEY = 8;
-            const input = event.target;
+        function stopOTPCountdown() {
+            clearInterval(otpTimer);
+        }
 
-            if (event.keyCode === BACKSPACE_KEY && input.value === '') {
-                const prevInput = document.querySelectorAll('.otp-input')[index - 1];
+        function resendOTP() {
+            // Reset any relevant state or data as needed
+            // For example, you might want to reset the OTP input field and any error messages
+            $('#OTP').val('');
+            $('#otpError').hide();
 
-                if (prevInput) {
-                    prevInput.focus();
-                }
-            }
+            // Stop the previous countdown (if any)
+            stopOTPCountdown();
+
+            // Call the sendOTP function to resend the OTP
+            sendOTP();
         }
 
         function verifyOTP() {
-            const enteredOTP = document.querySelectorAll('.otp-input');
-            const userEnteredOTP = Array.from(enteredOTP).map(input => input.value).join('');
+            var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+            var enteredOTP = document.getElementById("OTP").value;
 
-            // Replace with actual OTP from your backend
-            const userOTP = '123456';
+            // Make an AJAX request to the server to verify OTP
+            // You can use a library like jQuery or fetch API for the AJAX request
 
-            if (userEnteredOTP === userOTP) {
-                showMessage('success', 'OTP Verified! Welcome.');
-            } else {
-                showMessage('error', 'Invalid OTP. Please try again.');
-            }
-        }
+            // Example using jQuery
+            $.post("/M1/USERF01/verifyOTP", {
+                MobileNumber: mobileNumber,
+                enteredOTP: enteredOTP
+            })
+                .done(function (response) {
+                    alert(response); // Handle success
+                    $('#otpMessage').hide();
+                    $('#countdownMessage').hide();
 
-        function showMessage(type, text) {
-            if (type === 'success') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: text,
-                    showConfirmButton: false,
-                    timer: 3000
-                }).then(() => {
-                    // Redirect or perform additional actions on success
+                    // Change the color of the OTP input field to green
+                    document.getElementById("OTP").style.borderColor = "green";
+                    document.getElementById("otpError").style.display = "none"; // Hide the error message
+
+                })
+                .fail(function (error) {
+                    alert(error.responseText);
+
+                    // Clear the OTP input field if OTP doesn't match
+                    document.getElementById("OTP").value = "";
+                    // Optionally, you can also change the color back to the default color
+                    document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
+                    // Show the error message
+                    document.getElementById("otpError").style.display = "block";
                 });
-            } else if (type === 'error') {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: text
-                });
-            }
         }
     </script>
 
 </body>
+
 </html>

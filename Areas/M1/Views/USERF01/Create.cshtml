@@ -1233,6 +1233,8 @@
     </form>
 
 
+
+
     <div class="blur-area" id="blurArea" style="display:none;">
         <div class="loading-spinner">
             <img src="~/images/loading-42.gif" class="loading-spinner-img" alt="Loading..." role="status">
@@ -1260,6 +1262,8 @@
 
 </div>
 
+
+
 <footer  class="container">
     <p style="background-color: lightcyan; padding: 10px; width:100%; font-weight:bold; text-align: center;">&copy; 2024 IFFCO. All rights reserved. <br>This page is best viewed on Chrome, Firefox, and all recent Browsers.</p>
     <p></p>
@@ -1276,6 +1280,20 @@
 
 
 <script>
+
+       $(document).ready(function () {
+        debugger;
+
+        // Extract LAST_DATE from REC_CODE_GENERATION_MSTS if available
+        var lastDateFromMsts = '@Model.objRecCodeGenerationMsts?.LastDate' || '';
+
+        // Check if LAST_DATE is not an empty string and is a valid date
+        if (lastDateFromMsts && lastDateFromMsts !== 'null' && !isNaN(new Date(lastDateFromMsts))) {
+            // Display a warning message
+            $('#warningMessage').text('The LAST_DATE has already passed. Cannot create a new record.');
+            // Optionally, you can hide or disable the form elements here
+        }
+    });
     function showLoadingOverlay() {
         document.body.classList.add('blur');
         document.getElementById('blurArea').style.display = 'flex';

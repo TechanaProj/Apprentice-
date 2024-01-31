@@ -32,6 +32,8 @@ namespace USERFORM.Models
         public virtual DbSet<AtrmsExperienceDtl> AtrmsExperienceDtl { get; set; }
         public virtual DbSet<AtrmsPersonalDtl> AtrmsPersonalDtl { get; set; }
         public virtual DbSet<AtrmsQualificationDtl> AtrmsQualificationDtl { get; set; }
+
+        public virtual DbSet<RecAtmobilepaMsts> RecAtmobilepaMsts { get; set; }
         public virtual DbSet<RecCategoryMsts> RecCategoryMsts { get; set; }
         public virtual DbSet<RecCodeGenerationMsts> RecCodeGenerationMsts { get; set; }
         public virtual DbSet<RecDistrictMsts> RecDistrictMsts { get; set; }
@@ -44,8 +46,9 @@ namespace USERFORM.Models
         public virtual DbSet<RecQualificationMsts> RecQualificationMsts { get; set; }
         public virtual DbSet<RecStateMsts> RecStateMsts { get; set; }
         public virtual DbSet<RecUniversityMsts> RecUniversityMsts { get; set; }
+       
 
-
+      
         public int insertUpdateToDB(string sql)
         {
             OracleConnection connection = new OracleConnection(conn);
@@ -833,6 +836,34 @@ namespace USERFORM.Models
                   .HasMaxLength(15);
             });
 
+            modelBuilder.Entity<RecAtmobilepaMsts>(entity =>
+            {
+                entity.HasKey(e => e.Sno);
+
+                entity.ToTable("REC_ATMOBILEPA_MSTS", "RECAN");
+
+                entity.HasIndex(e => e.Sno)
+                    .HasName("SYS_C0051162")
+                    .IsUnique();
+
+                entity.Property(e => e.Sno).HasColumnName("SNO");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("CREATED_DATE")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.MobileNo).HasColumnName("MOBILE_NO");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("NAME")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Status)
+                    .HasColumnName("STATUS")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(1);
+            });
 
             modelBuilder.Entity<RecCategoryMsts>(entity =>
             {
@@ -1504,6 +1535,10 @@ namespace USERFORM.Models
                     .HasForeignKey(d => d.StateCd)
                     .HasConstraintName("FK_REC_UNIVERSITY_STATE");
             });
+
+
+           
+
         }
 
 

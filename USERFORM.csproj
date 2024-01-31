@@ -9,6 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Areas\M1\Controllers\USERF01Controller.cs~RF158f6610.TMP" />
+    <None Remove="Areas\M1\Controllers\USERF01Controller.cs~RF574436b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap-theme.css.map" />
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap-theme.min.css.map" />
     <None Include="wwwroot\bootstrap-3.3.7\css\bootstrap.css.map" />

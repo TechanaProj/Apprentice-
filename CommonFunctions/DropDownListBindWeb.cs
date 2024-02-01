@@ -166,7 +166,22 @@ namespace USERFORM.CommonFunctions
             }).ToList();
             return listState;
         }
-        
+
+        //public List<SelectListItem> HighestqualificationLOVBind()
+        //{
+        //    var HighestqualificationLOV = _context.RecQualificationMsts
+        //        .Where(x => x.Status == "A")
+        //        .OrderBy(x => x.QualCode)
+        //        .Select(x => new SelectListItem
+        //        {
+        //            Text = string.Concat(x.QualCode, " - ", x.QualDesc),
+        //            Value = x.QualCode.ToString()
+        //        })
+        //        .ToList();
+
+        //    return HighestqualificationLOV;
+        //}
+
         public List<SelectListItem> HighestqualificationLOVBind()
         {
             var HighestqualificationLOV = _context.RecQualificationMsts
@@ -174,7 +189,7 @@ namespace USERFORM.CommonFunctions
                 .OrderBy(x => x.QualCode)
                 .Select(x => new SelectListItem
                 {
-                    Text = string.Concat(x.QualCode, " - ", x.QualDesc),
+                    Text = (x.QualDesc),
                     Value = x.QualCode.ToString()
                 })
                 .ToList();
@@ -182,12 +197,24 @@ namespace USERFORM.CommonFunctions
             return HighestqualificationLOV;
         }
 
+        //public List<SelectListItem> POSTLOVBind()
+        //{
+        //    var POSTLOV = _context.RecPostAvailableMsts.OrderBy(x => x.PostAppliedCode).Select(x => new SelectListItem
+        //    {
+        //        Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+        //        Value = x.PostAppliedCode.ToString()+ "," + x.PostAppliedDescription.ToString()
+ 
+        //    }).ToList();
 
+
+
+        //    return POSTLOV;
+        //}
         public List<SelectListItem> POSTLOVBind()
         {
             var POSTLOV = _context.RecPostAvailableMsts.OrderBy(x => x.PostAppliedCode).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+                Text =( x.PostAppliedDescription),
                 Value = x.PostAppliedCode.ToString()+ "," + x.PostAppliedDescription.ToString()
  
             }).ToList();
@@ -211,11 +238,26 @@ namespace USERFORM.CommonFunctions
 
 
 
-        public List<SelectListItem> StateLOVBind()
+        //public List<SelectListItem> StateLOVBind()
+        //{
+        //    var StateLOV = _context.RecStateMsts.OrderBy(x => x.StateName).Select(x => new SelectListItem
+        //    {
+        //        Text = string.Concat(x.stateCode, " - ", x.StateName),
+        //        Value = x.stateCode.ToString()
+
+
+
+        //    }).ToList();
+
+
+
+        //    return StateLOV;
+        //}
+         public List<SelectListItem> StateLOVBind()
         {
             var StateLOV = _context.RecStateMsts.OrderBy(x => x.StateName).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.stateCode, " - ", x.StateName),
+                Text = ( x.StateName),
                 Value = x.stateCode.ToString()
 
 
@@ -241,11 +283,26 @@ namespace USERFORM.CommonFunctions
 
 
 
-        public List<SelectListItem> DistrictLOVBind()
+        //public List<SelectListItem> DistrictLOVBind()
+        //{
+        //    var DistrictLOV = _context.RecDistrictMsts.OrderBy(x => x.DisttCd).Select(x => new SelectListItem
+        //    {
+        //        Text = string.Concat(x.DisttCd, " - ", x.DisttName),
+        //        Value = x.DisttCd.ToString()
+
+
+
+        //    }).ToList();
+
+
+
+        //    return DistrictLOV;
+        //}
+         public List<SelectListItem> DistrictLOVBind()
         {
             var DistrictLOV = _context.RecDistrictMsts.OrderBy(x => x.DisttCd).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.DisttCd, " - ", x.DisttName),
+                Text = (x.DisttName),
                 Value = x.DisttCd.ToString()
 
 
@@ -269,6 +326,7 @@ namespace USERFORM.CommonFunctions
 
             return POSTAPPLIEDDESCRIPTION;
         }
+      
         public List<SelectListItem> POSTAPPLIEDCODEBind()
         {
             var POSTAPPLIEDCODE = _context.RecPostAvailableMsts.OrderBy(x => x.PostAppliedCode).Select(x => new SelectListItem

@@ -43,8 +43,6 @@ namespace USERFORM.Areas.M1.Controllers
 
         }
 
-
-
         public IActionResult Index(string AtId)
         {
             try
@@ -90,7 +88,7 @@ namespace USERFORM.Areas.M1.Controllers
         {
             var DistrictLOV = _context.RecDistrictMsts.Where(X => X.StateCd == StateCd).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.DisttCd, " - ", x.DisttName),
+                Text =(x.DisttName),
                 Value = x.DisttCd.ToString()
             }).ToList();
             return Json(DistrictLOV);
@@ -103,11 +101,20 @@ namespace USERFORM.Areas.M1.Controllers
         }
 
 
-        public JsonResult ddl2(string QualCode)
+        //public JsonResult ddl2(string QualCode)
+        //{
+        //    var POSTLOV = _context.RecPostAvailableMsts.Where(X => X.QualCode.ToString() == QualCode).Select(x => new SelectListItem
+        //    {
+        //        Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+        //        Value = x.PostAppliedCode.ToString() + "," + x.RecCode
+        //    }).ToList();
+        //    return Json(POSTLOV);
+        //}
+         public JsonResult ddl2(string QualCode)
         {
             var POSTLOV = _context.RecPostAvailableMsts.Where(X => X.QualCode.ToString() == QualCode).Select(x => new SelectListItem
             {
-                Text = string.Concat(x.PostAppliedCode, " - ", x.PostAppliedDescription),
+                Text = ( x.PostAppliedDescription),
                 Value = x.PostAppliedCode.ToString() + "," + x.RecCode
             }).ToList();
             return Json(POSTLOV);
@@ -286,19 +293,21 @@ namespace USERFORM.Areas.M1.Controllers
                .Select(x => x.PostAppliedDescription)
                .FirstOrDefault();
 
+                // Assign qualificationName to the Qualification property
+                uSERF01ViewModel.objAtrmsPersonalDtl.Qualification = qualificationName;
+                var existingRecord = _context.AtrmsPersonalDtl.FirstOrDefault(x => x.AadharNo == uSERF01ViewModel.objAtrmsPersonalDtl.AadharNo && x.Qualification == qualificationName);
 
-                var existingRecord = _context.AtrmsPersonalDtl.FirstOrDefault(x => x.AadharNo == uSERF01ViewModel.objAtrmsPersonalDtl.AadharNo);
+
 
                 if (existingRecord != null)
                 {
-                    CommonViewModel.Message = "Aadhar number already exists. Please provide a unique Aadhar number.";
-                    CommonViewModel.ErrorMessage = "Aadhar number already exists. Please provide a unique Aadhar number.";
+                    CommonViewModel.Message = "Aadhar number and qualification already exist. Please provide unique values.";
+                    CommonViewModel.ErrorMessage = "Aadhar number and qualification already exist. Please provide unique values.";
                     CommonViewModel.Alert = "Warning";
                     CommonViewModel.Status = "Warning";
                     return Json(CommonViewModel);
-
-
                 }
+
 
 
                 if (uSERF01ViewModel.objAtrmsPersonalDtl != null && uSERF01ViewModel.listAtrmsQualificationDtl.Any())

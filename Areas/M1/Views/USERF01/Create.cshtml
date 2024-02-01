@@ -728,7 +728,7 @@
                 </div>
                 <div class="col-sm-2 col-md-4">
                     <label for="AADHAR_NO">Aadhaar Number<span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="AADHAR_NO" required placeholder="Enter Aadhaar No">
+                    <input type="text" class="form-control" id="AADHAR_NO"  placeholder="Enter Aadhaar No" required maxlength="12">
 
                 </div>
             </div>
@@ -1158,7 +1158,7 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>945151564</strong></p>
+                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>xyz</strong></p>
                         <p>Timing For Contact: <br /><strong> 09:00 A.M. To 06:00 P.M.</strong></p>
                     </div>
                     <!-- Modal Footer -->
@@ -1179,7 +1179,7 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>945151564</strong></p>
+                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>xyz</strong></p>
                         <p>Timing For Contact: <br /><strong>09:00 A.M. To 06:00 P.M.</strong></p>
 
                         <!-- New Section for Age Criteria -->
@@ -1277,7 +1277,7 @@
 
 <script>
 
-
+    
     function showLoadingOverlay() {
         document.body.classList.add('blur');
         document.getElementById('blurArea').style.display = 'flex';
@@ -1316,7 +1316,7 @@
         $('#otpMessage').show();
 
         // Show the countdown message in the new div
-        $('#countdownMessage').html('Time remaining: 5m 0s');
+        $('#countdownMessage').html('OTP Expires in 5m 0s');
         $('#countdownMessage').show();
 
         // Toggle the visibility of the "Send OTP" and "Resend OTP" buttons
@@ -1352,7 +1352,7 @@
         otpTimer = setInterval(function () {
             if (countdown <= 0) {
                 clearInterval(otpTimer);
-                $('#otpMessage').html('OTP expired. Please click on Resend OTP to receive a new OTP.');
+                $('#otpMessage').html('OTP Expired. Please click on Resend OTP to receive a new OTP.');
                 $('#otpMessage').show();
                 $('#sendOTPButton').hide();
                 $('#resendOTPButton').show();
@@ -1362,12 +1362,15 @@
             } else {
                 var minutes = Math.floor(countdown / 60);
                 var seconds = countdown % 60;
-                var timeRemaining = 'Time remaining: ' + minutes + 'm ' + seconds + 's';
+                var timeRemaining = 'OTP Expires in ' + minutes + 'm ' + seconds + 's!';
                 $('#countdownMessage').html(timeRemaining);
                 countdown--;
             }
         }, 1000);
     }
+
+  
+    
 
     function stopOTPCountdown() {
         clearInterval(otpTimer);
@@ -1901,121 +1904,219 @@
     //    }
     //}
     // Function to move to the next tab
+    //let currentTab = 1;
+
+    //// JavaScript to toggle between tabs
+    //function openTab(tabName) {
+    //    const tabs = document.getElementsByClassName("tab");
+    //    for (let i = 0; i < tabs.length; i++) {
+    //        tabs[i].style.display = "none";
+    //    }
+
+    //    // Remove the active-button class from all tab buttons
+    //    const tabButtons = document.getElementsByClassName("tab-button");
+    //    for (let i = 0; i < tabButtons.length; i++) {
+    //        tabButtons[i].classList.remove("active-button");
+    //    }
+
+    //    // Show the selected tab
+    //    const currentTabElement = document.getElementById(tabName);
+    //    currentTabElement.style.display = "block";
+
+    //    // Add the active-button class to the clicked tab button
+    //    const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+    //    clickedButton.classList.add("active-button");
+
+    //    // Check if all inputs in the current tab are filled
+    //    const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
+    //    const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
+
+    //    // If all inputs are filled, change the button color to green
+    //    if (allInputsFilled) {
+    //        clickedButton.classList.add("filled-button");
+    //    }
+    //}
+    //// Function to move to the previous tab
+    //function previousTab() {
+    //    if (currentTab > 1) {
+    //        currentTab--;
+    //        openTab(`tab${currentTab}`);
+    //    }
+    //}
+
+    //// Function to move to the next tab
+    //function nextTab() {
+    //    if (currentTab < 4) {
+    //        currentTab++;
+    //        openTab(`tab${currentTab}`);
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+    //    }
+    //}
+
+    //// Open the first tab by default
+    //openTab('tab1');
+    //// here statrt for education dtl
+
+    //let rowCounter = 2; // Initialize the row counter
+
+    //function updateSerialNumbers() {
+    //    const serialNumberInputs = document.querySelectorAll(".sno");
+
+    //    // Loop through all serial number inputs and update their values
+    //    serialNumberInputs.forEach((input, index) => {
+    //        input.value = index + 1;
+    //    });
+    //}
+
+
+    //// Function to move to the next tab
+    //function nextTab() {
+    //    if (currentTab < 4) {
+    //        currentTab++;
+    //        openTab(`tab${currentTab}`);
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+    //    }
+    //}
+    //function openTab(tabName) {
+    //    const tabs = document.getElementsByClassName("tab");
+    //    for (let i = 0; i < tabs.length; i++) {
+    //        tabs[i].style.display = "none";
+    //    }
+
+    //    // Remove the active-button class from all tab buttons
+    //    const tabButtons = document.getElementsByClassName("tab-button");
+    //    for (let i = 0; i < tabButtons.length; i++) {
+    //        tabButtons[i].classList.remove("active-button", "filled-button");
+    //    }
+
+    //    // Show the selected tab
+    //    const currentTabElement = document.getElementById(tabName);
+    //    currentTabElement.style.display = "block";
+
+    //    // Add the active-button class to the clicked tab button
+    //    const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+    //    clickedButton.classList.add("active-button");
+
+    //    // Check if all inputs in the current tab are filled
+    //    const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
+    //    const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
+
+    //    // If all inputs are filled, change the button color to green
+    //    if (allInputsFilled) {
+    //        clickedButton.classList.add("filled-button");
+
+    //    }
+
+    //}
+
+    //// Function to move to the next tab
+    //function nextTab() {
+    //    if (currentTab < 4) {
+    //        currentTab++;
+    //        openTab(`tab${currentTab}`);
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+    //    }
+    //}
     let currentTab = 1;
 
-    // JavaScript to toggle between tabs
+
+    function areFieldsFilled(tabNumber) {
+        const tabId = `tab${tabNumber}`;
+        const inputs = document.getElementById(tabId).querySelectorAll("input[type='text'], input[type='email'], select");
+
+        const emptyFields = [];
+
+        for (let i = 0; i < inputs.length; i++) {
+            const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
+            const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
+            const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
+            const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
+            const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
+            const isRelativeName = inputs[i].id === 'RelativeName';
+            const isRelativeUnit = inputs[i].id === 'RelativeUnit';
+            const isRelativePost = inputs[i].id === 'RelativePost';
+            const isRelativeRelation = inputs[i].id === 'RelativeRelation';
+            const isExApperentice = inputs[i].id === 'ExApperentice';
+
+
+            // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
+            if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice) {
+                continue;
+            }
+
+            if (inputs[i].nodeName === "SELECT" && inputs[i].selectedIndex === 0) {
+                // Check if it's a select element and the selected index is 0 (default "Select" option)
+                emptyFields.push(inputs[i].id);
+            } else if (inputs[i].value.trim() === "") {
+                // Check if it's an input element and the value is empty
+                emptyFields.push(inputs[i].id);
+            }
+        }
+
+        // Check the OTP field
+        const otpField = document.getElementById("OTP");
+        if (otpField.style.borderColor !== "green") {
+            alert("Please verify OTP first.");
+            return false;
+        }
+
+        if (emptyFields.length > 0) {
+            const nonNullFields = emptyFields
+                .map(field => document.querySelector(`label[for="${field}"]`))
+                .filter(label => label !== null);
+
+            const emptyFieldsString = nonNullFields.map(label => label.innerText).join(', ');
+            alert(`Please fill in all details in ${emptyFieldsString} before proceeding.`);
+            return false;
+        }
+
+        return true;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Open the first tab by default
+        openTab('tab1');
+    });
+
+    // Open tab function outside of DOMContentLoaded
     function openTab(tabName) {
+        const currentTab = parseInt(tabName.replace('tab', ''));
+
+        // Check if all previous tabs are filled before moving to the current tab
+        for (let i = 1; i < currentTab; i++) {
+            if (!areFieldsFilled(i)) {
+                alert(`Please fill in all details in Tab ${i} before proceeding.`);
+                return;
+            }
+        }
+
+        // If the current tab is the last tab, check if it's filled before proceeding
+        if (currentTab === 4 && !areFieldsFilled(3)) {
+            alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
+            return;
+        }
+
+        // Hide all tabs
         const tabs = document.getElementsByClassName("tab");
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].style.display = "none";
         }
 
-        // Remove the active-button class from all tab buttons
+        // Remove active-button class from all tab buttons
         const tabButtons = document.getElementsByClassName("tab-button");
         for (let i = 0; i < tabButtons.length; i++) {
             tabButtons[i].classList.remove("active-button");
         }
 
-        // Show the selected tab
-        const currentTabElement = document.getElementById(tabName);
-        currentTabElement.style.display = "block";
+        // Display the current tab
+        document.getElementById(tabName).style.display = "block";
 
-        // Add the active-button class to the clicked tab button
+        // Add active-button class to the clicked tab button
         const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
         clickedButton.classList.add("active-button");
-
-        // Check if all inputs in the current tab are filled
-        const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
-        const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
-
-        // If all inputs are filled, change the button color to green
-        if (allInputsFilled) {
-            clickedButton.classList.add("filled-button");
-        }
-    }
-    // Function to move to the previous tab
-    function previousTab() {
-        if (currentTab > 1) {
-            currentTab--;
-            openTab(`tab${currentTab}`);
-        }
-    }
-
-    // Function to move to the next tab
-    function nextTab() {
-        if (currentTab < 4) {
-            currentTab++;
-            openTab(`tab${currentTab}`);
-            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-        }
-    }
-
-    // Open the first tab by default
-    openTab('tab1');
-    // here statrt for education dtl
-
-    let rowCounter = 2; // Initialize the row counter
-
-    function updateSerialNumbers() {
-        const serialNumberInputs = document.querySelectorAll(".sno");
-
-        // Loop through all serial number inputs and update their values
-        serialNumberInputs.forEach((input, index) => {
-            input.value = index + 1;
-        });
-    }
-
-
-    // Function to move to the next tab
-    function nextTab() {
-        if (currentTab < 4) {
-            currentTab++;
-            openTab(`tab${currentTab}`);
-            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-        }
-    }
-    function openTab(tabName) {
-        const tabs = document.getElementsByClassName("tab");
-        for (let i = 0; i < tabs.length; i++) {
-            tabs[i].style.display = "none";
-        }
-
-        // Remove the active-button class from all tab buttons
-        const tabButtons = document.getElementsByClassName("tab-button");
-        for (let i = 0; i < tabButtons.length; i++) {
-            tabButtons[i].classList.remove("active-button", "filled-button");
-        }
-
-        // Show the selected tab
-        const currentTabElement = document.getElementById(tabName);
-        currentTabElement.style.display = "block";
-
-        // Add the active-button class to the clicked tab button
-        const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
-        clickedButton.classList.add("active-button");
-
-        // Check if all inputs in the current tab are filled
-        const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
-        const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
-
-        // If all inputs are filled, change the button color to green
-        if (allInputsFilled) {
-            clickedButton.classList.add("filled-button");
-
-        }
-
-    }
-
-    // Function to move to the next tab
-    function nextTab() {
-        if (currentTab < 4) {
-            currentTab++;
-            openTab(`tab${currentTab}`);
-            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-        }
     }
 
 

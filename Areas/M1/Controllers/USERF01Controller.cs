@@ -28,6 +28,8 @@ namespace USERFORM.Areas.M1.Controllers
         private readonly DropDownListBindWeb dropDownListBindWeb = null;
         private readonly ATRMSCommonService aTRMSCommonService;
         private readonly PrimaryKeyGen primaryKeyGen = null;
+
+        
         //private object _httpClient;
 
         // public bool SomeCondition { get; private set; }
@@ -375,8 +377,26 @@ namespace USERFORM.Areas.M1.Controllers
 
                     }
 
+
                     if (AtId != null)
                     {
+                        // Retrieve the current serial number from the database or some other persistent storage
+                        var currentSerialNumber = _context.AtrmsReportLogGen
+                                                            .OrderByDescending(x => x.CreatedDateTime)
+                                                            .Select(x => x.Sno)
+                                                            .FirstOrDefault();
+
+                        // If no serial number is found, start from 1
+                        if (currentSerialNumber == null)
+                        {
+                            currentSerialNumber = "1";
+                        }
+                        else
+                        {
+                            // Increment the serial number for the next entry
+                            currentSerialNumber = (int.Parse(currentSerialNumber) + 1).ToString();
+                        }
+
                         string QueryString = string.Empty;
                         var Reportname = "APPLICANT_FORM.aspx";
                         QueryString = "AT_ID=" + AtId;
@@ -385,8 +405,21 @@ namespace USERFORM.Areas.M1.Controllers
                         var report = ReportObj.GenerateLink(Reportname, QueryString, AreaName);
                         CommonViewModel.Report = report;
 
-                       
+                        // Create an instance with the current serial number
+                        var urlDetails = new AtrmsReportLogGen()
+                        {
+                            Sno = currentSerialNumber, // Use the incremented serialNumber directly
+                            AtId = AtId,
+                            RdlcReportLink = report,
+                            CreatedDateTime = DateTime.Now,
+                        };
+
+                        // Add the instance to the context
+                        _context.AtrmsReportLogGen.Add(urlDetails);
+                        _context.SaveChanges();
                     }
+
+
 
                     CommonViewModel.AtId = AtId;
                     CommonViewModel.Message = "ENROLLED " + AtId;

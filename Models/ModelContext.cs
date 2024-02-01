@@ -33,6 +33,7 @@ namespace USERFORM.Models
         public virtual DbSet<AtrmsPersonalDtl> AtrmsPersonalDtl { get; set; }
         public virtual DbSet<AtrmsQualificationDtl> AtrmsQualificationDtl { get; set; }
 
+        public virtual DbSet<AtrmsReportLogGen> AtrmsReportLogGen { get; set; }
         public virtual DbSet<RecAtmobilepaMsts> RecAtmobilepaMsts { get; set; }
         public virtual DbSet<RecCategoryMsts> RecCategoryMsts { get; set; }
         public virtual DbSet<RecCodeGenerationMsts> RecCodeGenerationMsts { get; set; }
@@ -834,6 +835,37 @@ namespace USERFORM.Models
                   .HasColumnName("ROLL_NO")
                   .HasColumnType("varchar2")
                   .HasMaxLength(15);
+            });
+
+
+            modelBuilder.Entity<AtrmsReportLogGen>(entity =>
+            {
+                entity.HasKey(e => e.Sno);
+
+                entity.ToTable("ATRMS_REPORT_LOG_GEN", "RECAN");
+
+                entity.HasIndex(e => e.Sno)
+                    .HasName("SYS_C0051536")
+                    .IsUnique();
+
+                entity.Property(e => e.Sno)
+                    .HasColumnName("SNO")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.AtId)
+                    .HasColumnName("AT_ID")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.CreatedDateTime)
+                    .HasColumnName("CREATED_DATE_TIME")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.RdlcReportLink)
+                    .HasColumnName("RDLC_REPORT_LINK")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(1500);
             });
 
             modelBuilder.Entity<RecAtmobilepaMsts>(entity =>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using USERFORM.Models;
+ 
 using System;
 using System.Collections.Generic;
 
@@ -30,9 +31,9 @@ namespace USERFORM
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddSessionStateTempDataProvider();
+            
             services.AddScoped<ModelContext>();
-            services.AddScoped<ModelContext>();
+            services.AddScoped<USERFORM.Models.ModelContext>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -51,31 +52,24 @@ namespace USERFORM
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute("areaRoute", "{area:exists}/{controller=Account}/{action=Login}/{id?}");
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Account}/{action=Login}/{id?}"
-            //    );
-            //});
+
+
             app.UseMvc(routes =>
             {
-                routes.MapRoute("areaRoute", "{area:exists}/{controller=USERF01}/{action=Create}/{id?}");
+                // Map area route
                 routes.MapRoute(
-                    name: "createRoute",
-                    template: "{area=M1}/{controller=USERF01}/{action=Create}/{id?}"
+                    name: "areaRoute",
+                    template: "{area:exists=M1}/{controller=USERF01}/{action=Create}/{id?}"
                 );
+                routes.MapRoute(
+                   name: "createForm",
+                   template: "M1/USERF01/Create",
+                   defaults: new { controller = "USERF01", action = "Create" }
+               ); 
+               
             });
 
-            // Add a new route for handling OTP generation
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "sendOTPRoute",
-                    template: "{area=M1}/{controller=USERF01}/{action=SendOTP}/{id?}"
-                );
-            });
+
         }
     }
 }

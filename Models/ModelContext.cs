@@ -47,9 +47,9 @@ namespace USERFORM.Models
         public virtual DbSet<RecQualificationMsts> RecQualificationMsts { get; set; }
         public virtual DbSet<RecStateMsts> RecStateMsts { get; set; }
         public virtual DbSet<RecUniversityMsts> RecUniversityMsts { get; set; }
-       
 
-      
+
+
         public int insertUpdateToDB(string sql)
         {
             OracleConnection connection = new OracleConnection(conn);
@@ -212,8 +212,10 @@ namespace USERFORM.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseOracle("SERVICE NAME=ORACLE;Direct=true; License Key=vEyr8GdnIarOKlEHQKxi+4E0HlXN85PVGHI096M18fHO05syciZT/8xvOeNbTwuMbqdZkRZ1qbdPjO13mrnBnlMUyskKr9qbBNMTzJAp5+R858T7YUZaTY5rodcDl7pDutJBeuYiwHG+xtXnywKMPX+9u82fR1AMT9EailpEiBp1OAn6IbJ55eXY15+rsAfDDwUuIv/js610S6cy9vLt37IL4PcZ8Wx/MrQlA38Z+kEH9Wztcv+NSWFVRz2wnVRDtIowaySSKk30sA+MBbg2IIUI+/MgDUp6w53NCxQSsuM=; User Id=RECAN;Password=recan_dev; Data Source= iffcoexadr-92rdq-scan.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com:1521/ifppdbdev.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com;");
+                //optionsBuilder.UseOracle("SERVICE NAME=ORACLE;Direct=true; License Key=vEyr8GdnIarOKlEHQKxi+4E0HlXN85PVGHI096M18fHO05syciZT/8xvOeNbTwuMbqdZkRZ1qbdPjO13mrnBnlMUyskKr9qbBNMTzJAp5+R858T7YUZaTY5rodcDl7pDutJBeuYiwHG+xtXnywKMPX+9u82fR1AMT9EailpEiBp1OAn6IbJ55eXY15+rsAfDDwUuIv/js610S6cy9vLt37IL4PcZ8Wx/MrQlA38Z+kEH9Wztcv+NSWFVRz2wnVRDtIowaySSKk30sA+MBbg2IIUI+/MgDUp6w53NCxQSsuM=; User Id=REC_AN;Password=recan_dev; Data Source= iffcoexadr-92rdq-scan.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com:1521/ifppdbdev.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com;");
                 optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.UseOracle("SERVICE NAME=ORACLE; Direct=true; License Key=vEyr8GdnIarOKlEHQKxi+4E0HlXN85PVGHI096M18fHO05syciZT/8xvOeNbTwuMbqdZkRZ1qbdPjO13mrnBnlMUyskKr9qbBNMTzJAp5+R858T7YUZaTY5rodcDl7pDutJBeuYiwHG+xtXnywKMPX+9u82fR1AMT9EailpEiBp1OAn6IbJ55eXY15+rsAfDDwUuIv/js610S6cy9vLt37IL4PcZ8Wx/MrQlA38Z+kEH9Wztcv+NSWFVRz2wnVRDtIowaySSKk30sA+MBbg2IIUI+/MgDUp6w53NCxQSsuM=;User Id=REC_AN;Password=recan;Data Source=iffcoexadr-92rdq-scan.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com:1521/IFFCOAL.drhyddbcltsn01.drhydebsprodvcn.oraclevcn.com;");
+               
             }
         }
 
@@ -223,7 +225,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => new { e.Sno, e.AtId });
 
-                entity.ToTable("ATRMS_DOCUMENTS_DTL_MAIN", "RECAN");
+                entity.ToTable("ATRMS_DOCUMENTS_DTL_MAIN", "REC_AN");
 
                 entity.HasIndex(e => new { e.Sno, e.AtId })
                     .HasName("SYS_C0044024")
@@ -271,7 +273,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => new { e.Sno, e.AtId });
 
-                entity.ToTable("ATRMS_DOCUMENTS_DTL_TEMP", "RECAN");
+                entity.ToTable("ATRMS_DOCUMENTS_DTL_TEMP", "REC_AN");
 
                 entity.HasIndex(e => new { e.Sno, e.AtId })
                     .HasName("SYS_C0044025")
@@ -319,7 +321,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.AtId);
 
-                entity.ToTable("ATRMS_EMAIL_LOG", "RECAN");
+                entity.ToTable("ATRMS_EMAIL_LOG", "REC_AN");
 
                 entity.HasIndex(e => e.AtId)
                     .HasName("SYS_C0043703")
@@ -430,7 +432,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => new { e.Sno, e.AtId });
 
-                entity.ToTable("ATRMS_EXPERIENCE_DTL", "RECAN");
+                entity.ToTable("ATRMS_EXPERIENCE_DTL", "REC_AN");
 
                 entity.HasIndex(e => new { e.Sno, e.AtId })
                     .HasName("SYS_C0044023")
@@ -492,7 +494,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.AtId);
 
-                entity.ToTable("ATRMS_PERSONAL_DTL", "RECAN");
+                entity.ToTable("ATRMS_PERSONAL_DTL", "REC_AN");
 
                 entity.HasIndex(e => e.AtId)
                     .HasName("SYS_C0043814")
@@ -773,7 +775,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => new { e.Sno, e.AtId });
 
-                entity.ToTable("ATRMS_QUALIFICATION_DTL", "RECAN");
+                entity.ToTable("ATRMS_QUALIFICATION_DTL", "REC_AN");
 
                 entity.HasIndex(e => new { e.Sno, e.AtId })
                     .HasName("SYS_C0044022")
@@ -842,7 +844,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.Sno);
 
-                entity.ToTable("ATRMS_REPORT_LOG_GEN", "RECAN");
+                entity.ToTable("ATRMS_REPORT_LOG_GEN", "REC_AN");
 
                 entity.HasIndex(e => e.Sno)
                     .HasName("SYS_C0051536")
@@ -872,7 +874,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.Sno);
 
-                entity.ToTable("REC_ATMOBILEPA_MSTS", "RECAN");
+                entity.ToTable("REC_ATMOBILEPA_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.Sno)
                     .HasName("SYS_C0051162")
@@ -895,13 +897,18 @@ namespace USERFORM.Models
                     .HasColumnName("STATUS")
                     .HasColumnType("varchar2")
                     .HasMaxLength(1);
+
+                entity.Property(e => e.EmailId)
+                    .HasColumnName("EMAIL_ID")
+                    .HasColumnType("varchar2")
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<RecCategoryMsts>(entity =>
             {
                 entity.HasKey(e => new { e.RecCode, e.CategoryCode });
 
-                entity.ToTable("REC_CATEGORY_MSTS", "RECAN");
+                entity.ToTable("REC_CATEGORY_MSTS", "REC_AN");
 
                 entity.HasIndex(e => new { e.RecCode, e.CategoryCode })
                     .HasName("PK_REC_CATEGORY_MSTS")
@@ -949,13 +956,23 @@ namespace USERFORM.Models
                     .HasColumnName("MAX_DATE")
                     .HasColumnType("date");
 
+                entity.Property(e => e.MaxPassedYear1).HasColumnName("MAX_PASSED_YEAR_1");
+
+                entity.Property(e => e.MaxPassedYear2).HasColumnName("MAX_PASSED_YEAR_2");
+
+                entity.Property(e => e.MaxPassedYear3).HasColumnName("MAX_PASSED_YEAR_3");
+
                 entity.Property(e => e.MinAge).HasColumnName("MIN_AGE");
 
                 entity.Property(e => e.MinDate)
                     .HasColumnName("MIN_DATE")
                     .HasColumnType("date");
 
-                entity.Property(e => e.MinPassedYear).HasColumnName("MIN_PASSED_YEAR");
+                entity.Property(e => e.MinPassedYear1).HasColumnName("MIN_PASSED_YEAR_1");
+
+                entity.Property(e => e.MinPassedYear2).HasColumnName("MIN_PASSED_YEAR_2");
+
+                entity.Property(e => e.MinPassedYear3).HasColumnName("MIN_PASSED_YEAR_3");
 
                 entity.Property(e => e.ModificationDt)
                     .HasColumnName("MODIFICATION_DT")
@@ -967,9 +984,11 @@ namespace USERFORM.Models
                     .HasColumnName("ON_DATE")
                     .HasColumnType("date");
 
-                entity.Property(e => e.QualifyingMarksGeneralObc).HasColumnName("QUALIFYING_MARKS_GENERAL_OBC");
+                entity.Property(e => e.QualifyingMarks1).HasColumnName("QUALIFYING_MARKS_1");
 
-                entity.Property(e => e.QualifyingMarksScSt).HasColumnName("QUALIFYING_MARKS_SC_ST");
+                entity.Property(e => e.QualifyingMarks2).HasColumnName("QUALIFYING_MARKS_2");
+
+                entity.Property(e => e.QualifyingMarks3).HasColumnName("QUALIFYING_MARKS_3");
 
                 entity.Property(e => e.UnitCode).HasColumnName("UNIT_CODE");
             });
@@ -978,7 +997,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.RecCode);
 
-                entity.ToTable("REC_CODE_GENERATION_MSTS", "RECAN");
+                entity.ToTable("REC_CODE_GENERATION_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.RecCode)
                     .HasName("SYS_C0043178")
@@ -1035,7 +1054,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.DisttCd);
 
-                entity.ToTable("REC_DISTRICT_MSTS", "RECAN");
+                entity.ToTable("REC_DISTRICT_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.DisttCd)
                     .HasName("PK_REC_DISTRICT_MSTS")
@@ -1083,7 +1102,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.RecEventCode);
 
-                entity.ToTable("REC_EVENT_STATUS_MSTS", "RECAN");
+                entity.ToTable("REC_EVENT_STATUS_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.RecEventCode)
                     .HasName("PK_REC_EVENT_STATUS_MSTS")
@@ -1116,7 +1135,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.InstituteCd);
 
-                entity.ToTable("REC_INSTITUTE_MSTS", "RECAN");
+                entity.ToTable("REC_INSTITUTE_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.InstituteCd)
                     .HasName("SYS_C0042853")
@@ -1166,7 +1185,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.Sno);
 
-                entity.ToTable("REC_OTP_DETAILS", "RECAN");
+                entity.ToTable("REC_OTP_DETAILS", "REC_AN");
 
                 entity.HasIndex(e => e.Sno)
                     .HasName("SYS_C0050578")
@@ -1189,20 +1208,20 @@ namespace USERFORM.Models
                 entity.Property(e => e.Statuscode)
                     .HasColumnName("STATUSCODE")
                     .HasColumnType("varchar2")
-                    .HasMaxLength(1);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Smsapiresponse)
                     .HasColumnName("SMSAPIRESPONSE")
                     .HasColumnType("varchar2")
                     .HasMaxLength(1000);
-
+              
             });
 
             modelBuilder.Entity<RecPostAvailableMsts>(entity =>
             {
                 entity.HasKey(e => new { e.RecCode, e.PostAppliedCode });
 
-                entity.ToTable("REC_POST_AVAILABLE_MSTS", "RECAN");
+                entity.ToTable("REC_POST_AVAILABLE_MSTS", "REC_AN");
 
                 entity.HasIndex(e => new { e.RecCode, e.PostAppliedCode })
                     .HasName("PK_REC_POST_AVAILABLE_MSTS")
@@ -1284,7 +1303,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.PostAppliedCode);
 
-                entity.ToTable("REC_POST_MSTS", "RECAN");
+                entity.ToTable("REC_POST_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.PostAppliedCode)
                     .HasName("PK_REC_POST_MSTS")
@@ -1335,7 +1354,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.RecCode);
 
-                entity.ToTable("REC_POST_STATUS_MSTS", "RECAN");
+                entity.ToTable("REC_POST_STATUS_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.RecCode)
                     .HasName("PK_REC_STATUS_MSTS")
@@ -1442,7 +1461,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.QualCode);
 
-                entity.ToTable("REC_QUALIFICATION_MSTS", "RECAN");
+                entity.ToTable("REC_QUALIFICATION_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.QualCode)
                     .HasName("PK_REC_QUALIFICATION_MSTS")
@@ -1479,7 +1498,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.stateCode);
 
-                entity.ToTable("REC_STATE_MSTS", "RECAN");
+                entity.ToTable("REC_STATE_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.stateCode)
                     .HasName("PK_REC_STATE_MSTS")
@@ -1517,7 +1536,7 @@ namespace USERFORM.Models
             {
                 entity.HasKey(e => e.UniversityId);
 
-                entity.ToTable("REC_UNIVERSITY_MSTS", "RECAN");
+                entity.ToTable("REC_UNIVERSITY_MSTS", "REC_AN");
 
                 entity.HasIndex(e => e.UniversityId)
                     .HasName("PK_REC_UNIVERSITY_MSTS")
@@ -1569,7 +1588,7 @@ namespace USERFORM.Models
             });
 
 
-           
+
 
         }
 

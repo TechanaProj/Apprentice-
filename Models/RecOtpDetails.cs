@@ -12,6 +12,7 @@ namespace USERFORM.Models
         public string Statuscode { get; set; }
        
         public string Smsapiresponse { get; set; }
+       
     }
 }
 

@@ -40,6 +40,8 @@
 
 <head>
     <meta charset="UTF-8">
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ATRMS</title>
     <style>
@@ -292,7 +294,7 @@
         }
 
             .tab-button:last-child {
-                margin-right: 5; /* Remove right margin for the last button */
+                margin-right: 5px; /* Remove right margin for the last button */
             }
 
             .tab-button:hover {
@@ -525,7 +527,7 @@
         <img src="~/images/nanoss.jpg" alt="Header Image" class="nanoimage">
     </div>*@
 <div class="container">
-    <form id="CreateForm" asp-controller="USERF01" asp-action="Create" onsubmit="return Validate();" method="post">
+    <form id="CreateForm" asp-area="M1" asp-controller="USERF01" asp-action="Create" onsubmit="return Validate();" method="post">
         <div id="tab1" class="tab active-tab">
             <!-- Content for Tab 1 -->
             <h3 class="sub-heading1 sub-heading2"><span>PERSONAL DETAILS</span></h3>
@@ -658,7 +660,7 @@
                     <div class="custom-select">
                         <select class="form-control" id="CATEGORY" onchange="updateDateRange();" required>
                             <option value="" disabled selected style="text-align: center;">---Select Category---</option>
-                            <option value="GENERAL">GENERAL</option>
+                            <option value="General">GENERAL</option>
                             <option value="OBC">OBC</option>
                             <option value="SC">SC</option>
                             <option value="ST">ST</option>
@@ -728,7 +730,7 @@
                 </div>
                 <div class="col-sm-2 col-md-4">
                     <label for="AADHAR_NO">Aadhaar Number<span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="AADHAR_NO"  placeholder="Enter Aadhaar No" required maxlength="12">
+                    <input type="text" class="form-control" id="AADHAR_NO" placeholder="Enter Aadhaar No" required maxlength="12">
 
                 </div>
             </div>
@@ -1277,7 +1279,7 @@
 
 <script>
 
-    
+
     function showLoadingOverlay() {
         document.body.classList.add('blur');
         document.getElementById('blurArea').style.display = 'flex';
@@ -1294,6 +1296,7 @@
 
     function sendOTP() {
         var mobileNumber = $('#MOBILE_NUMBER').val();
+        var emailId = $('#EMAIL_ID').val();
 
 
         // Validate mobile number
@@ -1325,10 +1328,10 @@
 
         // AJAX POST request
         $.ajax({
-            url: '/M1/USERF01/sendOTP', // Replace with your server-side endpoint URL
+            url: window.location.href + '/M1/USERF01/sendOTP', // Replace with your server-side endpoint URL
             type: 'POST',
             data: {
-                MobileNumber: mobileNumber,
+                MobileNumber: mobileNumber, EmailId: emailId,
             },
             success: function (response) {
                 // Display messages on success
@@ -1369,8 +1372,8 @@
         }, 1000);
     }
 
-  
-    
+
+
 
     function stopOTPCountdown() {
         clearInterval(otpTimer);
@@ -1396,7 +1399,7 @@
         // You can use a library like jQuery or fetch API for the AJAX request
 
         // Example using jQuery
-        $.post("/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
+        $.post(window.location.href + "/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
             .done(function (response) {
                 alert(response); // Handle success
                 $('#otpMessage').hide();
@@ -1406,6 +1409,7 @@
                 document.getElementById("OTP").style.borderColor = "green";
                 document.getElementById("otpError").style.display = "none"; // Hide the error message
 
+                document.getElementById("MOBILE_NUMBER").readOnly = true;
 
             })
             .fail(function (error) {
@@ -1418,40 +1422,40 @@
                 // Show the error message
                 document.getElementById("otpError").style.display = "block";
             });
+
     }
 
+    //function verifyOTP() {
+    //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+    //    var enteredOTP = document.getElementById("OTP").value;
 
-    function verifyOTP() {
-        var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
-        var enteredOTP = document.getElementById("OTP").value;
+    //    // Make an AJAX request to the server to verify OTP
+    //    // You can use a library like jQuery or fetch API for the AJAX request
 
-        // Make an AJAX request to the server to verify OTP
-        // You can use a library like jQuery or fetch API for the AJAX request
+    //    // Example using jQuery
+    //    $.post("/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
+    //        .done(function (response) {
+    //            alert(response); // Handle success
+    //            $('#otpMessage').hide();
 
-        // Example using jQuery
-        $.post("/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
-            .done(function (response) {
-                alert(response); // Handle success
-                $('#otpMessage').hide();
+    //            // Change the color of the OTP input field to green
+    //            document.getElementById("OTP").style.borderColor = "green";
+    //            document.getElementById("otpError").style.display = "none"; // Hide the error message
 
-                // Change the color of the OTP input field to green
-                document.getElementById("OTP").style.borderColor = "green";
-                document.getElementById("otpError").style.display = "none"; // Hide the error message
+    //            // Stop the countdown when OTP is successfully verified
+    //            stopOTPCountdown();
+    //        })
+    //        .fail(function (error) {
+    //            alert(error.responseText);
 
-                // Stop the countdown when OTP is successfully verified
-                stopOTPCountdown();
-            })
-            .fail(function (error) {
-                alert(error.responseText);
-
-                // Clear the OTP input field if OTP doesn't match
-                document.getElementById("OTP").value = "";
-                // Optionally, you can also change the color back to the default color
-                document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
-                // Show the error message
-                document.getElementById("otpError").style.display = "block";
-            });
-    }
+    //            // Clear the OTP input field if OTP doesn't match
+    //            document.getElementById("OTP").value = "";
+    //            // Optionally, you can also change the color back to the default color
+    //            document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
+    //            // Show the error message
+    //            document.getElementById("otpError").style.display = "block";
+    //        });
+    //}
 
 
 
@@ -1883,244 +1887,228 @@
 
 
     //}
-
-
-
-    //// Function to move to the previous tab
-    //function previousTab() {
-    //    if (currentTab > 1) {
-    //        currentTab--;
-    //        openTab(`tab${currentTab}`);
-    //    }
-    //}
-
-    //// Function to move to the next tab
-    //function nextTab() {
-    //    if (currentTab < 4) {
-    //        currentTab++;
-    //        openTab(`tab${currentTab}`);
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-    //    }
-    //}
-    // Function to move to the next tab
-    //let currentTab = 1;
-
-    //// JavaScript to toggle between tabs
-    //function openTab(tabName) {
-    //    const tabs = document.getElementsByClassName("tab");
-    //    for (let i = 0; i < tabs.length; i++) {
-    //        tabs[i].style.display = "none";
-    //    }
-
-    //    // Remove the active-button class from all tab buttons
-    //    const tabButtons = document.getElementsByClassName("tab-button");
-    //    for (let i = 0; i < tabButtons.length; i++) {
-    //        tabButtons[i].classList.remove("active-button");
-    //    }
-
-    //    // Show the selected tab
-    //    const currentTabElement = document.getElementById(tabName);
-    //    currentTabElement.style.display = "block";
-
-    //    // Add the active-button class to the clicked tab button
-    //    const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
-    //    clickedButton.classList.add("active-button");
-
-    //    // Check if all inputs in the current tab are filled
-    //    const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
-    //    const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
-
-    //    // If all inputs are filled, change the button color to green
-    //    if (allInputsFilled) {
-    //        clickedButton.classList.add("filled-button");
-    //    }
-    //}
-    //// Function to move to the previous tab
-    //function previousTab() {
-    //    if (currentTab > 1) {
-    //        currentTab--;
-    //        openTab(`tab${currentTab}`);
-    //    }
-    //}
-
-    //// Function to move to the next tab
-    //function nextTab() {
-    //    if (currentTab < 4) {
-    //        currentTab++;
-    //        openTab(`tab${currentTab}`);
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-    //    }
-    //}
-
-    //// Open the first tab by default
-    //openTab('tab1');
-    //// here statrt for education dtl
-
-    //let rowCounter = 2; // Initialize the row counter
-
-    //function updateSerialNumbers() {
-    //    const serialNumberInputs = document.querySelectorAll(".sno");
-
-    //    // Loop through all serial number inputs and update their values
-    //    serialNumberInputs.forEach((input, index) => {
-    //        input.value = index + 1;
-    //    });
-    //}
-
-
-    //// Function to move to the next tab
-    //function nextTab() {
-    //    if (currentTab < 4) {
-    //        currentTab++;
-    //        openTab(`tab${currentTab}`);
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-    //    }
-    //}
-    //function openTab(tabName) {
-    //    const tabs = document.getElementsByClassName("tab");
-    //    for (let i = 0; i < tabs.length; i++) {
-    //        tabs[i].style.display = "none";
-    //    }
-
-    //    // Remove the active-button class from all tab buttons
-    //    const tabButtons = document.getElementsByClassName("tab-button");
-    //    for (let i = 0; i < tabButtons.length; i++) {
-    //        tabButtons[i].classList.remove("active-button", "filled-button");
-    //    }
-
-    //    // Show the selected tab
-    //    const currentTabElement = document.getElementById(tabName);
-    //    currentTabElement.style.display = "block";
-
-    //    // Add the active-button class to the clicked tab button
-    //    const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
-    //    clickedButton.classList.add("active-button");
-
-    //    // Check if all inputs in the current tab are filled
-    //    const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
-    //    const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
-
-    //    // If all inputs are filled, change the button color to green
-    //    if (allInputsFilled) {
-    //        clickedButton.classList.add("filled-button");
-
-    //    }
-
-    //}
-
-    //// Function to move to the next tab
-    //function nextTab() {
-    //    if (currentTab < 4) {
-    //        currentTab++;
-    //        openTab(`tab${currentTab}`);
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-    //    }
-    //}
     let currentTab = 1;
 
-
-    function areFieldsFilled(tabNumber) {
-        const tabId = `tab${tabNumber}`;
-        const inputs = document.getElementById(tabId).querySelectorAll("input[type='text'], input[type='email'], select");
-
-        const emptyFields = [];
-
-        for (let i = 0; i < inputs.length; i++) {
-            const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
-            const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
-            const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
-            const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
-            const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
-            const isRelativeName = inputs[i].id === 'RelativeName';
-            const isRelativeUnit = inputs[i].id === 'RelativeUnit';
-            const isRelativePost = inputs[i].id === 'RelativePost';
-            const isRelativeRelation = inputs[i].id === 'RelativeRelation';
-            const isExApperentice = inputs[i].id === 'ExApperentice';
-
-
-            // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
-            if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice) {
-                continue;
-            }
-
-            if (inputs[i].nodeName === "SELECT" && inputs[i].selectedIndex === 0) {
-                // Check if it's a select element and the selected index is 0 (default "Select" option)
-                emptyFields.push(inputs[i].id);
-            } else if (inputs[i].value.trim() === "") {
-                // Check if it's an input element and the value is empty
-                emptyFields.push(inputs[i].id);
-            }
-        }
-
-        // Check the OTP field
-        const otpField = document.getElementById("OTP");
-        if (otpField.style.borderColor !== "green") {
-            alert("Please verify OTP first.");
-            return false;
-        }
-
-        if (emptyFields.length > 0) {
-            const nonNullFields = emptyFields
-                .map(field => document.querySelector(`label[for="${field}"]`))
-                .filter(label => label !== null);
-
-            const emptyFieldsString = nonNullFields.map(label => label.innerText).join(', ');
-            alert(`Please fill in all details in ${emptyFieldsString} before proceeding.`);
-            return false;
-        }
-
-        return true;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        // Open the first tab by default
-        openTab('tab1');
-    });
-
-    // Open tab function outside of DOMContentLoaded
+    // JavaScript to toggle between tabs
     function openTab(tabName) {
-        const currentTab = parseInt(tabName.replace('tab', ''));
-
-        // Check if all previous tabs are filled before moving to the current tab
-        for (let i = 1; i < currentTab; i++) {
-            if (!areFieldsFilled(i)) {
-                alert(`Please fill in all details in Tab ${i} before proceeding.`);
-                return;
-            }
-        }
-
-        // If the current tab is the last tab, check if it's filled before proceeding
-        if (currentTab === 4 && !areFieldsFilled(3)) {
-            alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
-            return;
-        }
-
-        // Hide all tabs
         const tabs = document.getElementsByClassName("tab");
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].style.display = "none";
         }
 
-        // Remove active-button class from all tab buttons
+        // Remove the active-button class from all tab buttons
         const tabButtons = document.getElementsByClassName("tab-button");
         for (let i = 0; i < tabButtons.length; i++) {
             tabButtons[i].classList.remove("active-button");
         }
 
-        // Display the current tab
-        document.getElementById(tabName).style.display = "block";
+        // Show the selected tab
+        const currentTabElement = document.getElementById(tabName);
+        currentTabElement.style.display = "block";
 
-        // Add active-button class to the clicked tab button
+        // Add the active-button class to the clicked tab button
         const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
         clickedButton.classList.add("active-button");
+
+        // Check if all inputs in the current tab are filled
+        const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
+        const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
+
+        // If all inputs are filled, change the button color to green
+        if (allInputsFilled) {
+            clickedButton.classList.add("filled-button");
+        }
+    }
+    // Function to move to the previous tab
+    function previousTab() {
+        if (currentTab > 1) {
+            currentTab--;
+            openTab(`tab${currentTab}`);
+        }
+    }
+
+    // Function to move to the next tab
+    function nextTab() {
+        if (currentTab < 4) {
+            currentTab++;
+            openTab(`tab${currentTab}`);
+            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+        }
+    }
+
+    // Open the first tab by default
+    openTab('tab1');
+    // here statrt for education dtl
+
+    let rowCounter = 2; // Initialize the row counter
+
+    function updateSerialNumbers() {
+        const serialNumberInputs = document.querySelectorAll(".sno");
+
+        // Loop through all serial number inputs and update their values
+        serialNumberInputs.forEach((input, index) => {
+            input.value = index + 1;
+        });
     }
 
 
-    
+    // Function to move to the next tab
+    function nextTab() {
+        if (currentTab < 4) {
+            currentTab++;
+            openTab(`tab${currentTab}`);
+            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+        }
+    }
+    function openTab(tabName) {
+        const tabs = document.getElementsByClassName("tab");
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].style.display = "none";
+        }
+
+        // Remove the active-button class from all tab buttons
+        const tabButtons = document.getElementsByClassName("tab-button");
+        for (let i = 0; i < tabButtons.length; i++) {
+            tabButtons[i].classList.remove("active-button", "filled-button");
+        }
+
+        //Show the selected tab
+        const currentTabElement = document.getElementById(tabName);
+        currentTabElement.style.display = "block";
+
+        //  Add the active-button class to the clicked tab button
+        const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+        clickedButton.classList.add("active-button");
+
+        // Check if all inputs in the current tab are filled
+        const inputsInCurrentTab = currentTabElement.querySelectorAll('input');
+        const allInputsFilled = Array.from(inputsInCurrentTab).every(input => input.value.trim() !== '');
+
+        //  If all inputs are filled, change the button color to green
+        if (allInputsFilled) {
+            clickedButton.classList.add("filled-button");
+
+        }
+
+    }
+
+    // Function to move to the next tab
+    function nextTab() {
+        if (currentTab < 4) {
+            currentTab++;
+            openTab(`tab${currentTab}`);
+            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+        }
+    }
+
+
+  
+    //let currentTab = 1;
+
+
+    //function areFieldsFilled(tabNumber) {
+    //    const tabId = `tab${tabNumber}`;
+    //    const inputs = document.getElementById(tabId).querySelectorAll("input[type='text'], input[type='email'], select");
+
+    //    const emptyFields = [];
+
+    //    for (let i = 0; i < inputs.length; i++) {
+    //        const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
+    //        const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
+    //        const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
+    //        const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
+    //        const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
+    //        const isRelativeName = inputs[i].id === 'RelativeName';
+    //        const isRelativeUnit = inputs[i].id === 'RelativeUnit';
+    //        const isRelativePost = inputs[i].id === 'RelativePost';
+    //        const isRelativeRelation = inputs[i].id === 'RelativeRelation';
+    //        const isExApperentice = inputs[i].id === 'ExApperentice';
+    //        const isMIDDLE_NAME = inputs[i].id === 'MIDDLE_NAME';
+    //        const istxtLASTNAME = inputs[i].id === 'txtLASTNAME';
+
+
+    //        // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
+    //        if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice || isMIDDLE_NAME || istxtLASTNAME) {
+    //            continue;
+    //        }
+
+    //        if (inputs[i].nodeName === "SELECT" && inputs[i].selectedIndex === 0) {
+    //            // Check if it's a select element and the selected index is 0 (default "Select" option)
+    //            emptyFields.push(inputs[i].id);
+    //        } else if (inputs[i].value.trim() === "") {
+    //            // Check if it's an input element and the value is empty
+    //            emptyFields.push(inputs[i].id);
+    //        }
+    //    }
+
+    //    // Check the OTP field
+    //    const otpField = document.getElementById("OTP");
+    //    if (otpField.style.borderColor !== "green") {
+    //        alert("Please verify OTP first.");
+    //        return false;
+    //    }
+
+    //    if (emptyFields.length > 0) {
+    //        const nonNullFields = emptyFields
+    //            .map(field => document.querySelector(`label[for="${field}"]`))
+    //            .filter(label => label !== null);
+
+    //        const emptyFieldsString = nonNullFields.map(label => label.innerText).join(', ');
+    //        alert(`Please fill in all details in ${emptyFieldsString} before proceeding.`);
+    //        return false;
+    //    }
+
+    //    return true;
+    //}
+
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    // Open the first tab by default
+    //    openTab('tab1');
+    //});
+
+    //// Open tab function outside of DOMContentLoaded
+    //function openTab(tabName) {
+    //    const currentTab = parseInt(tabName.replace('tab', ''));
+
+    //    // Check if all previous tabs are filled before moving to the current tab
+    //    for (let i = 1; i < currentTab; i++) {
+    //        if (!areFieldsFilled(i)) {
+    //            alert(`Please fill in all details in Tab ${i} before proceeding.`);
+    //            return;
+    //        }
+    //    }
+
+    //    // If the current tab is the last tab, check if it's filled before proceeding
+    //    if (currentTab === 4 && !areFieldsFilled(3)) {
+    //        alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
+    //        return;
+    //    }
+
+    //    // Hide all tabs
+    //    const tabs = document.getElementsByClassName("tab");
+    //    for (let i = 0; i < tabs.length; i++) {
+    //        tabs[i].style.display = "none";
+    //    }
+
+    //    // Remove active-button class from all tab buttons
+    //    const tabButtons = document.getElementsByClassName("tab-button");
+    //    for (let i = 0; i < tabButtons.length; i++) {
+    //        tabButtons[i].classList.remove("active-button");
+    //    }
+
+    //    // Display the current tab
+    //    document.getElementById(tabName).style.display = "block";
+
+    //    // Add active-button class to the clicked tab button
+    //    const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+    //    clickedButton.classList.add("active-button");
+    //}
+
+
+
     function togglePreview() {
         var form = document.getElementById("CreateForm");
         var previewContainer = document.getElementById("previewContainer");
@@ -2792,7 +2780,7 @@
         var StateCd = $("#StateName-" + val).val();
 
         $.ajax({
-            url: 'M1/USERF01/ddl1',
+            url: window.location.href + '/M1/USERF01/ddl1',
             type: 'get',
             contentType: "application/json;charset=utf-8",
             dataType: "json", // Corrected typo: datatype to dataType
@@ -2826,7 +2814,7 @@
         debugger;
         var QualCode = $("#HqualName-" + val).val();
         $.ajax({
-            url: 'M1/USERF01/ddl2',
+            url: window.location.href + '/M1/USERF01/ddl2',
             type: 'get',
             contentType: "application/json;charset=utf-8",
             datatype: "json",
@@ -2894,7 +2882,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "M1/USERF01/Create",
+                    url: window.location.href + "/M1/USERF01/Create",
                     data: USERF01ViewModel,
                     contentType: "application/json; charset=utf-8",
                     dataType: "json"
@@ -3256,7 +3244,7 @@
         // Make AJAX request
         $.ajax({
             type: "POST",
-            url: '/M1/USERF01/AddNewRow',
+            url: window.location.href + '/M1/USERF01/AddNewRow',
             data: formData,
             dataType: "json",
             success: function (response) {
@@ -3348,94 +3336,77 @@
     });
 
     function calculatePercentage(row) {
-        debugger;
         var marksObtained1 = row.find('.marksObtained').val();
         var totalMarks1 = row.find('.totalMarks').val();
+        var qualification = row.find('.qualification').val();
+        var category = $('#CATEGORY').val();
 
-        if (
-            (marksObtained1 == "" || marksObtained1 == null || marksObtained1 == undefined || marksObtained1 == NaN) ||
-            (totalMarks1 == "" || totalMarks1 == null || totalMarks1 == undefined || totalMarks1 == NaN)
-        ) {
+        // Validate input
+        if (!marksObtained1 || !totalMarks1 || isNaN(parseFloat(marksObtained1)) || isNaN(parseFloat(totalMarks1))) {
             return 0;
-        } else {
-            var marksObtained = parseFloat(row.find('.marksObtained').val()) || 0;
-            var totalMarks = parseFloat(row.find('.totalMarks').val()) || 1; // Avoid division by zero
-
-            // Ensure totalMarks is greater than marksObtained
-            if (totalMarks <= marksObtained) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error...",
-                    text: "Total marks should be greater than marks obtained."
-                });
-                row.find('.marksObtained').val('');
-                row.find('.totalMarks').val('');
-                row.find('.percentage').val('');
-                return 0;
-            }
-            // Check for negative marks obtained
-            if (marksObtained < 0) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error...",
-                    text: "Marks obtained cannot be negative."
-                });
-                row.find('.marksObtained').val('');
-                row.find('.totalMarks').val('');
-                row.find('.percentage').val('');
-                return 0;
-            }
-
-            var percentage = (marksObtained / totalMarks) * 100;
-
-
-            debugger;
-            var Obtlength = marksObtained1.length;
-            var Totlength = totalMarks1.length;
-
-            if (Obtlength >= 3 && Totlength >= 3) {
-                var qual = row.find('.qualification').val();
-                var qualifyingperc = 0;
-                var message = "";
-
-                if (qual == "DIPLOMA" || qual == "ITI" || qual == "BSC(PCM/PCB)" || qual == "BSC(PCM)") {
-                    var category = $("#CATEGORY").val();
-
-                    if (qual == "BSC(PCM/PCB)" || qual == "BSC(PCM)") {
-                        if (category == "GENERAL") {
-                            qualifyingperc = 55;
-                            message = "Percentage is less than " + qualifyingperc;
-                        } else if (category == "OBC" || category == "SC" || category == "ST" || category == "OTHER") {
-                            qualifyingperc = 50;
-                            message = "Percentage is less than " + qualifyingperc;
-                        }
-                    } else {
-                        if (category == "GENERAL") {
-                            qualifyingperc = 60;
-                            message = "Percentage is less than " + qualifyingperc;
-                        } else if (category == "OBC" || category == "SC" || category == "ST" || category == "OTHER") {
-                            qualifyingperc = 55;
-                            message = "Percentage is less than " + qualifyingperc;
-                        }
-                    }
-
-                    if (qualifyingperc > percentage) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error...",
-                            text: message
-                        });
-                        row.find('.marksObtained').val('');
-                        row.find('.totalMarks').val('');
-                        row.find('.percentage').val('');
-                        return 0;
-                    }
-                }
-            }
-
-            return isNaN(percentage) ? 0 : percentage.toFixed(2);
         }
+
+        var marksObtained = parseFloat(marksObtained1) || 0;
+        var totalMarks = parseFloat(totalMarks1) || 1; // Avoid division by zero
+
+        if (totalMarks <= marksObtained) {
+            showError("Total marks should be greater than marks obtained.", row);
+            return 0;
+        }
+
+        if (marksObtained < 0) {
+            showError("Marks obtained cannot be negative.", row);
+            return 0;
+        }
+
+        // Create FormData and append additional form data
+        var formData = new FormData();
+        formData.append('marksObtained', marksObtained);
+        formData.append('totalMarks', totalMarks);
+        formData.append('qualification', qualification);
+        formData.append('category', category);
+
+        $.ajax({
+            type: "POST",
+            url: window.location.href + "/M1/USERF01/CalculatePercentage",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function (result) {
+                if (result.success) {
+                    row.find('.percentage').val(result.percentage.toFixed(2));
+                } else {
+                    showError(result.message, row);
+                }
+            },
+            error: function () {
+                showError("An error occurred while calculating percentage.", row);
+            }
+        });
     }
+
+    function showError(message, row) {
+        // Implement your error handling logic, e.g., displaying an error message to the user
+        console.error(message);
+    }
+
+
+    // You might want to handle the case where Obtlength < 3 or Totlength < 3
+
+    // return isNaN(percentage) ? 0 : percentage.toFixed(2);
+
+
+    function showError(message, row) {
+        Swal.fire({
+            icon: "error",
+            title: "Error...",
+            text: message
+        });
+        row.find('.marksObtained').val('');
+        row.find('.totalMarks').val('');
+        row.find('.percentage').val('');
+    }
+
 
 
 
@@ -3451,80 +3422,7 @@
         });
     }
 
-    //$(document).on('input', '.percentage', function () {
-    //    debugger;
-    //    var row = $(this).closest('.form-row');
-    //    var percentageObtained = $(this).val();
-    //    var qual = $(this).closest('.form-row').find('.qualification').val();
-    //    var qualifyingperc = 0;
-    //    var message = "";
-    //    if (qual == "DIPLOMA") {
-    //        var category = $("#CATEGORY").val();
-    //        switch (category) {
-    //            case "GENERAL":
-    //                qualifyingperc = 60;
-    //                message = "percentage is less then " + qualifyingperc;
-    //                if (qualifyingperc > percObtained) {
-    //                    Swal.fire({
-    //                        icon: "error",
-    //                        title: "Error...",
-    //                        text: message
-    //                    });
-    //                    $(this).closest('.form-row').find('.marksObtained').val('');
-    //                    $(this).closest('.form-row').find('.totalMarks').val('');
-    //                    $(this).closest('.form-row').find('.percentage').val('0.00');
-    //                }
 
-    //                break;
-    //            case "OBC":
-    //                qualifyingperc = 55;
-    //                message = "percentage is less then " + qualifyingperc;
-    //                if (qualifyingperc > percObtained) {
-    //                    Swal.fire({
-    //                        icon: "error",
-    //                        title: "Error...",
-    //                        text: message
-    //                    });
-    //                    $(this).closest('.form-row').find('.marksObtained').val('');
-    //                    $(this).closest('.form-row').find('.totalMarks').val('');
-    //                    $(this).closest('.form-row').find('.percentage').val('0.00');
-    //                }
-
-    //                break;
-    //            case "SC":
-    //                qualifyingperc = 55;
-    //                message = "percentage is less then " + qualifyingperc;
-    //                if (qualifyingperc > percObtained) {
-    //                    Swal.fire({
-    //                        icon: "error",
-    //                        title: "Error...",
-    //                        text: message
-    //                    });
-    //                    $(this).closest('.form-row').find('.marksObtained').val('');
-    //                    $(this).closest('.form-row').find('.totalMarks').val('');
-    //                    $(this).closest('.form-row').find('.percentage').val('0.00');
-    //                }
-
-    //                break;
-    //            case "ST":
-    //                qualifyingperc = 55;
-    //                message = "percentage is less then " + qualifyingperc;
-    //                if (qualifyingperc > percObtained) {
-    //                    Swal.fire({
-    //                        icon: "error",
-    //                        title: "Error...",
-    //                        text: message
-    //                    });
-    //                    $(this).closest('.form-row').find('.marksObtained').val('');
-    //                    $(this).closest('.form-row').find('.totalMarks').val('');
-    //                    $(this).closest('.form-row').find('.percentage').val('0.00');
-    //                }
-
-    //                break;
-    //            default:
-    //        }
-    //    }
-    //});
 
 
     const currentDate = new Date().toISOString().split('T')[0];
@@ -3536,67 +3434,124 @@
     function updateDateRange() {
         var category = $("#CATEGORY").val();
         var dateInput = $("#DATE_OF_BIRTH");
-        var isLandLooser = $("#LandLoser").val() === "YES";
-
+        var isLandLooser = $("#LandLooser").val() === "YES";
+        debugger;
         // Reset the dateInput value to an empty string
         dateInput.val('');
 
+
+
+        //ajax
+        //receive date min and max.
+        //var mindate = new Date(data.minDate);
+        // dateInput.attr("min", data.minDate);
+        // dateInput.attr("max", data.maxDate);
+
+
         switch (category) {
-            case "GENERAL":
+            case "General":
                 if (isLandLooser) {
-                    dateInput.attr("min", "1991-10-02");
-                    dateInput.attr("max", "2004-10-01");
+                    dateInput.attr("min", "1992-09-30");
+                    dateInput.attr("max", "2004-09-30");
                 } else {
-                    dateInput.attr("min", "1994-10-02");
-                    dateInput.attr("max", "2004-10-01");
+                    dateInput.attr("min", "1995-09-30");
+                    dateInput.attr("max", "2004-09-30");
                 }
                 break;
             case "OBC":
                 if (isLandLooser) {
-                    dateInput.attr("min", "1989-10-02");
+                    dateInput.attr("min", "1989-09-30");
                     dateInput.attr("max", "2004-10-01");
                 } else {
-                    dateInput.attr("min", "1992-10-02");
+                    dateInput.attr("min", "1992-09-30");
                     dateInput.attr("max", "2004-10-01");
                 }
                 break;
             case "SC":
                 if (isLandLooser) {
-                    dateInput.attr("min", "1987-10-02");
+                    dateInput.attr("min", "1987-09-30");
                     dateInput.attr("max", "2004-10-01");
                 } else {
-                    dateInput.attr("min", "1990-10-02");
+                    dateInput.attr("min", "1990-09-30");
                     dateInput.attr("max", "2004-10-01");
                 }
                 break;
             case "ST":
                 if (isLandLooser) {
-                    dateInput.attr("min", "1987-10-02");
+                    dateInput.attr("min", "1987-09-30");
                     dateInput.attr("max", "2004-10-01");
                 } else {
-                    dateInput.attr("min", "1990-10-02");
+                    dateInput.attr("min", "1990-09-30");
                     dateInput.attr("max", "2004-10-01");
                 }
                 break;
             case "OTHER":
                 if (isLandLooser) {
-                    dateInput.attr("min", "1987-10-02");
+                    dateInput.attr("min", "1987-09-30");
                     dateInput.attr("max", "2004-10-01");
                 } else {
-                    dateInput.attr("min", "1990-10-02");
+                    dateInput.attr("min", "1990-09-30");
                     dateInput.attr("max", "2004-10-01");
                 }
                 break;
-            default:
 
-                break;
 
         }
     }
 
+    //function updateDateRange(row) {
+    //    var category = $("#CATEGORY").val();
+    //    var isLandLooser = $("#LandLoser").val();
+
+    //    debugger;
+    //    // Check if both category and isLandLooser are not empty
+    //    if (category && isLandLooser) {
+    //        // Create FormData and append additional form data
+    //        var formData = new FormData();
+    //        formData.append('Category', category);
+    //        formData.append('LandLoser', isLandLooser);
+
+    //        $.ajax({
+    //            type: "POST",
+    //            url: window.location.origin + "/M1/USERF01/updateDateRange",
+    //            contentType: false,
+    //            processData: false,
+    //            data: formData,
+    //            success: function (result) {
+    //                if (result.success) {
+    //                    debugger;
+
+                        
+    //                    $("#MIN_DATE_INPUT").val(new Date(result.dateOfBirthData.minDate).toLocaleDateString());
+    //                    $("#MAX_DATE_INPUT").val(new Date(result.dateOfBirthData.maxDate).toLocaleDateString());
+    //                } else {
+    //                    showError(result.message, row);
+    //                }
+    //            },
+    //            error: function (error) {
+    //                showError("An error occurred while getting the date of birth data.", row);
+    //            }
+    //        });
+    //    } else {
+    //        // Handle the case when category or isLandLooser is empty
+    //        showError("Please provide both category and land looser values.", row);
+    //    }
+    //}
+
+
+
+
+
+
+
+
+
+
     $("#LandLoser", "#CATEGORY").change(function () {
         updateDateRange();
     });
+
+
 
     // Reset button functionality For image reset on screeen
     $(document).on("click", "#resetButton", function () {

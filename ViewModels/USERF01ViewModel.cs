@@ -81,5 +81,7 @@ namespace USERFORM.ViewModels
 
         public string Alert { get; internal set; }
         public string ErrorMessage { get; internal set; }
+        public DateTime? LastDate { get; internal set; }
+        public List<RecCategoryMsts> RecCategoryMaster { get; internal set; }
     }
 }

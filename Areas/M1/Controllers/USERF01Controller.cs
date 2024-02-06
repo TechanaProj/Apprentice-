@@ -29,7 +29,7 @@ namespace USERFORM.Areas.M1.Controllers
         private readonly ATRMSCommonService aTRMSCommonService;
         private readonly PrimaryKeyGen primaryKeyGen = null;
 
-        
+
         //private object _httpClient;
 
         // public bool SomeCondition { get; private set; }
@@ -88,7 +88,7 @@ namespace USERFORM.Areas.M1.Controllers
         {
             var DistrictLOV = _context.RecDistrictMsts.Where(X => X.StateCd == StateCd).Select(x => new SelectListItem
             {
-                Text =(x.DisttName),
+                Text = (x.DisttName),
                 Value = x.DisttCd.ToString()
             }).ToList();
             return Json(DistrictLOV);
@@ -110,11 +110,11 @@ namespace USERFORM.Areas.M1.Controllers
         //    }).ToList();
         //    return Json(POSTLOV);
         //}
-         public JsonResult ddl2(string QualCode)
+        public JsonResult ddl2(string QualCode)
         {
             var POSTLOV = _context.RecPostAvailableMsts.Where(X => X.QualCode.ToString() == QualCode).Select(x => new SelectListItem
             {
-                Text = ( x.PostAppliedDescription),
+                Text = (x.PostAppliedDescription),
                 Value = x.PostAppliedCode.ToString() + "," + x.RecCode
             }).ToList();
             return Json(POSTLOV);
@@ -197,6 +197,92 @@ namespace USERFORM.Areas.M1.Controllers
             return (CommonViewModel.listAtrmsQualificationDtl);
         }
 
+        [HttpPost]
+        public IActionResult CalculatePercentage(int marksObtained, int totalMarks, string qualification, string category)
+        {
+            try
+            {
+                if (marksObtained < 0 || totalMarks <= marksObtained)
+                {
+                    return Json(new { success = false, message = "Invalid input values" });
+                }
+
+                // Ensure floating-point division
+                var percentage = ((double)marksObtained / totalMarks) * 100;
+
+                var reccode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
+
+                int? TestObj = 0;
+
+                if (qualification == "BSC(PCM)")
+                {
+                    TestObj = _context.RecCategoryMsts.Where(x => x.RecCode == reccode && x.Category == category).Select(x => x.QualifyingMarks1).FirstOrDefault();
+
+                }
+                else if (qualification == "BSC(PCM/PCB)")
+                {
+                    TestObj = _context.RecCategoryMsts.Where(x => x.RecCode == reccode && x.Category == category).Select(x => x.QualifyingMarks2).FirstOrDefault();
+                }
+                else if (qualification == "ITI" || qualification == "DIPLOMA")
+                {
+                    TestObj = _context.RecCategoryMsts.Where(x => x.RecCode == reccode && x.Category == category).Select(x => x.QualifyingMarks3).FirstOrDefault();
+                }
+
+                if (TestObj.HasValue && TestObj <= percentage)
+                {
+                    return Json(new { success = true, message = "Success: Percentage is greater than TestObj", percentage = percentage });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Percentage is not equal to Required %", percentage = percentage });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred", error = ex.Message });
+            }
+        }
+
+
+        //public IActionResult UpdateDateRange(string category, string isLandLoser)
+        //{
+        //    var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
+
+        //    var obj = new RecCategoryMsts();
+
+        //    if (isLandLoser == "Y")
+        //    {
+        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == isLandLoser && x.ExApp == "N");
+
+        //    }
+        //    else if (isLandLoser == "N")
+        //    {
+        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == isLandLoser && x.ExApp == "N");
+
+        //    }
+
+        //    if (obj != null)
+        //    {
+        //        // Assuming you have a property like DateRange in RecCategoryMsts, update it here.
+        //        // For example, if you have a property called DateRange, you can set it like this:
+        //        // obj.DateRange = // Set your new date range value here;
+
+        //        // Save changes to the database
+        //        _context.SaveChanges();
+
+        //        // You may also return a JSON response with the updated object or a success message.
+        //        return Json(obj);
+        //    }
+        //    else
+        //    {
+        //        // Handle the case when the object is not found.
+        //        return Json(new { message = "Object not found" });
+        //    }
+        //}
+
+
+
+
         // GET: RController/CREATE
         [HttpGet]
         public ActionResult Create(DropDownListBindWeb dropDownListBindWeb)
@@ -225,7 +311,7 @@ namespace USERFORM.Areas.M1.Controllers
                 Status = "Create"
             };
 
-           
+
             if (recCodeGen != null && recCodeGen <= DateTime.Now)
 
             {
@@ -235,16 +321,15 @@ namespace USERFORM.Areas.M1.Controllers
             }
             else
             {
-                
+
 
                 return View("Create", CommonViewModel);
             }
-        
-            
+
+
 
             //return View("Create", CommonViewModel);
         }
-
 
 
         // POST: RECFSC02Controller/Create
@@ -467,62 +552,78 @@ namespace USERFORM.Areas.M1.Controllers
 
 
 
-
         [HttpPost]
-        public async Task<IActionResult> sendOTP(string MobileNumber)
+        public async Task<IActionResult> sendOTP(string MobileNumber, string EmailId)
         {
             USERF01ViewModel uSERF01ViewModel = new USERF01ViewModel();
 
-            if (!string.IsNullOrEmpty(MobileNumber))
+            if (!string.IsNullOrEmpty(MobileNumber) || !string.IsNullOrEmpty(EmailId))
             {
                 // Validate if the MobileNumber has exactly 10 digits
                 if (MobileNumber.Length == 10 && MobileNumber.All(char.IsDigit))
                 {
-
-                    // Check the number of OTPs sent for the given mobile number in the last 24 hours
-                    int maxAttemptsPerDay = 3;
-                    DateTime twentyFourHoursAgo = DateTime.Now.AddHours(-24);
-
-                    int sentOtpsCount = _context.RecOtpDetails
-                        .Count(o => o.Mobileemail == MobileNumber && o.Otpdate >= twentyFourHoursAgo);
-
-                    if (sentOtpsCount >= maxAttemptsPerDay)
+                    // Validate if the provided email is valid
+                    if (IsValidEmail(EmailId))
                     {
-                        return BadRequest(new { Message = "Exceeded OTP sending limit for the day. Only 3 SMS allowed." });
+                        // Check if the provided mobile number is associated with the given email
+                        bool mobileAndEmailMatch = _context.RecAtmobilepaMsts.Any(m => m.MobileNo.ToString() == MobileNumber && m.EmailId == EmailId);
+
+
+
+                        if (!mobileAndEmailMatch)
+                        {
+                            return BadRequest(new { Message = "Mobile number and email do not match." });
+                        }
+
+                        // Check the number of OTPs sent for the given mobile number in the last 24 hours
+                        int maxAttemptsPerDay = 3;
+                        DateTime twentyFourHoursAgo = DateTime.Now.AddHours(-24);
+
+                        int sentOtpsCount = _context.RecOtpDetails
+                            .Count(o => o.Mobileemail == MobileNumber && o.Otpdate >= twentyFourHoursAgo);
+
+                        if (sentOtpsCount >= maxAttemptsPerDay)
+                        {
+                            return BadRequest(new { Message = "Exceeded OTP sending limit for the day. Only 3 SMS allowed." });
+                        }
+
+                        int newSerialNo = GenerateUniqueSerialNumber();
+                        string otp = GenerateOTP();
+                        string smsContents = $"Your One-Time Password is {otp}, valid for 30 minutes only. Please do not share your OTP.";
+
+                        // Create an instance without Smsapiresponse initially
+                        var otpDetail = new RecOtpDetails()
+                        {
+                            Sno = newSerialNo,
+                            Mobileemail = MobileNumber,
+                            Otp = otp,
+                            Otpdate = DateTime.Now,
+                            Statuscode = EmailId,
+                        };
+
+                        // Add the instance to the context without Smsapiresponse
+                        _context.RecOtpDetails.Add(otpDetail);
+                        _context.SaveChanges();
+
+                        string URL = "http://hindit.biz/api/pushsms?user=Iffco&authkey=92QZpEbhUypU6&sender=IFFCOA&mobile=" + otpDetail.Mobileemail + "&text=" + otpDetail.Otp + "%20is%20the%20verification%20code%20generated%20for%20IFFCO%27s%20Recruitment%20Portal%20.%20Do%20not%20share%20this%20with%20anyone.%20IFFCO%20Aonla%20Unit&unicode=0&rpt=1&summary=1&output=json&entityid=1001232689878836835&templateid=1007642358221818606";
+
+                        HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
+                        HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                        StreamReader sr = new StreamReader(resp.GetResponseStream());
+                        string results = sr.ReadToEnd();
+                        sr.Close();
+
+                        // Update the instance with Smsapiresponse and save changes
+                        otpDetail.Smsapiresponse = results;
+                        _context.SaveChanges();
+
+
+                        return Ok(new { Message = "OTP sent successfully." });
                     }
-
-                    string statusCode = "S";
-                    int newSerialNo = GenerateUniqueSerialNumber();
-                    string otp = GenerateOTP();
-                    string smsContents = $"Your One-Time Password is {otp}, valid for 30 minutes only. Please do not share your OTP.";
-
-                    // Create an instance without Smsapiresponse initially
-                    var otpDetail = new RecOtpDetails()
+                    else
                     {
-                        Sno = newSerialNo,
-                        Mobileemail = MobileNumber,
-                        Otp = otp,
-                        Otpdate = DateTime.Now,
-                        Statuscode = statusCode,
-                    };
-
-                    // Add the instance to the context without Smsapiresponse
-                    _context.RecOtpDetails.Add(otpDetail);
-                    _context.SaveChanges();
-
-                    string URL = "http://hindit.biz/api/pushsms?user=Iffco&authkey=92QZpEbhUypU6&sender=IFFCOA&mobile=" + otpDetail.Mobileemail + "&text=" + otpDetail.Otp + "%20is%20the%20verification%20code%20generated%20for%20IFFCO%27s%20Recruitment%20Portal%20.%20Do%20not%20share%20this%20with%20anyone.%20IFFCO%20Aonla%20Unit&unicode=0&rpt=1&summary=1&output=json&entityid=1001232689878836835&templateid=1007642358221818606";
-
-                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(URL);
-                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-                    StreamReader sr = new StreamReader(resp.GetResponseStream());
-                    string results = sr.ReadToEnd();
-                    sr.Close();
-
-                    // Update the instance with Smsapiresponse and save changes
-                    otpDetail.Smsapiresponse = results;
-                    _context.SaveChanges();
-
-                    return Ok(new { Message = "OTP sent successfully." });
+                        return BadRequest(new { Message = "Invalid email format." });
+                    }
                 }
                 else
                 {
@@ -534,6 +635,21 @@ namespace USERFORM.Areas.M1.Controllers
                 return BadRequest(new { Message = "Failed to send OTP." });
             }
         }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
 
 
 

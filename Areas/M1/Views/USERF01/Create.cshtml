@@ -264,7 +264,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 10px; /* Adjust the margin as needed */
         }
-
         /* Rest of your existing styles for tabs, buttons, etc. */
 
 
@@ -286,7 +285,7 @@
         .tab-button {
             cursor: pointer;
             padding: 10px 15px; /* Adjusted padding for smaller buttons */
-            background-color: coral;
+            background-color: lightgray;
             border: 2px solid #ccc;
             border-radius: 2px; /* Adjusted border radius for smaller buttons */
             transition: background-color 0.3s ease; /* Smooth transition on hover */
@@ -298,7 +297,7 @@
             }
 
             .tab-button:hover {
-                background-color: yellow; /* Change color on hover */
+                background-color: gray; /* Change color on hover */
             }
 
             .tab-button.active {
@@ -691,7 +690,7 @@
                 </div>
 
                 <div class="col-sm-1 col-md-4">
-                    <label for="LandLoser"> IFFCO Employee Deceased/Landloser<span style="color: red;">*</span> </label>
+                    <label for="LandLoser"> IFFCO Deceased Employee || Landloser ||<span style="color: red;">*</span> </label>
                     <div class="custom-select">
                         <select class="form-control" id="LandLoser" onchange="updateDateRange();" required>
                             <option value="" disabled selected style="text-align: center;">---Select---</option>
@@ -875,6 +874,13 @@
                 </div>
 
             </div>
+            <br />
+            <div style="margin: 0 auto; padding: 20px; text-align: center; background-color: #f0f0f0;">
+                <h1 style="font-size: 1.5rem; margin: 0; font-family: Arial, sans-serif; color: red; font-weight: bold;">To Move to the Next Tab, Click on the Tab Button Above</h1>
+            </div>
+
+
+
 
 
 
@@ -947,10 +953,20 @@
                     </div>
                     <br />
                     <div class="row form-sm">
-                        <div class="col-sm-4 col-md-4">
-                            <label for="MhrdNats">MHRD NATS<span style="color: red;">*</span></label>
-                            <input type="text" class="form-control" id="MhrdNats">
+
+                        <div class="col-sm-1 col-md-4">
+                            <label for="MhrdNats">MHRD/NATS<span style="color: red;">*</span></label>
+                            <div class="custom-select">
+                                <select class="form-control" id="MhrdNats" required>
+                                    <option value="" disabled selected style="text-align: center;">---Select---</option>
+                                    <option value="MHRD">MHRD</option>
+                                    <option value="NATS">NATS</option>
+                                </select>
+
+                            </div>
                         </div>
+
+
                         <div class="col-sm-2 col-md-4">
                             <label for="RegNumberMhrdNats">REG NUMBER MHRD NATS<span style="color: red;">*</span></label>
                             <input type="text" class="form-control" id="RegNumberMhrdNats">
@@ -1007,6 +1023,10 @@
 
                 </div>
 
+            </div>
+            <br />
+            <div style="margin: 0 auto; padding: 20px; text-align: center; background-color: #f0f0f0;">
+                <h1 style="font-size: 1.5rem; margin: 0; font-family: Arial, sans-serif; color: red; font-weight: bold;">To Move to the Next Tab, Click on the Tab Button Above</h1>
             </div>
 
 
@@ -1093,6 +1113,10 @@
                     </div>
                 </div>
             </div>
+            <br />
+            <div style="margin: 0 auto; padding: 20px; text-align: center; background-color: #f0f0f0;">
+                <h1 style="font-size: 1.5rem; margin: 0; font-family: Arial, sans-serif; color: red; font-weight: bold;">To Move to the Next Tab, Click on the Tab Button Above</h1>
+            </div>
 
 
         </div>
@@ -1160,8 +1184,13 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>xyz</strong></p>
-                        <p>Timing For Contact: <br /><strong> 09:00 A.M. To 06:00 P.M.</strong></p>
+                        <p>If You have Any Technical Issue, Please Contact This No:<br /><strong>05812404103 / 05812404104 / 05812404108</strong></p>
+                        <p>Timing For Contact: <br /><strong>09:00 A.M. To 05:00 P.M.</strong></p>
+                        <p>For B.Sc. / ITI candidates: Link for Registration on NAPS Portal <br /><strong><a href="https://www.apprenticeshipindia.gov.in/login">https://www.apprenticeshipindia.gov.in/login</a></strong></p>
+                        <p>For Diploma candidates: Link for Registration of MHRD NATS Portal <br /><strong><a href="https://portal.mhrdnats.gov.in/boat/login/user_login.action">https://portal.mhrdnats.gov.in/boat/login/user_login.action</a></strong></p>
+                        <p class="text-danger">*Please see the Advertisement, always refresh the link before filling the FORM and use of CHROME Browser is mandatory</p>
+                        <p class="text-danger">*Fields marked with Asterisk(*) are compulsory and Print Out will be generated at the end of successful submission</p>
+                        <p class="text-success"><strong>Print Out will be generated at the end of successful submission</strong></p>
                     </div>
                     <!-- Modal Footer -->
                     <div class="modal-footer">
@@ -1170,6 +1199,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Bootstrap Modal -->
         <div class="modal" id="myModal1">
             <div class="modal-dialog">
@@ -1181,8 +1211,8 @@
                     </div>
                     <!-- Modal Body -->
                     <div class="modal-body">
-                        <p>If You have Any Technical Issue, Please Contact This No:<br /> <strong>xyz</strong></p>
-                        <p>Timing For Contact: <br /><strong>09:00 A.M. To 06:00 P.M.</strong></p>
+                        <p>If You have Any Technical Issue, Please Contact This No:<br /><strong>05812404103 / 05812404104 / 05812404108</strong></p>
+                        <p>Timing For Contact: <br /><strong>09:00 A.M. To 05:00 P.M.</strong></p>
 
                         <!-- New Section for Age Criteria -->
                         <p><strong>Age Criteria:</strong></p>
@@ -1235,7 +1265,7 @@
 
     <div class="blur-area" id="blurArea" style="display:none;">
         <div class="loading-spinner">
-            <img src="~/images/loading-42.gif" class="loading-spinner-img" alt="Loading..." role="status">
+            <img src="~/images/ZZ5H.gif" class="loading-spinner-img" alt="Loading..." role="status">
         </div>
     </div>
 
@@ -1316,7 +1346,7 @@
 
         // Show the OTP message in the designated div with bold red styling
         $('#otpMessage').html('OTP Send to this no this No: <span class="bold-red-message">' + maskedNumber + '</span>. Please wait for 1 minute for OTP or click on Resend OTP.');
-       
+
 
         // Show the countdown message in the new div
         $('#countdownMessage').html('OTP Expires in 5m 0s');
@@ -1996,17 +2026,17 @@
     //}
 
     //// Function to move to the next tab
-    //function nextTab() {
-    //    if (currentTab < 4) {
-    //        currentTab++;
-    //        openTab(`tab${currentTab}`);
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
-    //        document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
-    //    }
-    //}
+    function nextTab() {
+        if (currentTab < 4) {
+            currentTab++;
+            openTab(`tab${currentTab}`);
+            document.getElementById(`tab${currentTab - 1}-button`).classList.remove("active-button");
+            document.getElementById(`tab${currentTab - 1}-button`).classList.add("completed-button");
+        }
+    }
 
 
-  
+
     let currentTab = 1;
 
 
@@ -2265,8 +2295,8 @@
 
             var entriesSet9 = [
                 { id: "STREET", label: "Street" },
-                { id: "AREA", label: "Area" },
-                { id: "StateName-Create", label: "State Name" }
+                { id: "AREA", label: "Area" }
+               /* { id: "StateName-Create", label: "State Name" }*/
             ];
 
             appendAdditionalSection(entriesSet9);
@@ -2275,7 +2305,7 @@
             previewContainer.appendChild(document.createElement("hr"));
 
             var entriesSet10 = [
-                { id: "DistrictName-Create", label: "District Name" },
+               /* { id: "DistrictName-Create", label: "District Name" },*/
                 { id: "CITY", label: "City" },
                 { id: "HOMETOWN", label: "Home Town" }
             ];
@@ -2867,6 +2897,7 @@
 
         $('.save').on("click", function () {
 
+
             debugger;
             // Replace the condition below with your actual form validation logic
             var validated = validateForm()
@@ -3435,7 +3466,7 @@
     function updateDateRange() {
         var category = $("#CATEGORY").val();
         var dateInput = $("#DATE_OF_BIRTH");
-        var isLandLooser = $("#LandLooser").val() === "YES";
+        var isLandLooser = $("#LandLoser").val() === "YES";
         debugger;
         // Reset the dateInput value to an empty string
         dateInput.val('');
@@ -3514,17 +3545,49 @@
 
     //        $.ajax({
     //            type: "POST",
-    //            url: window.location.origin + "/M1/USERF01/updateDateRange",
+    //            url: window.location.href + "/M1/USERF01/updateDateRange",
     //            contentType: false,
     //            processData: false,
     //            data: formData,
     //            success: function (result) {
     //                if (result.success) {
     //                    debugger;
+    //                    var MinDate = new Date(result.dateOfBirthData.minDate);
+    //                    var year = MinDate.getFullYear();
+    //                    var month = MinDate.getMonth();
+    //                    month = month + 1;
+    //                    if (month < 10) {
+    //                        month = "0" + month.toString();
+    //                    }
+    //                    var day = MinDate.getDate();
+    //                    if (day < 10) {
+    //                        day = "0" + day.toString();
+    //                    }
+    //                    var Min = year.toString() + "-" + month + "-" + day.toString();
 
-                        
-    //                    $("#MIN_DATE_INPUT").val(new Date(result.dateOfBirthData.minDate).toLocaleDateString());
-    //                    $("#MAX_DATE_INPUT").val(new Date(result.dateOfBirthData.maxDate).toLocaleDateString());
+
+    //                    var MaxDate = new Date(result.dateOfBirthData.maxDate);
+
+    //                    var year = MaxDate.getFullYear();
+    //                    if (year < 100) {
+    //                        year += 1900;
+    //                    }
+
+
+    //                    var month = MaxDate.getMonth();
+    //                    month = month + 1;
+    //                    if (month < 10) {
+    //                        month = "0" + month.toString();
+    //                    }
+    //                    var day = MaxDate.getDate();
+    //                    if (day < 10) {
+    //                        day = "0" + day.toString();
+    //                    }
+    //                    var Max = year.toString() + "-" + month + "-" + day.toString();
+    //                    $("#DATE_OF_BIRTH").attr("min",Min);
+
+
+    //                    $("#DATE_OF_BIRTH").attr("max",Max);
     //                } else {
     //                    showError(result.message, row);
     //                }
@@ -3541,11 +3604,70 @@
 
 
 
+    //function agematching(row) {
+    //    var category = $("#CATEGORY").val();
+    //    var isLandLooser = $("#LandLoser").val();
+    //    var dob = $("#DATE_OF_BIRTH").val();
 
+    //    debugger;
 
+    //    // Create FormData and append additional form data
+    //    var formData = new FormData();
+    //    formData.append('CATEGORY', category);
+    //    formData.append('LandLoser', isLandLooser);
+    //    formData.append('DATE_OF_BIRTH', dob);
 
+    //    $.ajax({
+    //        type: "POST",
+    //        url: window.location.href + "/M1/USERF01/agematching",
+    //        contentType: false,
+    //        processData: false,
+    //        data: formData,
+    //        success: function (result) {
+    //            if (result.success) {
+    //                debugger;
+    //                var MinDate = new Date(result.dateOfBirthData.minDate);
+    //                var year = MinDate.getFullYear();
+    //                var month = MinDate.getMonth() + 1; // Added 1 to month here
+    //                if (month < 10) {
+    //                    month = "0" + month.toString();
+    //                }
+    //                var day = MinDate.getDate();
+    //                if (day < 10) {
+    //                    day = "0" + day.toString();
+    //                }
+    //                var Min = day.toString() + "-" + month + "-" + year.toString();
 
+    //                var MaxDate = new Date(result.dateOfBirthData.maxDate);
 
+    //                //year = MaxDate.getFullYear(); // Corrected variable name from MinDate to MaxDate here
+    //                var year = MaxDate.getFullYear();
+    //                // Check if the year is less than 100, if so, adjust it to be in the correct century
+    //                if (year < 100) {
+    //                    year += 2000; // Assuming years less than 100 represent years in the 2000s
+    //                }
+
+    //                month = MaxDate.getMonth() + 1; // Added 1 to month here
+    //                if (month < 10) {
+    //                    month = "0" + month.toString();
+    //                }
+    //                day = MaxDate.getDate();
+    //                if (day < 10) {
+    //                    day = "0" + day.toString();
+    //                }
+    //                var Max = day.toString() + "-" + month + "-" + year.toString(); // Corrected variable name from Min to Max here
+
+    //                $("#DATE_OF_BIRTH").attr("min", Min);
+    //                $("#DATE_OF_BIRTH").attr("max", Max);
+    //            } else {
+    //                showError(result.message, row);
+    //            }
+    //        },
+    //        error: function (error) {
+    //            showError("An error occurred while getting the date of birth data.", row);
+    //        }
+    //    });
+    //}
 
 
     $("#LandLoser", "#CATEGORY").change(function () {
@@ -3592,6 +3714,7 @@
 
 
     function updateDateOfBirth() {
+        debugger;
         var category = document.getElementById("CATEGORY").value;
         var dateOfBirthInput = document.getElementById("DATE_OF_BIRTH");
 

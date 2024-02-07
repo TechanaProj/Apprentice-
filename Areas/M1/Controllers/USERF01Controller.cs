@@ -246,26 +246,53 @@ namespace USERFORM.Areas.M1.Controllers
         }
 
 
-        //public IActionResult UpdateDateRange(string category, string isLandLoser)
+        //public IActionResult UpdateDateRange(string category, string LandLoser)
         //{
         //    var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
 
         //    var obj = new RecCategoryMsts();
 
-        //    if (isLandLoser == "Y")
+        //    if (LandLoser == "YES")
         //    {
-        //        obj = _context.RecCategoryMsts.Where(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == isLandLoser && x.ExApp == "N").Select(x => new { x.MinAge, x.MaxAge }).FirstOrDefault();
-
-
+        //        LandLoser = "Y";
+        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == LandLoser && x.ExApp == "N");
         //    }
-        //    else if (isLandLoser == "N")
+        //    else if (LandLoser == "NO")
         //    {
-        //      obj =  _context.RecCategoryMsts.Where(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == isLandLoser && x.ExApp == "N").Select(x => new { x.MinAge, x.MaxAge }).FirstOrDefault();
-
+        //        LandLoser = "N";
+        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
         //    }
 
-            
+        //    // Update date range based on obj, if needed
+
+        //    return Json(new { success = true, message = "Success: ", dateOfBirthData = obj });
         //}
+
+
+        //public IActionResult agematching(string category, string LandLoser,string dob)
+        //{
+        //    var testdob = dob;
+
+        //    var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
+
+        //    var obj = new RecCategoryMsts();
+
+        //    if (LandLoser == "YES")
+        //    {
+        //        LandLoser = "Y";
+        //       obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == LandLoser && x.ExApp == "N");
+        //    }
+        //    else if (LandLoser == "NO")
+        //    {
+        //        LandLoser = "N";
+        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
+        //    }
+
+        //    // Update date range based on obj, if needed
+
+        //    return Json(new { success = true, message = "Success: ", dateOfBirthData=obj });
+        //}
+
 
 
 

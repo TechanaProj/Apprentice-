@@ -45,6 +45,12 @@ namespace USERFORM.Areas.M1.Controllers
 
         }
 
+        public IActionResult Information()
+        {
+
+            return View("Information");
+        }
+
         public IActionResult Index(string AtId)
         {
             try
@@ -246,8 +252,32 @@ namespace USERFORM.Areas.M1.Controllers
         }
 
 
-        //public IActionResult UpdateDateRange(string category, string LandLoser)
+        public IActionResult UpdateDateRange(string category, string LandLoser)
+        {
+            var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
+
+            var obj = new RecCategoryMsts();
+
+            if (LandLoser == "YES")
+            {
+                LandLoser = "Y";
+                obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == LandLoser && x.ExApp == "N");
+            }
+            else if (LandLoser == "NO")
+            {
+                LandLoser = "N";
+                obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
+            }
+
+            // Update date range based on obj, if needed
+
+            return Json(new { success = true, message = "Success: ", dateOfBirthData = obj });
+        }
+
+        //public IActionResult AgeMatching(string category, string LandLoser, string dob)
         //{
+        //    var testdob = dob;
+
         //    var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
 
         //    var obj = new RecCategoryMsts();
@@ -263,37 +293,8 @@ namespace USERFORM.Areas.M1.Controllers
         //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
         //    }
 
-        //    // Update date range based on obj, if needed
-
         //    return Json(new { success = true, message = "Success: ", dateOfBirthData = obj });
         //}
-
-
-        //public IActionResult agematching(string category, string LandLoser,string dob)
-        //{
-        //    var testdob = dob;
-
-        //    var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
-
-        //    var obj = new RecCategoryMsts();
-
-        //    if (LandLoser == "YES")
-        //    {
-        //        LandLoser = "Y";
-        //       obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == LandLoser && x.ExApp == "N");
-        //    }
-        //    else if (LandLoser == "NO")
-        //    {
-        //        LandLoser = "N";
-        //        obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
-        //    }
-
-        //    // Update date range based on obj, if needed
-
-        //    return Json(new { success = true, message = "Success: ", dateOfBirthData=obj });
-        //}
-
-
 
 
 
@@ -303,6 +304,8 @@ namespace USERFORM.Areas.M1.Controllers
         {
             var ObjCat = new AtrmsPersonalDtl();
             var Objdoc = new AtrmsDocumentsDtlMain();
+            var otpFlag = "I";
+
 
             // Assuming you have a context for the REC_CODE_GEN table
             var recCodeGen = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.LastDate).FirstOrDefault(); // Adjust the query as needed
@@ -322,7 +325,8 @@ namespace USERFORM.Areas.M1.Controllers
                 DistrictLOV = dropDownListBindWeb.DistrictLOVBind(),
                 AreaName = this.ControllerContext.RouteData.Values["area"].ToString(),
                 SelectedMenu = this.ControllerContext.RouteData.Values["controller"].ToString(),
-                Status = "Create"
+                Status = "Create",
+                OtpFlag = otpFlag
             };
 
 
@@ -877,6 +881,49 @@ namespace USERFORM.Areas.M1.Controllers
             return newSerialNo;
         }
 
+        //[HttpPost]
+        //public IActionResult verifyOTP(string MobileNumber, string enteredOTP)
+        //{
+        //    if (!string.IsNullOrEmpty(MobileNumber) && !string.IsNullOrEmpty(enteredOTP))
+        //    {
+        //        // Retrieve the latest OTP details for the given MobileNumber from the database
+        //        var latestOtpDetail = _context.RecOtpDetails
+        //            .Where(otp => otp.Mobileemail == MobileNumber)
+        //            .OrderByDescending(otp => otp.Otpdate)
+        //            .FirstOrDefault();
+
+        //        if (latestOtpDetail != null && latestOtpDetail.Otp == enteredOTP)
+        //        {
+        //            // Check if the OTP is still valid (within 5 minutes)
+        //            var currentTime = DateTime.Now;
+
+        //            // Ensure that latestOtpDetail.Otpdate is a DateTime object
+        //            if (latestOtpDetail.Otpdate is DateTime otpTimestamp)
+        //            {
+        //                if ((currentTime - otpTimestamp).TotalMinutes <= 5)
+        //                {
+        //                    return Ok("OTP verification successful.");
+        //                }
+        //                else
+        //                {
+        //                    // Expired OTP
+        //                    return BadRequest("OTP has expired.");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Handle the case where Otpdate is not a DateTime
+        //                return BadRequest("Invalid timestamp for OTP.");
+        //            }
+        //        }
+
+        //        return BadRequest("Invalid OTP.");
+        //    }
+
+        //    return BadRequest("Mobile number and OTP are required.");
+        //}
+
+
         [HttpPost]
         public IActionResult verifyOTP(string MobileNumber, string enteredOTP)
         {
@@ -918,8 +965,6 @@ namespace USERFORM.Areas.M1.Controllers
 
             return BadRequest("Mobile number and OTP are required.");
         }
-
-
 
 
     }

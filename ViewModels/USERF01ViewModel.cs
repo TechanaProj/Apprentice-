@@ -28,6 +28,7 @@ namespace USERFORM.ViewModels
         public List<SelectListItem> StateLOV { get; set; }
         public string StateCd { get; set; }
 
+        public string OtpFlag { get; set; }
         public string StateName { get; set; }
         public List<SelectListItem> DistrictLOV { get; set; }
         public string DisttCd { get; set; }

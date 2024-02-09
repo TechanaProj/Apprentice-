@@ -1,0 +1,242 @@
+﻿@model USERFORM.ViewModels.USERF01ViewModel
+@{
+    ViewData["Title"] = "Information";
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .banner {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .organization {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .organization img {
+                max-width: 100px; /* Set the maximum width for the logo */
+            }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Basic button styles */
+        .animated-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 2px solid #3498db;
+            color: #3498db;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+            /* Button hover effect */
+            .animated-button:hover {
+                color: #fff;
+                background-color: #3498db;
+            }
+
+            /* Button animation */
+            .animated-button:before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background-color: #3498db;
+                border-radius: 100%;
+                transform: translate(-50%, -50%);
+                transition: width 0.3s, height 0.3s;
+            }
+
+            .animated-button:hover:before {
+                width: 120%;
+                height: 120%;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="organization">
+        <img src="your_logo.png" alt="Organization Logo">
+        <h2>Your Organization Name</h2>
+    </div>
+
+    <div class="banner">
+        <h1>Job Application Form Details</h1>
+        <p>Post to be applied for: Attendant Operator - CP, Lab Assistant - CP, Diploma in various disciplines, ITI trades, PASSA/COPA</p>
+        <p>Qualification criteria and qualifying marks for each post are mentioned. Ensure you meet the requirements before applying.</p>
+    </div>
+
+    <div class="container">
+        <!-- Your form content goes here -->
+        <p>Vacancies/Latest Openings:</p>
+        <ul>
+            <li>Post of Act Apprentices in the various Trades <a href="https://appsaonla.iffco.coop/Recan" class="animated-button">Click to apply</a></li>
+        </ul>
+
+        <p>Job Details:</p>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Trade</th>
+                    <th>Qualification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Attendant Operator - CP</td>
+                    <td>BSc (PCM)</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Lab Assistant - CP</td>
+                    <td>BSc (PCM / PCB)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Diploma - Mechanical Engineering</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Diploma - Electrical Engineering</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Diploma - Civil</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Diploma - Electronics</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Diploma Instrumentation & Control</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Diploma - Chemical</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Diploma - Secretarial Practice</td>
+                    <td>Diploma</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>ITI - Fitter</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>ITI - Electrician</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>ITI - Electronics Mechanic CP</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>ITI - Inst Mechanic CP</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>ITI - Mechanic R&AC</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>ITI - Draftsman Civil</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>ITI - Draftsman Mechanical</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>ITI - Mechanic Motor Vehicle</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>ITI - Machinist</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>ITI - Welder (G&E)</td>
+                    <td>ITI</td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>PASSA /COPA</td>
+                    <td>ITI</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+      // Your JavaScript logic can go here
+      // For example, handling form submissions or dynamic content loading
+    </script>
+
+</body>
+</html>

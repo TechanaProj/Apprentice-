@@ -568,7 +568,7 @@
                     <input type="hidden" id="PostAppliedCode" asp-for="@Model.objAtrmsPersonalDtl.PostAppliedCode" />
                     <input type="hidden" id="RecCode" asp-for="@Model.objAtrmsPersonalDtl.RecCode" />
 
-                    <input type="hidden" id="otpFlag" value="@Model.OtpFlag" />
+                    @*<input type="hidden" id="otpFlag" value="@Model.OtpFlag" />*@
 
                     @*<label for="PostAppliedDescription">Post Selection</label>
 
@@ -1411,651 +1411,651 @@
 <script>
 
 
-    function showLoadingOverlay() {
-        document.body.classList.add('blur');
-        document.getElementById('blurArea').style.display = 'flex';
-    }
+        function showLoadingOverlay() {
+            document.body.classList.add('blur');
+            document.getElementById('blurArea').style.display = 'flex';
+        }
 
-    function hideLoadingOverlay() {
-        document.body.classList.remove('blur');
-        document.getElementById('blurArea').style.display = 'none';
-    }
-
-
-    var otpTimer;
-    var maskedNumber; // Declare maskedNumber as a global variable
-
-    function sendOTP() {
-
-
-        var mobileNumber = $('#MOBILE_NUMBER').val();
-        var emailId = $('#EMAIL_ID').val();
-
-        // Reset the border color of the OTP input field
-        $('#OTP').css('border-color', '');
-
-        // Validate mobile number
-        if (mobileNumber.length !== 10 || !(/^\d+$/.test(mobileNumber))) {
-            // Display validation error message
-            $('#mobileNumberError').show();
-            return;
-        } else {
-            // Hide any previous validation error messages
-            $('#mobileNumberError').hide();
+        function hideLoadingOverlay() {
+            document.body.classList.remove('blur');
+            document.getElementById('blurArea').style.display = 'none';
         }
 
 
+        var otpTimer;
+        var maskedNumber; // Declare maskedNumber as a global variable
 
-        // Display message about waiting for OTP
-        maskedNumber = mobileNumber.substr(0, mobileNumber.length - 4) + "****" + mobileNumber.substr(mobileNumber.length - 2);
-
-        // Show the OTP message in the designated div with bold red styling
-        $('#otpMessage').html('OTP Send to this no this No: <span class="bold-red-message">' + maskedNumber + '</span>. Please wait for 1 minute for OTP or click on Resend OTP.');
+        function sendOTP() {
 
 
-        // Show the countdown message in the new div
-        //$('#countdownMessage').html('OTP Expires in 5m 0s');
-        $('#countdownMessage').show();
+            var mobileNumber = $('#MOBILE_NUMBER').val();
+            var emailId = $('#EMAIL_ID').val();
 
-        // Toggle the visibility of the "Send OTP" and "Resend OTP" buttons
-        $('#sendOTPButton').hide();
-        $('#resendOTPButton').show();
+            // Reset the border color of the OTP input field
+            $('#OTP').css('border-color', '');
 
-        // AJAX POST request
-        $.ajax({
-            url: window.location.href + '/M1/USERF01/sendOTP', // Replace with your server-side endpoint URL
-            type: 'POST',
-            data: {
-                MobileNumber: mobileNumber, EmailId: emailId,
-            },
-            success: function (response) {
-
-                // Display messages on success
-                alert(response.message);
-                $('#otpMessage').show();
-                // Start the 5-minute countdown
-                startOTPCountdown();
-
-                // Hide the OTP message upon successful OTP verification
-            },
-            error: function (error) {
-                // Display messages on error
-                alert(error.responseJSON.message);
-            }
-        });
-    }
-
-    function startOTPCountdown() {
-        var countdown = 5 * 60; // 5 minutes in seconds
-
-        otpTimer = setInterval(function () {
-            if (countdown <= 0) {
-                clearInterval(otpTimer);
-                $('#otpMessage').html('OTP Expired. Please click on Resend OTP to receive a new OTP.');
-                $('#otpMessage').show();
-                $('#sendOTPButton').hide();
-                $('#resendOTPButton').show();
-
-                // Hide the countdown message when the countdown is over
-                $('#countdownMessage').hide();
+            // Validate mobile number
+            if (mobileNumber.length !== 10 || !(/^\d+$/.test(mobileNumber))) {
+                // Display validation error message
+                $('#mobileNumberError').show();
+                return;
             } else {
-                var minutes = Math.floor(countdown / 60);
-                var seconds = countdown % 60;
-                var timeRemaining = 'OTP Expires in ' + minutes + 'm ' + seconds + 's!';
-                $('#countdownMessage').html(timeRemaining);
-                countdown--;
+                // Hide any previous validation error messages
+                $('#mobileNumberError').hide();
             }
-        }, 1000);
-    }
 
 
 
+            // Display message about waiting for OTP
+            maskedNumber = mobileNumber.substr(0, mobileNumber.length - 4) + "****" + mobileNumber.substr(mobileNumber.length - 2);
 
-    function stopOTPCountdown() {
-        clearInterval(otpTimer);
-    }
+            // Show the OTP message in the designated div with bold red styling
+            $('#otpMessage').html('OTP Send to this no this No: <span class="bold-red-message">' + maskedNumber + '</span>. Please wait for 1 minute for OTP or click on Resend OTP.');
 
-    function resendOTP() {
-        // Reset any relevant state or data as needed
-        // For example, you might want to reset the OTP input field and any error messages
-        $('#OTP').val('');
-        $('#otpError').hide();
 
-        // Stop the previous countdown (if any)
-        stopOTPCountdown();
+            // Show the countdown message in the new div
+            //$('#countdownMessage').html('OTP Expires in 5m 0s');
+            $('#countdownMessage').show();
 
-        // Call the sendOTP function to resend the OTP
-        sendOTP();
-    }
-    //function verifyOTP() {
-    //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
-    //    var enteredOTP = document.getElementById("OTP").value;
+            // Toggle the visibility of the "Send OTP" and "Resend OTP" buttons
+            $('#sendOTPButton').hide();
+            $('#resendOTPButton').show();
 
-    //    // Make an AJAX request to the server to verify OTP
-    //    // You can use a library like jQuery or fetch API for the AJAX request
+            // AJAX POST request
+            $.ajax({
+                url: window.location.href + '/M1/USERF01/sendOTP', // Replace with your server-side endpoint URL
+                type: 'POST',
+                data: {
+                    MobileNumber: mobileNumber, EmailId: emailId,
+                },
+                success: function (response) {
 
-    //    // Example using jQuery
-    //    $.post(window.location.href + "/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
-    //        .done(function (response) {
-    //            alert(response); // Handle success
-    //            $('#otpMessage').hide();
-    //            $('#countdownMessage').hide();
+                    // Display messages on success
+                    alert(response.message);
+                    $('#otpMessage').show();
+                    // Start the 5-minute countdown
+                    startOTPCountdown();
 
-    //            // Change the color of the OTP input field to green
-    //            document.getElementById("OTP").style.borderColor = "green";
-    //            document.getElementById("otpError").style.display = "none"; // Hide the error message
-
-    //            document.getElementById("MOBILE_NUMBER").readOnly = true;
-
-    //        })
-    //        .fail(function (error) {
-    //            alert(error.responseText);
-
-    //            // Clear the OTP input field if OTP doesn't match
-    //            document.getElementById("OTP").value = "";
-    //            // Optionally, you can also change the color back to the default color
-    //            document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
-    //            // Show the error message
-    //            document.getElementById("otpError").style.display = "block";
-    //        });
-
-    //}
-    function verifyOTP() {
-        var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
-        var enteredOTP = document.getElementById("OTP").value;
-
-        // Make an AJAX request to the server to verify OTP
-        // Example using jQuery
-        $.post(window.location.href + "/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
-            .done(function (response) {
-                alert(response); // Handle success
-                $('#otpMessage').hide();
-                $('#countdownMessage').hide();
-
-                if (response === "OTP verification successful.") {
-                    // Server-side verification successful, change color on the client side
-                    $('#otpFlag').val("Y");
-                    changeInputFieldColor("OTP", "green");
-                    document.getElementById("OTP").readOnly = true;
-                    document.getElementById("MOBILE_NUMBER").readOnly = true;
-                } else {
-                    // Server-side verification failed, show error message
-                    showError("otpError", response);
+                    // Hide the OTP message upon successful OTP verification
+                },
+                error: function (error) {
+                    // Display messages on error
+                    alert(error.responseJSON.message);
                 }
-            })
-            .fail(function (error) {
-                alert(error.responseText);
-                // Handle AJAX request failure
             });
-    }
-
-    function changeInputFieldColor(elementId, color) {
-        document.getElementById(elementId).style.borderColor = color;
-    }
-
-    function showError(elementId, message) {
-        var errorElement = document.getElementById(elementId);
-        errorElement.style.display = "block";
-        errorElement.innerText = message;
-    }
-
-
-    //function verifyOTP() {
-    //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
-    //    var enteredOTP = document.getElementById("OTP").value;
-
-    //    // Make an AJAX request to the server to verify OTP
-    //    // You can use a library like jQuery or fetch API for the AJAX request
-
-    //    // Example using jQuery
-    //    $.post("/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
-    //        .done(function (response) {
-    //            alert(response); // Handle success
-    //            $('#otpMessage').hide();
-
-    //            // Change the color of the OTP input field to green
-    //            document.getElementById("OTP").style.borderColor = "green";
-    //            document.getElementById("otpError").style.display = "none"; // Hide the error message
-
-    //            // Stop the countdown when OTP is successfully verified
-    //            stopOTPCountdown();
-    //        })
-    //        .fail(function (error) {
-    //            alert(error.responseText);
-
-    //            // Clear the OTP input field if OTP doesn't match
-    //            document.getElementById("OTP").value = "";
-    //            // Optionally, you can also change the color back to the default color
-    //            document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
-    //            // Show the error message
-    //            document.getElementById("otpError").style.display = "block";
-    //        });
-    //}
-
-
-
-
-
-    document.getElementById("txtName").addEventListener("input", function () {
-        validateNameInput("txtName");
-    });
-
-    document.getElementById("MIDDLE_NAME").addEventListener("input", function () {
-        validateNameInput("MIDDLE_NAME");
-    });
-
-    document.getElementById("txtLASTNAME").addEventListener("input", function () {
-        validateNameInput("txtLASTNAME");
-    });
-
-
-    //VALIDATE1
-
-    document.getElementById("FATHER_NAME").addEventListener("input", function () {
-        validateNameInput1("FATHER_NAME");
-    });
-    document.getElementById("FATHER_OCCUPATION").addEventListener("input", function () {
-        validateNameInput1("FATHER_OCCUPATION");
-    });
-
-
-    document.getElementById("MOTHER_NAME").addEventListener("input", function () {
-        validateNameInput1("MOTHER_NAME");
-    });
-
-    document.getElementById("MOTHER_OCCUPATION").addEventListener("input", function () {
-        validateNameInput1("MOTHER_OCCUPATION");
-    });
-    document.getElementById("BIRTH_PLACE").addEventListener("input", function () {
-        validateNameInput1("BIRTH_PLACE");
-    });
-
-    document.getElementById("NATIONALITY").addEventListener("input", function () {
-        validateNameInput1("NATIONALITY");
-    });
-    document.getElementById("IDENTIFICATION_MARK").addEventListener("input", function () {
-        validateNameInput1("IDENTIFICATION_MARK");
-    });
-    document.getElementById("CITY").addEventListener("input", function () {
-        validateNameInput1("CITY");
-    });
-    document.getElementById("HOMETOWN").addEventListener("input", function () {
-        validateNameInput1("HOMETOWN");
-    });
-    document.getElementById("COUNTRY").addEventListener("input", function () {
-        validateNameInput1("COUNTRY");
-    });
-    document.getElementById("RelativeName").addEventListener("input", function () {
-        validateNameInput1("RelativeName");
-    });
-    document.getElementById("RelativeUnit").addEventListener("input", function () {
-        validateNameInput1("RelativeUnit");
-    });
-    document.getElementById("RelativePost").addEventListener("input", function () {
-        validateNameInput1("RelativePost");
-    });
-    document.getElementById("RelativePost").addEventListener("input", function () {
-        validateNameInput1("RelativePost");
-    });
-    document.getElementById("RelativeRelation").addEventListener("input", function () {
-        validateNameInput1("RelativeRelation");
-    });
-
-
-    function validateNameInput(inputId) {
-        var input = document.getElementById(inputId);
-
-
-        var cleanedValue = input.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
-
-
-        cleanedValue = cleanedValue.substring(0, 20);
-
-        // Update the input value with the cleaned and truncated value
-        input.value = cleanedValue;
-    }
-
-    function validateNameInput1(inputId) {
-        var input = document.getElementById(inputId);
-
-        // Preserve leading and trailing spaces
-        var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
-
-        cleanedValue = cleanedValue.substring(0, 35);
-
-        // Update the input value with cleaned value
-        input.value = cleanedValue;
-    }
-
-
-
-
-    function validateEmailid() {
-        var emailInput = document.getElementById('EMAIL_ID');
-
-        if (emailInput.checkValidity()) {
-            // The email is valid
-            return true;
-        } else {
-            // The email is invalid
-            alert("Please enter a valid Email Id.");
-            return false;
-        }
-    }
-
-    function validateAlternateEmailid() {
-        var emailInput = document.getElementById('ALTERNATE_EMAIL_ID');
-
-        if (emailInput === "") {
-            // If the field is empty, do not perform validation
-            return true;
         }
 
-        if (emailInput.checkValidity()) {
-            // The email is valid
-            return true;
-        } else {
-            // The email is invalid
-            alert("Please enter a valid Alternate Email Id.");
-            return false;
-        }
-    }
+        function startOTPCountdown() {
+            var countdown = 5 * 60; // 5 minutes in seconds
 
+            otpTimer = setInterval(function () {
+                if (countdown <= 0) {
+                    clearInterval(otpTimer);
+                    $('#otpMessage').html('OTP Expired. Please click on Resend OTP to receive a new OTP.');
+                    $('#otpMessage').show();
+                    $('#sendOTPButton').hide();
+                    $('#resendOTPButton').show();
 
-    function validateDateOfBirth() {
-        var dateOfBirth = $("#DATE_OF_BIRTH").val();
-
-        // Add your validation logic here
-        // For example, check if the date is not empty
-        if (dateOfBirth) {
-
-            return true;
-        }
-        else {
-            alert("please Enter Date Of Birth")
-            return false;
-
-        }
-
-        // Additional validation logic can be added as needed
-
-        // If everything is valid, hide the error message and return true
-        $("#birthplaceError").hide();
-        return true;
-    }
-
-
-
-    function validateAadharNumber() {
-        //Assuming Aadhar card number field has id="aadharNumber"
-        var aadharNumber = $('#AADHAR_NO').val();
-
-        //Regular expression for Aadhar card number validation
-        var aadharRegex = /^\d{12}$/;
-
-        if (aadharRegex.test(aadharNumber)) {
-            // Aadhar card number is valid
-            return true;
-
-
-        } else {
-            // Aadhar card number is invalid
-            alert('Invalid Aadhar Card Number. Please enter a 12-digit numeric value.');
-            return false;
-        }
-    }
-    function validatePincode() {
-
-        var pincodeInput = $('#PINCODE').val();
-
-
-        var pincode = /^\d{6}$/;
-
-        if (pincode.test(pincodeInput)) {
-            //
-            return true;
-
-
-        } else {
-
-            alert('Invalid PIN  Number. Please enter a 06 -digit numeric value.');
-            return false;
-        }
-    }
-
-    function validateMobileNumber() {
-        var mobileNumber = $('#MOBILE_NUMBER').val();
-        var mobileNumberRegex = /^\d{10}$/;
-
-        if (mobileNumberRegex.test(mobileNumber)) {
-
-            return true;
-        } else {
-            alert('Please enter a valid 10-digit mobile number.');
-            return false;
+                    // Hide the countdown message when the countdown is over
+                    $('#countdownMessage').hide();
+                } else {
+                    var minutes = Math.floor(countdown / 60);
+                    var seconds = countdown % 60;
+                    var timeRemaining = 'OTP Expires in ' + minutes + 'm ' + seconds + 's!';
+                    $('#countdownMessage').html(timeRemaining);
+                    countdown--;
+                }
+            }, 1000);
         }
 
 
-    }
-    function validateAlternateMobileNumber() {
-        var mobileNumber = $('#ALTERNATE_NUMBER').val().trim(); // Trim leading and trailing whitespaces
-        var mobileNumberRegex = /^\d{10}$/;
 
-        if (mobileNumber === "") {
-            // If the field is empty, do not perform validation
-            return true;
+
+        function stopOTPCountdown() {
+            clearInterval(otpTimer);
         }
 
-        if (mobileNumberRegex.test(mobileNumber)) {
-            return true;
-        } else {
-            alert('Please enter a valid 10-digit Alternate mobile number.');
-            return false;
+        function resendOTP() {
+            // Reset any relevant state or data as needed
+            // For example, you might want to reset the OTP input field and any error messages
+            $('#OTP').val('');
+            $('#otpError').hide();
+
+            // Stop the previous countdown (if any)
+            stopOTPCountdown();
+
+            // Call the sendOTP function to resend the OTP
+            sendOTP();
         }
-    }
+        //function verifyOTP() {
+        //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+        //    var enteredOTP = document.getElementById("OTP").value;
 
+        //    // Make an AJAX request to the server to verify OTP
+        //    // You can use a library like jQuery or fetch API for the AJAX request
 
+        //    // Example using jQuery
+        //    $.post(window.location.href + "/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
+        //        .done(function (response) {
+        //            alert(response); // Handle success
+        //            $('#otpMessage').hide();
+        //            $('#countdownMessage').hide();
 
+        //            // Change the color of the OTP input field to green
+        //            document.getElementById("OTP").style.borderColor = "green";
+        //            document.getElementById("otpError").style.display = "none"; // Hide the error message
 
+        //            document.getElementById("MOBILE_NUMBER").readOnly = true;
 
+        //        })
+        //        .fail(function (error) {
+        //            alert(error.responseText);
 
-    function validateRelativeEmpId() {
+        //            // Clear the OTP input field if OTP doesn't match
+        //            document.getElementById("OTP").value = "";
+        //            // Optionally, you can also change the color back to the default color
+        //            document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
+        //            // Show the error message
+        //            document.getElementById("otpError").style.display = "block";
+        //        });
 
-        var recEmpid = $('#RelativeEmpId').val();
-        var recEmpidRegex = /^\d{6}$/;
+        //}
+        function verifyOTP() {
+            var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+            var enteredOTP = document.getElementById("OTP").value;
 
-        if (recEmpidRegex.test(recEmpid)) {
+            // Make an AJAX request to the server to verify OTP
+            // Example using jQuery
+            $.post(window.location.href + "/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
+                .done(function (response) {
+                    alert(response); // Handle success
+                    $('#otpMessage').hide();
+                    $('#countdownMessage').hide();
 
-            return true;
-
-
+                    if (response === "OTP verification successful.") {
+                        // Server-side verification successful, change color on the client side
+                        $('#otpFlag').val("Y");
+                        changeInputFieldColor("OTP", "green");
+                        document.getElementById("OTP").readOnly = true;
+                        document.getElementById("MOBILE_NUMBER").readOnly = true;
+                    } else {
+                        // Server-side verification failed, show error message
+                        showError("otpError", response);
+                    }
+                })
+                .fail(function (error) {
+                    alert(error.responseText);
+                    // Handle AJAX request failure
+                });
         }
-        else {
-            alert("Please enter a valid Employee Number.");
-            return false;
+
+        function changeInputFieldColor(elementId, color) {
+            document.getElementById(elementId).style.borderColor = color;
+        }
+
+        function showError(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.style.display = "block";
+            errorElement.innerText = message;
         }
 
 
-    }
+        //function verifyOTP() {
+        //    var mobileNumber = document.getElementById("MOBILE_NUMBER").value;
+        //    var enteredOTP = document.getElementById("OTP").value;
+
+        //    // Make an AJAX request to the server to verify OTP
+        //    // You can use a library like jQuery or fetch API for the AJAX request
+
+        //    // Example using jQuery
+        //    $.post("/M1/USERF01/verifyOTP", { MobileNumber: mobileNumber, enteredOTP: enteredOTP })
+        //        .done(function (response) {
+        //            alert(response); // Handle success
+        //            $('#otpMessage').hide();
+
+        //            // Change the color of the OTP input field to green
+        //            document.getElementById("OTP").style.borderColor = "green";
+        //            document.getElementById("otpError").style.display = "none"; // Hide the error message
+
+        //            // Stop the countdown when OTP is successfully verified
+        //            stopOTPCountdown();
+        //        })
+        //        .fail(function (error) {
+        //            alert(error.responseText);
+
+        //            // Clear the OTP input field if OTP doesn't match
+        //            document.getElementById("OTP").value = "";
+        //            // Optionally, you can also change the color back to the default color
+        //            document.getElementById("OTP").style.borderColor = ""; // This will reset to the default color
+        //            // Show the error message
+        //            document.getElementById("otpError").style.display = "block";
+        //        });
+        //}
 
 
 
 
 
-    document.getElementById("STREET").addEventListener("input", function () {
-        validatelocationInput5("STREET");
-    });
+        document.getElementById("txtName").addEventListener("input", function () {
+            validateNameInput("txtName");
+        });
 
-    document.getElementById("AREA").addEventListener("input", function () {
-        validatelocationInput4("AREA");
-    });
+        document.getElementById("MIDDLE_NAME").addEventListener("input", function () {
+            validateNameInput("MIDDLE_NAME");
+        });
 
-    document.getElementById("HOUSE_NO").addEventListener("keyup", function () {
-        validatelocationInput4("HOUSE_NO");
-    });
-
-    document.getElementById("C_ADDRESS").addEventListener("input", function () {
-        validatelocationInput5("C_ADDRESS");
-    });
-
-    document.getElementById("P_ADDRESS").addEventListener("input", function () {
-        validatelocationInput5("P_ADDRESS");
-    });
+        document.getElementById("txtLASTNAME").addEventListener("input", function () {
+            validateNameInput("txtLASTNAME");
+        });
 
 
+        //VALIDATE1
+
+        document.getElementById("FATHER_NAME").addEventListener("input", function () {
+            validateNameInput1("FATHER_NAME");
+        });
+        document.getElementById("FATHER_OCCUPATION").addEventListener("input", function () {
+            validateNameInput1("FATHER_OCCUPATION");
+        });
 
 
+        document.getElementById("MOTHER_NAME").addEventListener("input", function () {
+            validateNameInput1("MOTHER_NAME");
+        });
 
-    function validatelocationInput4(inputId) {
-        var input = document.getElementById(inputId);
+        document.getElementById("MOTHER_OCCUPATION").addEventListener("input", function () {
+            validateNameInput1("MOTHER_OCCUPATION");
+        });
+        document.getElementById("BIRTH_PLACE").addEventListener("input", function () {
+            validateNameInput1("BIRTH_PLACE");
+        });
+
+        document.getElementById("NATIONALITY").addEventListener("input", function () {
+            validateNameInput1("NATIONALITY");
+        });
+        document.getElementById("IDENTIFICATION_MARK").addEventListener("input", function () {
+            validateNameInput1("IDENTIFICATION_MARK");
+        });
+        document.getElementById("CITY").addEventListener("input", function () {
+            validateNameInput1("CITY");
+        });
+        document.getElementById("HOMETOWN").addEventListener("input", function () {
+            validateNameInput1("HOMETOWN");
+        });
+        document.getElementById("COUNTRY").addEventListener("input", function () {
+            validateNameInput1("COUNTRY");
+        });
+        document.getElementById("RelativeName").addEventListener("input", function () {
+            validateNameInput1("RelativeName");
+        });
+        document.getElementById("RelativeUnit").addEventListener("input", function () {
+            validateNameInput1("RelativeUnit");
+        });
+        document.getElementById("RelativePost").addEventListener("input", function () {
+            validateNameInput1("RelativePost");
+        });
+        document.getElementById("RelativePost").addEventListener("input", function () {
+            validateNameInput1("RelativePost");
+        });
+        document.getElementById("RelativeRelation").addEventListener("input", function () {
+            validateNameInput1("RelativeRelation");
+        });
 
 
-        // Preserve leading and trailing spaces, allowing letters and numbers
-        var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
-
-        cleanedValue = cleanedValue.substring(0, 20);
-
-        // Update the input value with the cleaned value
-        input.value = cleanedValue;
+        function validateNameInput(inputId) {
+            var input = document.getElementById(inputId);
 
 
-    }
-    function validatelocationInput5(inputId, errorId) {
-        var input = document.getElementById(inputId);
+            var cleanedValue = input.value.replace(/[^a-zA-Z]/g, '').toUpperCase();
 
 
-        // Preserve leading and trailing spaces, allowing letters and numbers
-        var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+            cleanedValue = cleanedValue.substring(0, 20);
 
-
-        cleanedValue = cleanedValue.substring(0, 100);
-
-        // Update the input value with the cleaned value
-        input.value = cleanedValue;
-
-
-
-    }
-
-    document.getElementById("sameAsPermanent").addEventListener("change", function () {
-        if (this.checked) {
-            // If checkbox is checked, copy values from permanent address to correspondence address
-            document.getElementById("C_ADDRESS").value = document.getElementById("P_ADDRESS").value;
-            // Add additional fields if needed
-        } else {
-            // Clear correspondence address fields
-            document.getElementById("C_ADDRESS").value = "";
-            // Clear additional fields if needed
+            // Update the input value with the cleaned and truncated value
+            input.value = cleanedValue;
         }
-    });
+
+        function validateNameInput1(inputId) {
+            var input = document.getElementById(inputId);
+
+            // Preserve leading and trailing spaces
+            var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
+
+            cleanedValue = cleanedValue.substring(0, 35);
+
+            // Update the input value with cleaned value
+            input.value = cleanedValue;
+        }
 
 
-    $(document).ready(function () {
-        // Function to toggle the style based on the checkbox state
-        function toggleAddressStyle() {
-            var isSameAsPermanent = $("#sameAsPermanent").is(":checked");
 
-            if (isSameAsPermanent) {
-                // Apply your desired styling when checked
-                $("#C_ADDRESS").addClass("same-as-permanent");
+
+        function validateEmailid() {
+            var emailInput = document.getElementById('EMAIL_ID');
+
+            if (emailInput.checkValidity()) {
+                // The email is valid
+                return true;
             } else {
-                // Remove the styling when unchecked
-                $("#C_ADDRESS").removeClass("same-as-permanent");
+                // The email is invalid
+                alert("Please enter a valid Email Id.");
+                return false;
             }
         }
 
-        // Initial call to set the style based on the checkbox state
-        toggleAddressStyle();
+        function validateAlternateEmailid() {
+            var emailInput = document.getElementById('ALTERNATE_EMAIL_ID');
 
-        // Bind the function to the checkbox change event
-        $("#sameAsPermanent").change(function () {
-            toggleAddressStyle();
+            if (emailInput === "") {
+                // If the field is empty, do not perform validation
+                return true;
+            }
+
+            if (emailInput.checkValidity()) {
+                // The email is valid
+                return true;
+            } else {
+                // The email is invalid
+                alert("Please enter a valid Alternate Email Id.");
+                return false;
+            }
+        }
+
+
+        function validateDateOfBirth() {
+            var dateOfBirth = $("#DATE_OF_BIRTH").val();
+
+            // Add your validation logic here
+            // For example, check if the date is not empty
+            if (dateOfBirth) {
+
+                return true;
+            }
+            else {
+                alert("please Enter Date Of Birth")
+                return false;
+
+            }
+
+            // Additional validation logic can be added as needed
+
+            // If everything is valid, hide the error message and return true
+            $("#birthplaceError").hide();
+            return true;
+        }
+
+
+
+        function validateAadharNumber() {
+            //Assuming Aadhar card number field has id="aadharNumber"
+            var aadharNumber = $('#AADHAR_NO').val();
+
+            //Regular expression for Aadhar card number validation
+            var aadharRegex = /^\d{12}$/;
+
+            if (aadharRegex.test(aadharNumber)) {
+                // Aadhar card number is valid
+                return true;
+
+
+            } else {
+                // Aadhar card number is invalid
+                alert('Invalid Aadhar Card Number. Please enter a 12-digit numeric value.');
+                return false;
+            }
+        }
+        function validatePincode() {
+
+            var pincodeInput = $('#PINCODE').val();
+
+
+            var pincode = /^\d{6}$/;
+
+            if (pincode.test(pincodeInput)) {
+                //
+                return true;
+
+
+            } else {
+
+                alert('Invalid PIN  Number. Please enter a 06 -digit numeric value.');
+                return false;
+            }
+        }
+
+        function validateMobileNumber() {
+            var mobileNumber = $('#MOBILE_NUMBER').val();
+            var mobileNumberRegex = /^\d{10}$/;
+
+            if (mobileNumberRegex.test(mobileNumber)) {
+
+                return true;
+            } else {
+                alert('Please enter a valid 10-digit mobile number.');
+                return false;
+            }
+
+
+        }
+        function validateAlternateMobileNumber() {
+            var mobileNumber = $('#ALTERNATE_NUMBER').val().trim(); // Trim leading and trailing whitespaces
+            var mobileNumberRegex = /^\d{10}$/;
+
+            if (mobileNumber === "") {
+                // If the field is empty, do not perform validation
+                return true;
+            }
+
+            if (mobileNumberRegex.test(mobileNumber)) {
+                return true;
+            } else {
+                alert('Please enter a valid 10-digit Alternate mobile number.');
+                return false;
+            }
+        }
+
+
+
+
+
+
+        function validateRelativeEmpId() {
+
+            var recEmpid = $('#RelativeEmpId').val();
+            var recEmpidRegex = /^\d{6}$/;
+
+            if (recEmpidRegex.test(recEmpid)) {
+
+                return true;
+
+
+            }
+            else {
+                alert("Please enter a valid Employee Number.");
+                return false;
+            }
+
+
+        }
+
+
+
+
+
+        document.getElementById("STREET").addEventListener("input", function () {
+            validatelocationInput5("STREET");
         });
-    });
 
-    //document.getElementById("ExApperentice").addEventListener("change", function () {
-    //    validateSelect6("ExApperentice");
-    //});
+        document.getElementById("AREA").addEventListener("input", function () {
+            validatelocationInput4("AREA");
+        });
 
-    document.getElementById("RegNoEmpExchange").addEventListener("input", function () {
-        validatelocationInput6("RegNoEmpExchange");
-    });
+        document.getElementById("HOUSE_NO").addEventListener("keyup", function () {
+            validatelocationInput4("HOUSE_NO");
+        });
 
+        document.getElementById("C_ADDRESS").addEventListener("input", function () {
+            validatelocationInput5("C_ADDRESS");
+        });
 
-    function validatelocationInput6(inputId, errorId) {
-        var input = document.getElementById(inputId);
-
-
-        // Preserve leading and trailing spaces, allowing letters and numbers
-        var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
-
-
-        cleanedValue = cleanedValue.substring(0, 25);
-
-        // Update the input value with the cleaned value
-        input.value = cleanedValue;
+        document.getElementById("P_ADDRESS").addEventListener("input", function () {
+            validatelocationInput5("P_ADDRESS");
+        });
 
 
 
-    }
-
-    document.getElementById("NameEmpExchange").addEventListener("input", function () {
-        validateNameInput7("NameEmpExchange");
-    });
 
 
-    function validateNameInput7(inputId) {
-        var input = document.getElementById(inputId);
-
-        // Preserve leading and trailing spaces
-        var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
-
-        cleanedValue = cleanedValue.substring(0, 20);
-
-        // Update the input value with cleaned value
-        input.value = cleanedValue;
-    }
+        function validatelocationInput4(inputId) {
+            var input = document.getElementById(inputId);
 
 
+            // Preserve leading and trailing spaces, allowing letters and numbers
+            var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
 
-    document.getElementById("RegNumberMhrdNats").addEventListener("input", function () {
-        validatelocationInput8("RegNumberMhrdNats");
-    });
+            cleanedValue = cleanedValue.substring(0, 20);
 
-    function validatelocationInput8(inputId, errorId) {
-        var input = document.getElementById(inputId);
-
-
-        // Preserve leading and trailing spaces, allowing letters and numbers
-        var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+            // Update the input value with the cleaned value
+            input.value = cleanedValue;
 
 
-        cleanedValue = cleanedValue.substring(0, 25);
+        }
+        function validatelocationInput5(inputId, errorId) {
+            var input = document.getElementById(inputId);
 
-        // Update the input value with the cleaned value
-        input.value = cleanedValue;
+
+            // Preserve leading and trailing spaces, allowing letters and numbers
+            var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+
+
+            cleanedValue = cleanedValue.substring(0, 100);
+
+            // Update the input value with the cleaned value
+            input.value = cleanedValue;
 
 
 
-    }
-    //document.getElementById("RelativeEmpId").addEventListener("input", function () {
-    //    validatemobInput2("RelativeEmpId");
-    //});
-    //function validatepincodeInput(inputId) {
-    //    var input = document.getElementById(inputId);
+        }
 
-    //    // Remove non-numeric characters from the input value
-    //    var cleanedValue = input.value.replace(/\D/g, '');
-
-    //    cleanedValue = cleanedValue.substring(0, 6);
-
-
-
-    //    // Update the input value with cleaned value
-    //    input.value = cleanedValue;
+        document.getElementById("sameAsPermanent").addEventListener("change", function () {
+            if (this.checked) {
+                // If checkbox is checked, copy values from permanent address to correspondence address
+                document.getElementById("C_ADDRESS").value = document.getElementById("P_ADDRESS").value;
+                // Add additional fields if needed
+            } else {
+                // Clear correspondence address fields
+                document.getElementById("C_ADDRESS").value = "";
+                // Clear additional fields if needed
+            }
+        });
 
 
-    //}
+        $(document).ready(function () {
+            // Function to toggle the style based on the checkbox state
+            function toggleAddressStyle() {
+                var isSameAsPermanent = $("#sameAsPermanent").is(":checked");
+
+                if (isSameAsPermanent) {
+                    // Apply your desired styling when checked
+                    $("#C_ADDRESS").addClass("same-as-permanent");
+                } else {
+                    // Remove the styling when unchecked
+                    $("#C_ADDRESS").removeClass("same-as-permanent");
+                }
+            }
+
+            // Initial call to set the style based on the checkbox state
+            toggleAddressStyle();
+
+            // Bind the function to the checkbox change event
+            $("#sameAsPermanent").change(function () {
+                toggleAddressStyle();
+            });
+        });
+
+        //document.getElementById("ExApperentice").addEventListener("change", function () {
+        //    validateSelect6("ExApperentice");
+        //});
+
+        document.getElementById("RegNoEmpExchange").addEventListener("input", function () {
+            validatelocationInput6("RegNoEmpExchange");
+        });
+
+
+        function validatelocationInput6(inputId, errorId) {
+            var input = document.getElementById(inputId);
+
+
+            // Preserve leading and trailing spaces, allowing letters and numbers
+            var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+
+
+            cleanedValue = cleanedValue.substring(0, 25);
+
+            // Update the input value with the cleaned value
+            input.value = cleanedValue;
+
+
+
+        }
+
+        document.getElementById("NameEmpExchange").addEventListener("input", function () {
+            validateNameInput7("NameEmpExchange");
+        });
+
+
+        function validateNameInput7(inputId) {
+            var input = document.getElementById(inputId);
+
+            // Preserve leading and trailing spaces
+            var cleanedValue = input.value.replace(/[^A-Za-z ]/g, '').toUpperCase();
+
+            cleanedValue = cleanedValue.substring(0, 20);
+
+            // Update the input value with cleaned value
+            input.value = cleanedValue;
+        }
+
+
+
+        document.getElementById("RegNumberMhrdNats").addEventListener("input", function () {
+            validatelocationInput8("RegNumberMhrdNats");
+        });
+
+        function validatelocationInput8(inputId, errorId) {
+            var input = document.getElementById(inputId);
+
+
+            // Preserve leading and trailing spaces, allowing letters and numbers
+            var cleanedValue = input.value.replace(/[^A-Za-z0-9 ]/g, '').toUpperCase();
+
+
+            cleanedValue = cleanedValue.substring(0, 25);
+
+            // Update the input value with the cleaned value
+            input.value = cleanedValue;
+
+
+
+        }
+        //document.getElementById("RelativeEmpId").addEventListener("input", function () {
+        //    validatemobInput2("RelativeEmpId");
+        //});
+        //function validatepincodeInput(inputId) {
+        //    var input = document.getElementById(inputId);
+
+        //    // Remove non-numeric characters from the input value
+        //    var cleanedValue = input.value.replace(/\D/g, '');
+
+        //    cleanedValue = cleanedValue.substring(0, 6);
+
+
+
+        //    // Update the input value with cleaned value
+        //    input.value = cleanedValue;
+
+
+        //}
 
 
     ////    let currentTab = 1;
@@ -2177,526 +2177,538 @@
 
 
 
-    let currentTab = 1;
+        let currentTab = 1;
 
 
-    function areFieldsFilled(tabNumber) {
+        function areFieldsFilled(tabNumber) {
 
 
-        const tabId = `tab${tabNumber}`;
-        const inputs = document.getElementById(tabId).querySelectorAll("input[type='text'], input[type='email'], select");
+            const tabId = `tab${tabNumber}`;
+            const inputs = document.getElementById(tabId).querySelectorAll("input[type='text'], input[type='email'], select");
 
-        const emptyFields = [];
+            const emptyFields = [];
 
-        for (let i = 0; i < inputs.length; i++) {
-            const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
-            const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
-            const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
-            const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
-            const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
-            const isRelativeName = inputs[i].id === 'RelativeName';
-            const isRelativeUnit = inputs[i].id === 'RelativeUnit';
-            const isRelativePost = inputs[i].id === 'RelativePost';
-            const isRelativeRelation = inputs[i].id === 'RelativeRelation';
-            const isExApperentice = inputs[i].id === 'ExApperentice';
-            const isMIDDLE_NAME = inputs[i].id === 'MIDDLE_NAME';
-            const istxtLASTNAME = inputs[i].id === 'txtLASTNAME';
-            const isRegNoEmpExchange = inputs[i].id === 'RegNoEmpExchange';
-            const isNameEmpExchange = inputs[i].id === 'NameEmpExchange';
+            for (let i = 0; i < inputs.length; i++) {
+                const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
+                const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
+                const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
+                const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
+                const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
+                const isRelativeName = inputs[i].id === 'RelativeName';
+                const isRelativeUnit = inputs[i].id === 'RelativeUnit';
+                const isRelativePost = inputs[i].id === 'RelativePost';
+                const isRelativeRelation = inputs[i].id === 'RelativeRelation';
+                const isExApperentice = inputs[i].id === 'ExApperentice';
+                const isMIDDLE_NAME = inputs[i].id === 'MIDDLE_NAME';
+                const istxtLASTNAME = inputs[i].id === 'txtLASTNAME';
+                const isRegNoEmpExchange = inputs[i].id === 'RegNoEmpExchange';
+                const isNameEmpExchange = inputs[i].id === 'NameEmpExchange';
 
 
-            // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
-            if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice || isMIDDLE_NAME || istxtLASTNAME || isRegNoEmpExchange || isNameEmpExchange) {
-                continue;
+                // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
+                if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice || isMIDDLE_NAME || istxtLASTNAME || isRegNoEmpExchange || isNameEmpExchange) {
+                    continue;
+                }
+
+                if (inputs[i].nodeName === "SELECT" && inputs[i].selectedIndex === 0) {
+                    // Check if it's a select element and the selected index is 0 (default "Select" option)
+                    emptyFields.push(inputs[i].id);
+                } else if (inputs[i].value.trim() === "") {
+                    // Check if it's an input element and the value is empty
+                    emptyFields.push(inputs[i].id);
+                }
             }
 
-            if (inputs[i].nodeName === "SELECT" && inputs[i].selectedIndex === 0) {
-                // Check if it's a select element and the selected index is 0 (default "Select" option)
-                emptyFields.push(inputs[i].id);
-            } else if (inputs[i].value.trim() === "") {
-                // Check if it's an input element and the value is empty
-                emptyFields.push(inputs[i].id);
+
+            if (emptyFields.length > 0) {
+                const nonNullFields = emptyFields
+                    .map(field => document.querySelector(`label[for="${field}"]`))
+                    .filter(label => label !== null);
+
+                const emptyFieldsString = nonNullFields.map(label => label.innerText).join(', ');
+                alert(`Please fill in all details in ${emptyFieldsString} before proceeding.`);
+                return false;
             }
+
+            return true;
         }
 
-
-        if (emptyFields.length > 0) {
-            const nonNullFields = emptyFields
-                .map(field => document.querySelector(`label[for="${field}"]`))
-                .filter(label => label !== null);
-
-            const emptyFieldsString = nonNullFields.map(label => label.innerText).join(', ');
-            alert(`Please fill in all details in ${emptyFieldsString} before proceeding.`);
-            return false;
-        }
-
-        return true;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        // Open the first tab by default
-        openTabInitial('tab1');
-    });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Open the first tab by default
+            openTabInitial('tab1');
+        });
 
     function openTabInitial(tabName) {
         debugger;
-        var otpFlag = $('#otpFlag').val();
-        if (otpFlag == "I") {
+            var otpFlag = '@Context.Session.GetString("OtpFlag")';
+            //var otpFlag = '@ViewBag.OtpFlag';
+            /*var otpFlag = $('#otpFlag').val();*/
+            if (otpFlag == "I") {
 
-            const currentTab = parseInt(tabName.replace('tab', ''));
+                const currentTab = parseInt(tabName.replace('tab', ''));
 
-            // Check if all previous tabs are filled before moving to the current tab
-            for (let i = 1; i < currentTab; i++) {
-                if (!areFieldsFilled(i)) {
-                    alert(`Please fill in all details in Tab ${i} before proceeding.`);
+                // Check if all previous tabs are filled before moving to the current tab
+                for (let i = 1; i < currentTab; i++) {
+                    if (!areFieldsFilled(i)) {
+                        alert(`Please fill in all details in Tab ${i} before proceeding.`);
+                        return;
+                    }
+                }
+
+                // If the current tab is the last tab, check if it's filled before proceeding
+                if (currentTab === 4 && !areFieldsFilled(3)) {
+                    alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
                     return;
                 }
+
+                // Hide all tabs
+                const tabs = document.getElementsByClassName("tab");
+                for (let i = 0; i < tabs.length; i++) {
+                    tabs[i].style.display = "none";
+                }
+
+                // Remove active-button class from all tab buttons
+                const tabButtons = document.getElementsByClassName("tab-button");
+                for (let i = 0; i < tabButtons.length; i++) {
+                    tabButtons[i].classList.remove("active-button");
+                }
+
+                // Display the current tab
+                document.getElementById(tabName).style.display = "block";
+
+                // Add active-button class to the clicked tab button
+                const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+                clickedButton.classList.add("active-button");
             }
-
-            // If the current tab is the last tab, check if it's filled before proceeding
-            if (currentTab === 4 && !areFieldsFilled(3)) {
-                alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
-                return;
+            else {
+                alert("Please verify OTP");
             }
-
-            // Hide all tabs
-            const tabs = document.getElementsByClassName("tab");
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].style.display = "none";
-            }
-
-            // Remove active-button class from all tab buttons
-            const tabButtons = document.getElementsByClassName("tab-button");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove("active-button");
-            }
-
-            // Display the current tab
-            document.getElementById(tabName).style.display = "block";
-
-            // Add active-button class to the clicked tab button
-            const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
-            clickedButton.classList.add("active-button");
-        }
-        else {
-            alert("Please verify OTP");
-        }
     }
 
-    // Open tab function outside of DOMContentLoaded
+        // Open tab function outside of DOMContentLoaded
     function openTab(tabName) {
         debugger;
-        var otpFlag = $('#otpFlag').val();
-        if (otpFlag == "Y") {
+        var otpFlag = "";
+        var url = window.location.href + '/M1/USERF01/CheckVerifyFlag';
+        $.getJSON(url, function (data) {
+            debugger;
+            var flag = data.otpFlagRet;
+            otpFlag = flag;
+            if (otpFlag == "Y") {
 
-            const currentTab = parseInt(tabName.replace('tab', ''));
+                const currentTab = parseInt(tabName.replace('tab', ''));
 
-            // Check if all previous tabs are filled before moving to the current tab
-            for (let i = 1; i < currentTab; i++) {
-                if (!areFieldsFilled(i)) {
-                    alert(`Please fill in all details in Tab ${i} before proceeding.`);
+                // Check if all previous tabs are filled before moving to the current tab
+                for (let i = 1; i < currentTab; i++) {
+                    if (!areFieldsFilled(i)) {
+                        alert(`Please fill in all details in Tab ${i} before proceeding.`);
+                        return;
+                    }
+                }
+
+                // If the current tab is the last tab, check if it's filled before proceeding
+                if (currentTab === 4 && !areFieldsFilled(3)) {
+                    alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
                     return;
                 }
+
+                // Hide all tabs
+                const tabs = document.getElementsByClassName("tab");
+                for (let i = 0; i < tabs.length; i++) {
+                    tabs[i].style.display = "none";
+                }
+
+                // Remove active-button class from all tab buttons
+                const tabButtons = document.getElementsByClassName("tab-button");
+                for (let i = 0; i < tabButtons.length; i++) {
+                    tabButtons[i].classList.remove("active-button");
+                }
+
+                // Display the current tab
+                document.getElementById(tabName).style.display = "block";
+
+                // Add active-button class to the clicked tab button
+                const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
+                clickedButton.classList.add("active-button");
             }
-
-            // If the current tab is the last tab, check if it's filled before proceeding
-            if (currentTab === 4 && !areFieldsFilled(3)) {
-                alert("Please fill in all details in Tab 3 before proceeding to the last tab.");
-                return;
+            else {
+                alert("Please verify OTP");
             }
+        });
 
-            // Hide all tabs
-            const tabs = document.getElementsByClassName("tab");
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].style.display = "none";
-            }
-
-            // Remove active-button class from all tab buttons
-            const tabButtons = document.getElementsByClassName("tab-button");
-            for (let i = 0; i < tabButtons.length; i++) {
-                tabButtons[i].classList.remove("active-button");
-            }
-
-            // Display the current tab
-            document.getElementById(tabName).style.display = "block";
-
-            // Add active-button class to the clicked tab button
-            const clickedButton = document.querySelector(`[onclick="openTab('${tabName}')"]`);
-            clickedButton.classList.add("active-button");
-        }
-        else {
-            alert("Please verify OTP");
-        }
+           
     }
 
 
 
 
-    function togglePreview() {
-        var form = document.getElementById("CreateForm");
-        var previewContainer = document.getElementById("previewContainer");
-
-        //Clear existing content in the previewContainer
-        previewContainer.innerHTML = "";
-
-        //Toggle visibility of form and preview
-        form.style.display = form.style.display === "none" ? "block" : "none";
-        previewContainer.style.display = previewContainer.style.display === "none" ? "block" : "none";
-        var declarationSection; // Declare the variable here
-        //If transitioning to preview, update preview values
-        if (previewContainer.style.display === "block") {
-            // Add heading to the previewContainer
-            var heading = document.createElement("h5");
-            heading.innerHTML = "Preview Application Form";
-            heading.style.textAlign = "center";
-            heading.style.color = "blue";  // Set the text color to blue
-            heading.style.fontFamily = "Arial, sans-serif";  // Set the font family
-            heading.style.fontSize = "24px";  // Set the font size
-            heading.style.fontWeight = "bold";  // Set the font weight to bold
-
-            // Add a background color and padding for better appearance
-            heading.style.backgroundColor = "#f2f2f2";
-            heading.style.padding = "10px";
-
-            previewContainer.appendChild(heading);
 
 
-            previewContainer.appendChild(document.createElement("hr"));
+        function togglePreview() {
+            var form = document.getElementById("CreateForm");
+            var previewContainer = document.getElementById("previewContainer");
 
-            var entryCounter = 0;
+            //Clear existing content in the previewContainer
+            previewContainer.innerHTML = "";
 
-            //  Function to create and append additional section with entries
-            function appendAdditionalSection(entries) {
-                var additionalSection = document.createElement("div");
-                additionalSection.classList.add("row", "form-sm");
+            //Toggle visibility of form and preview
+            form.style.display = form.style.display === "none" ? "block" : "none";
+            previewContainer.style.display = previewContainer.style.display === "none" ? "block" : "none";
+            var declarationSection; // Declare the variable here
+            //If transitioning to preview, update preview values
+            if (previewContainer.style.display === "block") {
+                // Add heading to the previewContainer
+                var heading = document.createElement("h5");
+                heading.innerHTML = "Preview Application Form";
+                heading.style.textAlign = "center";
+                heading.style.color = "blue";  // Set the text color to blue
+                heading.style.fontFamily = "Arial, sans-serif";  // Set the font family
+                heading.style.fontSize = "24px";  // Set the font size
+                heading.style.fontWeight = "bold";  // Set the font weight to bold
 
-                for (var i = 0; i < entries.length; i++) {
-                    var entry = entries[i];
-                    var entryDiv = document.createElement("div");
-                    entryDiv.classList.add("col-sm-2", "col-md-4");
-                    entryDiv.innerHTML = `
+                // Add a background color and padding for better appearance
+                heading.style.backgroundColor = "#f2f2f2";
+                heading.style.padding = "10px";
+
+                previewContainer.appendChild(heading);
+
+
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entryCounter = 0;
+
+                //  Function to create and append additional section with entries
+                function appendAdditionalSection(entries) {
+                    var additionalSection = document.createElement("div");
+                    additionalSection.classList.add("row", "form-sm");
+
+                    for (var i = 0; i < entries.length; i++) {
+                        var entry = entries[i];
+                        var entryDiv = document.createElement("div");
+                        entryDiv.classList.add("col-sm-2", "col-md-4");
+                        entryDiv.innerHTML = `
                                                         <label for="preview${entry.id}">${entry.label}:</label>
                                                         <span id="preview${entry.id}">${form.elements[entry.id].value}</span>
                                                     `;
-                    additionalSection.appendChild(entryDiv);
+                        additionalSection.appendChild(entryDiv);
+                    }
+
+                    //Append the additional section to the previewContainer
+                    previewContainer.appendChild(additionalSection);
+
+                    // Increment entry counter
+                    entryCounter++;
+
+                    //  Check if three entries have been reached
+                    if (entryCounter % 14 === 0) {
+                        //   Add a horizontal line after every three entries
+                        previewContainer.appendChild(document.createElement("hr"));
+                    }
                 }
+                var entriesSet1 = [
+                    { id: "txtName", label: "First's Name" },
+                    { id: "MIDDLE_NAME", label: "Middle Name" },
+                    { id: "txtLASTNAME", label: "Last's Name" }
+                ];
+                appendAdditionalSection(entriesSet1);
 
-                //Append the additional section to the previewContainer
-                previewContainer.appendChild(additionalSection);
-
-                // Increment entry counter
-                entryCounter++;
-
-                //  Check if three entries have been reached
-                if (entryCounter % 14 === 0) {
-                    //   Add a horizontal line after every three entries
-                    previewContainer.appendChild(document.createElement("hr"));
-                }
-            }
-            var entriesSet1 = [
-                { id: "txtName", label: "First's Name" },
-                { id: "MIDDLE_NAME", label: "Middle Name" },
-                { id: "txtLASTNAME", label: "Last's Name" }
-            ];
-            appendAdditionalSection(entriesSet1);
-
-            //Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-            // First set of entries
-            var entriesSet2 = [
-                { id: "FATHER_NAME", label: "Father's Name" },
-                { id: "FATHER_OCCUPATION", label: "Father's Occupation" },
-                { id: "MOTHER_NAME", label: "Mother's Name" }
-            ];
-
-            appendAdditionalSection(entriesSet2);
-
-            //Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-
-            //Second set of entries
-            var entriesSet3 = [
-                { id: "MOTHER_OCCUPATION", label: "Mother's Occupation" },
-                { id: "Religion", label: "Religion" },
-                { id: "BIRTH_PLACE", label: "Birth Place" }
-            ];
-
-            appendAdditionalSection(entriesSet3);
-
-            //Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            //Third set of entries
-            var entriesSet4 = [
-                { id: "GENDER", label: "Gender" },
-                { id: "CATEGORY", label: "Category" },
-                { id: "NATIONALITY", label: "Nationality" }
-            ];
-
-            appendAdditionalSection(entriesSet4);
-
-            // Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet5 = [
-                { id: "IDENTIFICATION_MARK", label: "Indentification Marks" },
-                { id: "LandLoser", label: "LandLoser" },
-                { id: "DATE_OF_BIRTH", label: "Date Of Birth" }
-            ];
-
-            appendAdditionalSection(entriesSet5);
-
-            //  Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet6 = [
-                { id: "EMAIL_ID", label: "Email Id" },
-                { id: "ALTERNATE_EMAIL_ID", label: "Alternate Email Id" },
-                { id: "AADHAR_NO", label: "Aadhaar No" }
-            ];
-
-            appendAdditionalSection(entriesSet6);
-
-            // Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet7 = [
-                { id: "MOBILE_NUMBER", label: "Mobile Number" },
-                { id: "ALTERNATE_NUMBER", label: "Alternate Number" },
-                { id: "MARITAL_STATUS", label: "Marital Status" }
-            ];
-
-            appendAdditionalSection(entriesSet7);
-
-            // Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-
-            var entriesSet8 = [
-                { id: "P_ADDRESS", label: "Permanent Address " },
-                { id: "C_ADDRESS", label: "Correspondence Address" },
-                { id: "HOUSE_NO", label: "House No" }
-            ];
-
-            appendAdditionalSection(entriesSet8);
-
-
-            previewContainer.appendChild(document.createElement("hr"));
-
-
-            var entriesSet9 = [
-                { id: "STREET", label: "Street" },
-                { id: "AREA", label: "Area" }
-                /* { id: "StateName-Create", label: "State Name" }*/
-            ];
-
-            appendAdditionalSection(entriesSet9);
-
-            //Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet10 = [
-                /* { id: "DistrictName-Create", label: "District Name" },*/
-                { id: "CITY", label: "City" },
-                { id: "HOMETOWN", label: "Home Town" }
-            ];
-
-            appendAdditionalSection(entriesSet10);
-
-            // Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet11 = [
-                { id: "PINCODE", label: "Pin Code" },
-                { id: "COUNTRY", label: "Country" },
-
-            ];
-
-            appendAdditionalSection(entriesSet11);
-            //Append a horizontal line after every set of entries
-            previewContainer.appendChild(document.createElement("hr"));
-
-            // Assuming educationTableBody is the ID of the tbody in your education table
-            var educationTableBody = document.getElementById("educationTableBody");
-
-            // Get all rows inside educationTableBody
-            var educationRows = educationTableBody.querySelectorAll(".form-row");
-            // Create the heading for education details
-            var heading = document.createElement("h5");
-            heading.innerHTML = "Education Details";
-            heading.style.textAlign = "center";
-            heading.style.color = "blue";
-            heading.style.fontFamily = "Arial, sans-serif";
-            heading.style.fontSize = "24px";
-            heading.style.fontWeight = "bold";
-            heading.style.backgroundColor = "#f2f2f2";
-            heading.style.padding = "10px";
-
-            // Append the heading to the preview container
-            previewContainer.appendChild(heading);
-            // Create a table element for education details
-            var educationTable = document.createElement("table");
-            educationTable.border = '1';
-            educationTable.cellPadding = '5';
-            educationTable.cellSpacing = '0';
-            educationTable.style.width = '100%';
-            educationTable.style.backgroundColor = 'lightblue';
-
-            // Create the header row
-            var headerRow = educationTable.createTHead().insertRow(0);
-            var headerLabels = ["S.No", "Course/Degree", "Subjects", "Name Of Board / University", "Year Of Passing(YYYY)", "Roll No", "Marks Obtained", "Total Marks", "Percentage"];
-
-            for (var i = 0; i < headerLabels.length; i++) {
-                var headerCell = document.createElement("th");
-                headerCell.style.fontWeight = 'bold';
-                headerCell.textContent = headerLabels[i];
-                headerRow.appendChild(headerCell);
-            }
-
-            // Iterate through educationRows and create table rows
-            for (var i = 0; i < educationRows.length; i++) {
-                var educationRow = educationRows[i];
-                var sno = educationRow.querySelector(".sno").value;
-                var qualification = educationRow.querySelector(".qualification").value;
-                var subject = educationRow.querySelector(".subject").value;
-                var nameOfBoard = educationRow.querySelector(".nameOfBoard").value;
-                var yearOfPassing = educationRow.querySelector(".yearOfPassing").value;
-                var rollNo = educationRow.querySelector(".rollNo").value;
-                var marksObtained = educationRow.querySelector(".marksObtained").value;
-                var totalMarks = educationRow.querySelector(".totalMarks").value;
-                var percentage = educationRow.querySelector(".percentage").value;
-
-                // Append education details to the table
-                var row = educationTable.insertRow(-1);
-                var cells = [
-                    row.insertCell(0),
-                    row.insertCell(1),
-                    row.insertCell(2),
-                    row.insertCell(3),
-                    row.insertCell(4),
-                    row.insertCell(5),
-                    row.insertCell(6),
-                    row.insertCell(7),
-                    row.insertCell(8)
+                //Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+                // First set of entries
+                var entriesSet2 = [
+                    { id: "FATHER_NAME", label: "Father's Name" },
+                    { id: "FATHER_OCCUPATION", label: "Father's Occupation" },
+                    { id: "MOTHER_NAME", label: "Mother's Name" }
                 ];
 
-                cells[0].textContent = sno;
-                cells[1].textContent = qualification;
-                cells[2].textContent = subject;
-                cells[3].textContent = nameOfBoard;
-                cells[4].textContent = yearOfPassing;
-                cells[5].textContent = rollNo;
-                cells[6].textContent = marksObtained;
-                cells[7].textContent = totalMarks;
-                cells[8].textContent = percentage;
-            }
+                appendAdditionalSection(entriesSet2);
 
-            // Append the table to the preview container
-            previewContainer.appendChild(educationTable);
-
-            previewContainer.appendChild(document.createElement("hr"));
-            // ... (previous code)
-
-            // Add a heading for "OTHER DETAILS"
-            // Create the heading for education details
-            var heading = document.createElement("h5");
-            heading.innerHTML = "Other Details";
-            heading.style.textAlign = "center";
-            heading.style.color = "blue";
-            heading.style.fontFamily = "Arial, sans-serif";
-            heading.style.fontSize = "24px";
-            heading.style.fontWeight = "bold";
-            heading.style.backgroundColor = "#f2f2f2";
-            heading.style.padding = "10px";
-
-            // Append the heading to the preview container
-            previewContainer.appendChild(heading);
-
-            // Add some styling to the "OTHER DETAILS" section
-            var otherDetailsSection = document.createElement("div");
-            otherDetailsSection.style.padding = "10px"; // Add padding for better appearance
-            previewContainer.appendChild(otherDetailsSection);
-
-            var entriesSet12 = [
-                { id: "ExApperentice", label: "EX APPRENTICE" },
-                { id: "RegNoEmpExchange", label: "REG NO EMP EXCHANGE" },
-            ];
-
-            // Append a container for entriesSet12
-            var entriesSet12Container = document.createElement("div");
-            entriesSet12Container.style.padding = "5px"; // Add padding for better appearance
-            otherDetailsSection.appendChild(entriesSet12Container);
-
-            // Append entriesSet12 to the container
-            appendAdditionalSection(entriesSet12, entriesSet12Container);
-
-            previewContainer.appendChild(document.createElement("hr"));
-
-            var entriesSet13 = [
-                { id: "NameEmpExchange", label: "NAME EMP EXCHANGE" },
-                { id: "RegNumberMhrdNats", label: "REG NUMBER MHRD NATS" }
-            ];
-
-            var entriesSet13Container = document.createElement("div");
-            entriesSet13Container.style.padding = "5px"; // Add padding for better appearance
-            otherDetailsSection.appendChild(entriesSet13Container);
-
-            // Append entriesSet13 to the container
-            appendAdditionalSection(entriesSet13, entriesSet13Container);
-
-            previewContainer.appendChild(document.createElement("hr"));
+                //Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
 
 
+                //Second set of entries
+                var entriesSet3 = [
+                    { id: "MOTHER_OCCUPATION", label: "Mother's Occupation" },
+                    { id: "Religion", label: "Religion" },
+                    { id: "BIRTH_PLACE", label: "Birth Place" }
+                ];
+
+                appendAdditionalSection(entriesSet3);
+
+                //Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                //Third set of entries
+                var entriesSet4 = [
+                    { id: "GENDER", label: "Gender" },
+                    { id: "CATEGORY", label: "Category" },
+                    { id: "NATIONALITY", label: "Nationality" }
+                ];
+
+                appendAdditionalSection(entriesSet4);
+
+                // Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet5 = [
+                    { id: "IDENTIFICATION_MARK", label: "Indentification Marks" },
+                    { id: "LandLoser", label: "LandLoser" },
+                    { id: "DATE_OF_BIRTH", label: "Date Of Birth" }
+                ];
+
+                appendAdditionalSection(entriesSet5);
+
+                //  Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet6 = [
+                    { id: "EMAIL_ID", label: "Email Id" },
+                    { id: "ALTERNATE_EMAIL_ID", label: "Alternate Email Id" },
+                    { id: "AADHAR_NO", label: "Aadhaar No" }
+                ];
+
+                appendAdditionalSection(entriesSet6);
+
+                // Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet7 = [
+                    { id: "MOBILE_NUMBER", label: "Mobile Number" },
+                    { id: "ALTERNATE_NUMBER", label: "Alternate Number" },
+                    { id: "MARITAL_STATUS", label: "Marital Status" }
+                ];
+
+                appendAdditionalSection(entriesSet7);
+
+                // Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+
+                var entriesSet8 = [
+                    { id: "P_ADDRESS", label: "Permanent Address " },
+                    { id: "C_ADDRESS", label: "Correspondence Address" },
+                    { id: "HOUSE_NO", label: "House No" }
+                ];
+
+                appendAdditionalSection(entriesSet8);
+
+
+                previewContainer.appendChild(document.createElement("hr"));
+
+
+                var entriesSet9 = [
+                    { id: "STREET", label: "Street" },
+                    { id: "AREA", label: "Area" }
+                    /* { id: "StateName-Create", label: "State Name" }*/
+                ];
+
+                appendAdditionalSection(entriesSet9);
+
+                //Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet10 = [
+                    /* { id: "DistrictName-Create", label: "District Name" },*/
+                    { id: "CITY", label: "City" },
+                    { id: "HOMETOWN", label: "Home Town" }
+                ];
+
+                appendAdditionalSection(entriesSet10);
+
+                // Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet11 = [
+                    { id: "PINCODE", label: "Pin Code" },
+                    { id: "COUNTRY", label: "Country" },
+
+                ];
+
+                appendAdditionalSection(entriesSet11);
+                //Append a horizontal line after every set of entries
+                previewContainer.appendChild(document.createElement("hr"));
+
+                // Assuming educationTableBody is the ID of the tbody in your education table
+                var educationTableBody = document.getElementById("educationTableBody");
+
+                // Get all rows inside educationTableBody
+                var educationRows = educationTableBody.querySelectorAll(".form-row");
+                // Create the heading for education details
+                var heading = document.createElement("h5");
+                heading.innerHTML = "Education Details";
+                heading.style.textAlign = "center";
+                heading.style.color = "blue";
+                heading.style.fontFamily = "Arial, sans-serif";
+                heading.style.fontSize = "24px";
+                heading.style.fontWeight = "bold";
+                heading.style.backgroundColor = "#f2f2f2";
+                heading.style.padding = "10px";
+
+                // Append the heading to the preview container
+                previewContainer.appendChild(heading);
+                // Create a table element for education details
+                var educationTable = document.createElement("table");
+                educationTable.border = '1';
+                educationTable.cellPadding = '5';
+                educationTable.cellSpacing = '0';
+                educationTable.style.width = '100%';
+                educationTable.style.backgroundColor = 'lightblue';
+
+                // Create the header row
+                var headerRow = educationTable.createTHead().insertRow(0);
+                var headerLabels = ["S.No", "Course/Degree", "Subjects", "Name Of Board / University", "Year Of Passing(YYYY)", "Roll No", "Marks Obtained", "Total Marks", "Percentage"];
+
+                for (var i = 0; i < headerLabels.length; i++) {
+                    var headerCell = document.createElement("th");
+                    headerCell.style.fontWeight = 'bold';
+                    headerCell.textContent = headerLabels[i];
+                    headerRow.appendChild(headerCell);
+                }
+
+                // Iterate through educationRows and create table rows
+                for (var i = 0; i < educationRows.length; i++) {
+                    var educationRow = educationRows[i];
+                    var sno = educationRow.querySelector(".sno").value;
+                    var qualification = educationRow.querySelector(".qualification").value;
+                    var subject = educationRow.querySelector(".subject").value;
+                    var nameOfBoard = educationRow.querySelector(".nameOfBoard").value;
+                    var yearOfPassing = educationRow.querySelector(".yearOfPassing").value;
+                    var rollNo = educationRow.querySelector(".rollNo").value;
+                    var marksObtained = educationRow.querySelector(".marksObtained").value;
+                    var totalMarks = educationRow.querySelector(".totalMarks").value;
+                    var percentage = educationRow.querySelector(".percentage").value;
+
+                    // Append education details to the table
+                    var row = educationTable.insertRow(-1);
+                    var cells = [
+                        row.insertCell(0),
+                        row.insertCell(1),
+                        row.insertCell(2),
+                        row.insertCell(3),
+                        row.insertCell(4),
+                        row.insertCell(5),
+                        row.insertCell(6),
+                        row.insertCell(7),
+                        row.insertCell(8)
+                    ];
+
+                    cells[0].textContent = sno;
+                    cells[1].textContent = qualification;
+                    cells[2].textContent = subject;
+                    cells[3].textContent = nameOfBoard;
+                    cells[4].textContent = yearOfPassing;
+                    cells[5].textContent = rollNo;
+                    cells[6].textContent = marksObtained;
+                    cells[7].textContent = totalMarks;
+                    cells[8].textContent = percentage;
+                }
+
+                // Append the table to the preview container
+                previewContainer.appendChild(educationTable);
+
+                previewContainer.appendChild(document.createElement("hr"));
+                // ... (previous code)
+
+                // Add a heading for "OTHER DETAILS"
+                // Create the heading for education details
+                var heading = document.createElement("h5");
+                heading.innerHTML = "Other Details";
+                heading.style.textAlign = "center";
+                heading.style.color = "blue";
+                heading.style.fontFamily = "Arial, sans-serif";
+                heading.style.fontSize = "24px";
+                heading.style.fontWeight = "bold";
+                heading.style.backgroundColor = "#f2f2f2";
+                heading.style.padding = "10px";
+
+                // Append the heading to the preview container
+                previewContainer.appendChild(heading);
+
+                // Add some styling to the "OTHER DETAILS" section
+                var otherDetailsSection = document.createElement("div");
+                otherDetailsSection.style.padding = "10px"; // Add padding for better appearance
+                previewContainer.appendChild(otherDetailsSection);
+
+                var entriesSet12 = [
+                    { id: "ExApperentice", label: "EX APPRENTICE" },
+                    { id: "RegNoEmpExchange", label: "REG NO EMP EXCHANGE" },
+                ];
+
+                // Append a container for entriesSet12
+                var entriesSet12Container = document.createElement("div");
+                entriesSet12Container.style.padding = "5px"; // Add padding for better appearance
+                otherDetailsSection.appendChild(entriesSet12Container);
+
+                // Append entriesSet12 to the container
+                appendAdditionalSection(entriesSet12, entriesSet12Container);
+
+                previewContainer.appendChild(document.createElement("hr"));
+
+                var entriesSet13 = [
+                    { id: "NameEmpExchange", label: "NAME EMP EXCHANGE" },
+                    { id: "RegNumberMhrdNats", label: "REG NUMBER MHRD NATS" }
+                ];
+
+                var entriesSet13Container = document.createElement("div");
+                entriesSet13Container.style.padding = "5px"; // Add padding for better appearance
+                otherDetailsSection.appendChild(entriesSet13Container);
+
+                // Append entriesSet13 to the container
+                appendAdditionalSection(entriesSet13, entriesSet13Container);
+
+                previewContainer.appendChild(document.createElement("hr"));
 
 
 
-            // Create the heading for education details
-            var heading = document.createElement("h5");
-            heading.innerHTML = "Relative Details";
-            heading.style.textAlign = "center";
-            heading.style.color = "blue";
-            heading.style.fontFamily = "Arial, sans-serif";
-            heading.style.fontSize = "24px";
-            heading.style.fontWeight = "bold";
-            heading.style.backgroundColor = "#f2f2f2";
-            heading.style.padding = "10px";
 
-            // Append the heading to the preview container
-            previewContainer.appendChild(heading);
 
-            // Check the value of IffcoEmployee
-            var iffcoEmployeeValue = form.elements["IffcoEmployee"].value;
+                // Create the heading for education details
+                var heading = document.createElement("h5");
+                heading.innerHTML = "Relative Details";
+                heading.style.textAlign = "center";
+                heading.style.color = "blue";
+                heading.style.fontFamily = "Arial, sans-serif";
+                heading.style.fontSize = "24px";
+                heading.style.fontWeight = "bold";
+                heading.style.backgroundColor = "#f2f2f2";
+                heading.style.padding = "10px";
 
-            // Display the preview for IffcoEmployee
-            var iffcoEmployeePreview = document.createElement("div");
-            iffcoEmployeePreview.innerHTML = `
+                // Append the heading to the preview container
+                previewContainer.appendChild(heading);
+
+                // Check the value of IffcoEmployee
+                var iffcoEmployeeValue = form.elements["IffcoEmployee"].value;
+
+                // Display the preview for IffcoEmployee
+                var iffcoEmployeePreview = document.createElement("div");
+                iffcoEmployeePreview.innerHTML = `
           <p>
                 <span style="color: brown; font-weight: bold;">IF SON/DAUGHTER OF EMPLOYEE OR EX-EMPLOYEE OF IFFCO:</span>
                 <span style="color: purple; font-weight: bold;"> ${iffcoEmployeeValue}</span>
             </p>
 `;
 
-            // Append the preview for IffcoEmployee to the previewContainer
-            previewContainer.appendChild(iffcoEmployeePreview);
-            previewContainer.appendChild(document.createElement("hr"));
+                // Append the preview for IffcoEmployee to the previewContainer
+                previewContainer.appendChild(iffcoEmployeePreview);
+                previewContainer.appendChild(document.createElement("hr"));
 
-            // If the value of IffcoEmployee is "YES", show the preview for RELATIVE DETAILS
-            if (iffcoEmployeeValue === "YES") {
-                // Get the values from the form
-                var relativeEmpId = form.elements["RelativeEmpId"].value;
-                var relativeName = form.elements["RelativeName"].value;
-                var relativeUnit = form.elements["RelativeUnit"].value;
-                var relativePost = form.elements["RelativePost"].value;
-                var relativeRelation = form.elements["RelativeRelation"].value;
+                // If the value of IffcoEmployee is "YES", show the preview for RELATIVE DETAILS
+                if (iffcoEmployeeValue === "YES") {
+                    // Get the values from the form
+                    var relativeEmpId = form.elements["RelativeEmpId"].value;
+                    var relativeName = form.elements["RelativeName"].value;
+                    var relativeUnit = form.elements["RelativeUnit"].value;
+                    var relativePost = form.elements["RelativePost"].value;
+                    var relativeRelation = form.elements["RelativeRelation"].value;
 
-                // Create a div to contain the colored table
-                var tableContainer = document.createElement("div");
-                tableContainer.classList.add("colored-table-container");
+                    // Create a div to contain the colored table
+                    var tableContainer = document.createElement("div");
+                    tableContainer.classList.add("colored-table-container");
 
-                // Display the preview for RELATIVE DETAILS with a colored table
-                var relativeDetailsPreview = document.createElement("div");
-                relativeDetailsPreview.innerHTML = `
+                    // Display the preview for RELATIVE DETAILS with a colored table
+                    var relativeDetailsPreview = document.createElement("div");
+                    relativeDetailsPreview.innerHTML = `
 
                 <table class="colored-table"  style="color: brown; font-weight: bold;">
                     <thead>
@@ -2720,639 +2732,849 @@
                 </table>
             `;
 
-                // Append the colored table preview for RELATIVE DETAILS to the tableContainer
-                tableContainer.appendChild(relativeDetailsPreview);
+                    // Append the colored table preview for RELATIVE DETAILS to the tableContainer
+                    tableContainer.appendChild(relativeDetailsPreview);
 
-                // Append the colored table container to the previewContainer
-                previewContainer.appendChild(tableContainer);
-                previewContainer.appendChild(document.createElement("hr"));
+                    // Append the colored table container to the previewContainer
+                    previewContainer.appendChild(tableContainer);
+                    previewContainer.appendChild(document.createElement("hr"));
+                }
+
+
+
+
+                //Continue adding sets of entries as needed...
+                // Creating an "Edit" button
+                var editButton = document.createElement("button");
+                editButton.innerHTML = "Edit";
+                editButton.classList.add("btn", "btn-primary", "btn-lg"); // Add the desired size class
+                editButton.style.display = "block"; // Make the button a block element
+                editButton.style.margin = "auto"; // Center the button
+
+                // Add an event listener to handle the "Edit" button click
+                editButton.addEventListener("click", function () {
+                    // Handle the click event to switch back to the form view
+                    form.style.display = "block";
+                    previewContainer.style.display = "none";
+                });
+
+                // Append the "Edit" button to the body
+                document.body.appendChild(editButton);
+
+                // Append the "Edit" button to the previewContainer
+                previewContainer.appendChild(editButton);
+                var editButton = document.createElement("button");
+                editButton.innerHTML = "Back to Save";
+                editButton.classList.add("btn", "btn-primary", "btn-lg"); // Add the desired size class
+                editButton.style.display = "block"; // Make the button a block element
+                editButton.style.margin = "auto"; // Center the button
+
+                // Add an event listener to handle the "Edit" button click
+                editButton.addEventListener("click", function () {
+                    // Handle the click event to switch back to the form view
+                    form.style.display = "block";
+                    previewContainer.style.display = "none";
+                });
+
+                // Append the "Edit" button to the body
+                document.body.appendChild(editButton);
+
+                // Append the "Edit" button to the previewContainer
+                previewContainer.appendChild(editButton);
+
+                //var printButton = document.createElement("button");
+                //printButton.innerText = "Print Data";
+                //printButton.classList.add("btn", "btn-primary");
+                //printButton.addEventListener("click", printData);
+
+                //previewContainer.appendChild(printButton);
+
+
+
+                // Create a container to hold the buttons
+                var buttonContainer = document.createElement("div");
+                buttonContainer.classList.add("button-container");
+
+                // Append buttons to the container
+                buttonContainer.appendChild(editButton);
+                //buttonContainer.appendChild(printButton);
+
+
+                // Append the container to the previewContainer
+                previewContainer.appendChild(buttonContainer);
+
+                // Hide the print button before printing
+                window.addEventListener("beforeprint", function () {
+                    printButton.style.display = "none";
+                });
+
+                // Show the print button after printing
+                window.addEventListener("afterprint", function () {
+                    printButton.style.display = "block";
+                });
+
             }
-
-
-
-
-            //Continue adding sets of entries as needed...
-            // Creating an "Edit" button
-            var editButton = document.createElement("button");
-            editButton.innerHTML = "Edit";
-            editButton.classList.add("btn", "btn-primary", "btn-lg"); // Add the desired size class
-            editButton.style.display = "block"; // Make the button a block element
-            editButton.style.margin = "auto"; // Center the button
-
-            // Add an event listener to handle the "Edit" button click
-            editButton.addEventListener("click", function () {
-                // Handle the click event to switch back to the form view
-                form.style.display = "block";
-                previewContainer.style.display = "none";
-            });
-
-            // Append the "Edit" button to the body
-            document.body.appendChild(editButton);
-
-            // Append the "Edit" button to the previewContainer
-            previewContainer.appendChild(editButton);
-            var editButton = document.createElement("button");
-            editButton.innerHTML = "Back to Save";
-            editButton.classList.add("btn", "btn-primary", "btn-lg"); // Add the desired size class
-            editButton.style.display = "block"; // Make the button a block element
-            editButton.style.margin = "auto"; // Center the button
-
-            // Add an event listener to handle the "Edit" button click
-            editButton.addEventListener("click", function () {
-                // Handle the click event to switch back to the form view
-                form.style.display = "block";
-                previewContainer.style.display = "none";
-            });
-
-            // Append the "Edit" button to the body
-            document.body.appendChild(editButton);
-
-            // Append the "Edit" button to the previewContainer
-            previewContainer.appendChild(editButton);
-
-            //var printButton = document.createElement("button");
-            //printButton.innerText = "Print Data";
-            //printButton.classList.add("btn", "btn-primary");
-            //printButton.addEventListener("click", printData);
-
-            //previewContainer.appendChild(printButton);
-
-
-
-            // Create a container to hold the buttons
-            var buttonContainer = document.createElement("div");
-            buttonContainer.classList.add("button-container");
-
-            // Append buttons to the container
-            buttonContainer.appendChild(editButton);
-            //buttonContainer.appendChild(printButton);
-
-
-            // Append the container to the previewContainer
-            previewContainer.appendChild(buttonContainer);
-
-            // Hide the print button before printing
-            window.addEventListener("beforeprint", function () {
-                printButton.style.display = "none";
-            });
-
-            // Show the print button after printing
-            window.addEventListener("afterprint", function () {
-                printButton.style.display = "block";
-            });
-
         }
-    }
 
 
 
-    //var uploadedFiles = { image: null, pdf: null };
+        //var uploadedFiles = { image: null, pdf: null };
 
-    //$(document).on("change", "#imageFile, #pdfFile", function () {
-    //    var inputId = this.id;
-    //    var fileType = inputId === "imageFile" ? "image" : "pdf";
-    //    var files = document.querySelector("#" + inputId).files;
+        //$(document).on("change", "#imageFile, #pdfFile", function () {
+        //    var inputId = this.id;
+        //    var fileType = inputId === "imageFile" ? "image" : "pdf";
+        //    var files = document.querySelector("#" + inputId).files;
 
-    //    if (files.length > 0) {
-    //        var fileSize = files[0].size;
+        //    if (files.length > 0) {
+        //        var fileSize = files[0].size;
 
-    //        // Check file size
-    //        if (fileSize > 2 * 1024 * 1024) {
-    //            Swal.fire({
-    //                icon: "error",
-    //                title: "Size issue...",
-    //                text: "File size must be less than 2MB."
-    //            });
+        //        // Check file size
+        //        if (fileSize > 2 * 1024 * 1024) {
+        //            Swal.fire({
+        //                icon: "error",
+        //                title: "Size issue...",
+        //                text: "File size must be less than 2MB."
+        //            });
 
-    //            /*alert('');*/
-    //            $("#" + inputId).val('');
-    //            return;
-    //        }
+        //            /*alert('');*/
+        //            $("#" + inputId).val('');
+        //            return;
+        //        }
 
-    //        var promise = getBase64(files[0]);
-    //        promise.then(function (result) {
-    //            var comma = result.indexOf(',');
-    //            var base64 = result.substr(comma + 1);
-    //            var strBase64 = base64;
-    //            var fileName = files[0].name;
+        //        var promise = getBase64(files[0]);
+        //        promise.then(function (result) {
+        //            var comma = result.indexOf(',');
+        //            var base64 = result.substr(comma + 1);
+        //            var strBase64 = base64;
+        //            var fileName = files[0].name;
 
-    //            if (uploadedFiles[fileType]) {
-    //                var existingRow = $("#HrmsHrdGrid tbody td:contains('" + fileType + "')").closest('tr');
-    //                existingRow.find('td:first').text(fileName);
-    //                existingRow.find('td:eq(1)').text(fileSize);
-    //                existingRow.find('td:eq(2) input#attachType').val(fileType);
-    //                existingRow.find('input#attachFile').val(strBase64);
-    //                existingRow.find('i').text('Ready for Upload');
+        //            if (uploadedFiles[fileType]) {
+        //                var existingRow = $("#HrmsHrdGrid tbody td:contains('" + fileType + "')").closest('tr');
+        //                existingRow.find('td:first').text(fileName);
+        //                existingRow.find('td:eq(1)').text(fileSize);
+        //                existingRow.find('td:eq(2) input#attachType').val(fileType);
+        //                existingRow.find('input#attachFile').val(strBase64);
+        //                existingRow.find('i').text('Ready for Upload');
 
-    //                uploadedFiles[fileType] = {
-    //                    name: fileName,
-    //                    size: fileSize,
-    //                    base64: strBase64
-    //                };
-    //            } else {
-    //                if (fileSize > 2 * 1024 * 1024) {
+        //                uploadedFiles[fileType] = {
+        //                    name: fileName,
+        //                    size: fileSize,
+        //                    base64: strBase64
+        //                };
+        //            } else {
+        //                if (fileSize > 2 * 1024 * 1024) {
 
-    //                    Swal.fire({
-    //                        icon: "error",
-    //                        title: "Size issue...",
-    //                        text: "File size must be less than 2MB."
-    //                    });
-    //                    $("#" + inputId).val('');
-    //                    return;
-    //                }
+        //                    Swal.fire({
+        //                        icon: "error",
+        //                        title: "Size issue...",
+        //                        text: "File size must be less than 2MB."
+        //                    });
+        //                    $("#" + inputId).val('');
+        //                    return;
+        //                }
 
-    //                var trHTML = '<tr>';
-    //                trHTML += '<td>' + fileName + '</td>';
-    //                trHTML += '<td>' + fileSize + '</td>';
-    //                trHTML += '<td><input type="text" readonly id="attachType' + 1 + '" value="' + fileType + '" /></td>';
-    //                trHTML += '<td><input type="hidden" id="attachFile" value="' + strBase64 + '" /><i>Ready for Upload</i></td>';
-    //                trHTML += '</tr>';
-    //                $('#HrmsHrdGrid tbody').append(trHTML);
+        //                var trHTML = '<tr>';
+        //                trHTML += '<td>' + fileName + '</td>';
+        //                trHTML += '<td>' + fileSize + '</td>';
+        //                trHTML += '<td><input type="text" readonly id="attachType' + 1 + '" value="' + fileType + '" /></td>';
+        //                trHTML += '<td><input type="hidden" id="attachFile" value="' + strBase64 + '" /><i>Ready for Upload</i></td>';
+        //                trHTML += '</tr>';
+        //                $('#HrmsHrdGrid tbody').append(trHTML);
 
-    //                uploadedFiles[fileType] = {
-    //                    name: fileName,
-    //                    size: fileSize,
-    //                    base64: strBase64
-    //                };
-    //            }
-    //        });
-    //    }
-    //});
+        //                uploadedFiles[fileType] = {
+        //                    name: fileName,
+        //                    size: fileSize,
+        //                    base64: strBase64
+        //                };
+        //            }
+        //        });
+        //    }
+        //});
 
-    var uploadedFiles = { image: null, pdf: null };
+        var uploadedFiles = { image: null, pdf: null };
 
-    $(document).on("change", "#imageFile, #pdfFile", function () {
-        var inputId = this.id;
-        var fileType = inputId === "imageFile" ? "image" : "pdf";
-        var files = document.querySelector("#" + inputId).files;
+        $(document).on("change", "#imageFile, #pdfFile", function () {
+            var inputId = this.id;
+            var fileType = inputId === "imageFile" ? "image" : "pdf";
+            var files = document.querySelector("#" + inputId).files;
 
-        if (files.length > 0) {
-            var fileSize = files[0].size;
+            if (files.length > 0) {
+                var fileSize = files[0].size;
 
-            // Check file size
-            if (fileType === "pdf" && fileSize > 5 * 1024 * 1024) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Size issue...",
-                    text: "PDF file size must be less than 5MB."
+                // Check file size
+                if (fileType === "pdf" && fileSize > 5 * 1024 * 1024) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Size issue...",
+                        text: "PDF file size must be less than 5MB."
+                    });
+                    $("#" + inputId).val('');
+                    return;
+                }
+
+                // Additional check for all files
+                if (fileSize > 2 * 1024 * 1024) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Size issue...",
+                        text: "File size must be less than 2MB."
+                    });
+                    $("#" + inputId).val('');
+                    return;
+                }
+
+                var promise = getBase64(files[0]);
+                promise.then(function (result) {
+                    var comma = result.indexOf(',');
+                    var base64 = result.substr(comma + 1);
+                    var strBase64 = base64;
+                    var fileName = files[0].name;
+
+                    if (uploadedFiles[fileType]) {
+                        var existingRow = $("#HrmsHrdGrid tbody td:contains('" + fileType + "')").closest('tr');
+                        existingRow.find('td:first').text(fileName);
+                        existingRow.find('td:eq(1)').text(fileSize);
+                        existingRow.find('td:eq(2) input#attachType').val(fileType);
+                        existingRow.find('input#attachFile').val(strBase64);
+                        existingRow.find('i').text('Ready for Upload');
+
+                        uploadedFiles[fileType] = {
+                            name: fileName,
+                            size: fileSize,
+                            base64: strBase64
+                        };
+                    } else {
+                        var trHTML = '<tr>';
+                        trHTML += '<td>' + fileName + '</td>';
+                        trHTML += '<td>' + fileSize + '</td>';
+                        trHTML += '<td><input type="text" readonly id="attachType' + 1 + '" value="' + fileType + '" /></td>';
+                        trHTML += '<td><input type="hidden" id="attachFile" value="' + strBase64 + '" /><i>Ready for Upload</i></td>';
+                        trHTML += '</tr>';
+                        $('#HrmsHrdGrid tbody').append(trHTML);
+
+                        uploadedFiles[fileType] = {
+                            name: fileName,
+                            size: fileSize,
+                            base64: strBase64
+                        };
+                    }
                 });
-                $("#" + inputId).val('');
-                return;
             }
+        });
 
-            // Additional check for all files
-            if (fileSize > 2 * 1024 * 1024) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Size issue...",
-                    text: "File size must be less than 2MB."
-                });
-                $("#" + inputId).val('');
-                return;
+
+
+        // Include your getBase64 function and other necessary scripts here
+
+
+
+        //$("#PostName-Create").on("change", function () {
+        //    debugger;
+        //    var selectedOption = $(this).find("option:selected");
+        //    var optionValues = selectedOption.val().split(',');
+
+        //    // Update hidden fields
+        //    $("#PostAppliedCode").val(optionValues[0]);
+        //    $("#RecCode").val(optionValues[1]);
+
+        //    // Serialize form data
+        //    var formData = $("form").serialize();
+
+        //    // Make AJAX request
+        //    $.ajax({
+        //        type: "POST",
+        //        url: '/M1/USERF01/AddNewRow',
+        //        data: formData,
+        //        dataType: "json", // assuming the response is in JSON format
+        //        success: function (response) {
+        //            debugger;
+        //            var data = response.listAtrmsQualificationDtl;
+
+        //            // Clear existing table rows
+        //            $('#educationTableBody').empty();
+
+        //            for (var i = 0; i < data.length; i++) {
+        //                var markup = '<tr class="form-row">';
+        //                markup += '<td><input type="number" class="sno form-control" value="' + data[i].sno + '"></td>';
+        //                markup += '<td><input type="text" class="qualification form-control" value="' + data[i].qualification + '"></td>';
+        //                markup += '<td><input type="text" class="subject form-control"></td>';
+        //                markup += '<td><input type="text" class="nameOfBoard form-control"></td>';
+        //                markup += '<td><input type="number" class="yearOfPassing form-control"></td>';
+        //                markup += '<td><input type="number" class="marksObtained form-control"></td>';
+        //                markup += '<td><input type="number" class="totalMarks form-control"></td>';
+        //                markup += '<td><input type="number" class="percentage form-control" readonly></td>';
+
+        //                markup += '</tr>';
+
+        //                $('#educationTableBody').append(markup);
+        //            }
+
+
+        //            updatePercentages();
+
+        //            debugger;
+
+        //            $('#educationTableBody').off('input', '.MarksObtained, .TotalMarks'); // Remove previous handlers
+        //            $('#educationTableBody').on('input', '.MarksObtained, .TotalMarks', function () {
+        //                var row = $(this).closest('.form-row');
+        //                updatePercentageForRow(row);
+        //            });
+
+        //        },
+        //        error: function (xhr, status, error) {
+        //            console.error("AJAX request failed:", status, error);
+        //        }
+        //    });
+        //});
+
+
+
+
+        // Get the select element
+        var iffcoEmployeeSelect = document.getElementById("IffcoEmployee");
+
+        // Get the table element
+        var relativeTable = document.getElementById("relativeTable");
+
+        // Add an event listener to the select element
+        iffcoEmployeeSelect.addEventListener("change", function () {
+            // Check if "Yes" is selected
+            if (iffcoEmployeeSelect.value === "YES") {
+                // Show the table
+                relativeTable.style.display = "table";
+            } else {
+                // Hide the table
+                relativeTable.style.display = "none";
             }
+        });
 
-            var promise = getBase64(files[0]);
-            promise.then(function (result) {
-                var comma = result.indexOf(',');
-                var base64 = result.substr(comma + 1);
-                var strBase64 = base64;
-                var fileName = files[0].name;
 
-                if (uploadedFiles[fileType]) {
-                    var existingRow = $("#HrmsHrdGrid tbody td:contains('" + fileType + "')").closest('tr');
-                    existingRow.find('td:first').text(fileName);
-                    existingRow.find('td:eq(1)').text(fileSize);
-                    existingRow.find('td:eq(2) input#attachType').val(fileType);
-                    existingRow.find('input#attachFile').val(strBase64);
-                    existingRow.find('i').text('Ready for Upload');
 
-                    uploadedFiles[fileType] = {
-                        name: fileName,
-                        size: fileSize,
-                        base64: strBase64
-                    };
-                } else {
-                    var trHTML = '<tr>';
-                    trHTML += '<td>' + fileName + '</td>';
-                    trHTML += '<td>' + fileSize + '</td>';
-                    trHTML += '<td><input type="text" readonly id="attachType' + 1 + '" value="' + fileType + '" /></td>';
-                    trHTML += '<td><input type="hidden" id="attachFile" value="' + strBase64 + '" /><i>Ready for Upload</i></td>';
-                    trHTML += '</tr>';
-                    $('#HrmsHrdGrid tbody').append(trHTML);
 
-                    uploadedFiles[fileType] = {
-                        name: fileName,
-                        size: fileSize,
-                        base64: strBase64
-                    };
+        //// JavaScript to display the uploaded image
+        //const imageFileInput = document.getElementById('imageFile');
+        //const uploadedImage = document.getElementById('uploadedImage');
+
+
+
+
+        //imageFileInput.addEventListener('change', function () {
+        //    if (this.files && this.files[0]) {
+        //        const reader = new FileReader();
+        //        reader.onload = function (e) {
+        //            uploadedImage.src = e.target.result;
+        //        };
+        //        reader.readAsDataURL(this.files[0]);
+        //    }
+        //});
+
+
+
+
+        $(document).ready(function () {
+
+
+
+            $('#StateName-Create');
+
+
+        });
+
+        function bindddl(val) {
+
+            var StateCd = $("#StateName-" + val).val();
+
+            $.ajax({
+                url: window.location.href + '/M1/USERF01/ddl1',
+                type: 'get',
+                contentType: "application/json;charset=utf-8",
+                dataType: "json", // Corrected typo: datatype to dataType
+                data: { StateCd: StateCd }, // Include StateName in the data
+                async: false,
+                success: function (DistrictLOV) {
+                    BindDropDown(DistrictLOV, "#DistrictName-" + val)
+                    console.log(DistrictLOV);
+                },
+                error: function () {
+                    alert('District not found !!');
                 }
             });
         }
-    });
-
-
-
-    // Include your getBase64 function and other necessary scripts here
-
-
-
-    //$("#PostName-Create").on("change", function () {
-    //    debugger;
-    //    var selectedOption = $(this).find("option:selected");
-    //    var optionValues = selectedOption.val().split(',');
-
-    //    // Update hidden fields
-    //    $("#PostAppliedCode").val(optionValues[0]);
-    //    $("#RecCode").val(optionValues[1]);
-
-    //    // Serialize form data
-    //    var formData = $("form").serialize();
-
-    //    // Make AJAX request
-    //    $.ajax({
-    //        type: "POST",
-    //        url: '/M1/USERF01/AddNewRow',
-    //        data: formData,
-    //        dataType: "json", // assuming the response is in JSON format
-    //        success: function (response) {
-    //            debugger;
-    //            var data = response.listAtrmsQualificationDtl;
-
-    //            // Clear existing table rows
-    //            $('#educationTableBody').empty();
-
-    //            for (var i = 0; i < data.length; i++) {
-    //                var markup = '<tr class="form-row">';
-    //                markup += '<td><input type="number" class="sno form-control" value="' + data[i].sno + '"></td>';
-    //                markup += '<td><input type="text" class="qualification form-control" value="' + data[i].qualification + '"></td>';
-    //                markup += '<td><input type="text" class="subject form-control"></td>';
-    //                markup += '<td><input type="text" class="nameOfBoard form-control"></td>';
-    //                markup += '<td><input type="number" class="yearOfPassing form-control"></td>';
-    //                markup += '<td><input type="number" class="marksObtained form-control"></td>';
-    //                markup += '<td><input type="number" class="totalMarks form-control"></td>';
-    //                markup += '<td><input type="number" class="percentage form-control" readonly></td>';
-
-    //                markup += '</tr>';
-
-    //                $('#educationTableBody').append(markup);
-    //            }
-
-
-    //            updatePercentages();
-
-    //            debugger;
-
-    //            $('#educationTableBody').off('input', '.MarksObtained, .TotalMarks'); // Remove previous handlers
-    //            $('#educationTableBody').on('input', '.MarksObtained, .TotalMarks', function () {
-    //                var row = $(this).closest('.form-row');
-    //                updatePercentageForRow(row);
-    //            });
-
-    //        },
-    //        error: function (xhr, status, error) {
-    //            console.error("AJAX request failed:", status, error);
-    //        }
-    //    });
-    //});
 
 
 
 
-    // Get the select element
-    var iffcoEmployeeSelect = document.getElementById("IffcoEmployee");
 
-    // Get the table element
-    var relativeTable = document.getElementById("relativeTable");
+        function BindDropDown(data, id) {
 
-    // Add an event listener to the select element
-    iffcoEmployeeSelect.addEventListener("change", function () {
-        // Check if "Yes" is selected
-        if (iffcoEmployeeSelect.value === "YES") {
-            // Show the table
-            relativeTable.style.display = "table";
-        } else {
-            // Hide the table
-            relativeTable.style.display = "none";
+            var ddlhtml = "<option>----------Select District----------</option>";
+            $.each(data, function (index, ddl) {
+                ddlhtml += "<option value=" + ddl.value + ">" + ddl.text + "</option>";
+            });
+            $(id).html(ddlhtml);
+            /* $(id).select2();*/
         }
-    });
 
+        function bindddl1(val) {
 
-
-
-    //// JavaScript to display the uploaded image
-    //const imageFileInput = document.getElementById('imageFile');
-    //const uploadedImage = document.getElementById('uploadedImage');
-
-
-
-
-    //imageFileInput.addEventListener('change', function () {
-    //    if (this.files && this.files[0]) {
-    //        const reader = new FileReader();
-    //        reader.onload = function (e) {
-    //            uploadedImage.src = e.target.result;
-    //        };
-    //        reader.readAsDataURL(this.files[0]);
-    //    }
-    //});
-
-
-
-
-    $(document).ready(function () {
-
-
-
-        $('#StateName-Create');
-
-
-    });
-
-    function bindddl(val) {
-
-        var StateCd = $("#StateName-" + val).val();
-
-        $.ajax({
-            url: window.location.href + '/M1/USERF01/ddl1',
-            type: 'get',
-            contentType: "application/json;charset=utf-8",
-            dataType: "json", // Corrected typo: datatype to dataType
-            data: { StateCd: StateCd }, // Include StateName in the data
-            async: false,
-            success: function (DistrictLOV) {
-                BindDropDown(DistrictLOV, "#DistrictName-" + val)
-                console.log(DistrictLOV);
-            },
-            error: function () {
-                alert('District not found !!');
-            }
-        });
-    }
+            var QualCode = $("#HqualName-" + val).val();
+            $.ajax({
+                url: window.location.href + '/M1/USERF01/ddl2',
+                type: 'get',
+                contentType: "application/json;charset=utf-8",
+                datatype: "json",
+                data: { QualCode: QualCode },
+                async: false,
+                success: function (POSTLOV) {
+                    PBindDropDown(POSTLOV, "#PostName-" + val)
+                    console.log(POSTLOV);
+                },
+                error: function () {
+                    alert('Post not found !!');
+                }
+            });
+        }
 
 
 
 
 
-    function BindDropDown(data, id) {
+        function PBindDropDown(data, id) {
 
-        var ddlhtml = "<option>----------Select District----------</option>";
-        $.each(data, function (index, ddl) {
-            ddlhtml += "<option value=" + ddl.value + ">" + ddl.text + "</option>";
-        });
-        $(id).html(ddlhtml);
-        /* $(id).select2();*/
-    }
-
-    function bindddl1(val) {
-
-        var QualCode = $("#HqualName-" + val).val();
-        $.ajax({
-            url: window.location.href + '/M1/USERF01/ddl2',
-            type: 'get',
-            contentType: "application/json;charset=utf-8",
-            datatype: "json",
-            data: { QualCode: QualCode },
-            async: false,
-            success: function (POSTLOV) {
-                PBindDropDown(POSTLOV, "#PostName-" + val)
-                console.log(POSTLOV);
-            },
-            error: function () {
-                alert('Post not found !!');
-            }
-        });
-    }
+            var ddlhtml = "<option>----------Select Post----------</option>";
+            $.each(data, function (index, ddl) {
+                ddlhtml += "<option value=" + ddl.value + ">" + ddl.text + "</option>";
+            });
+            $(id).html(ddlhtml);
+            /* $(id).select2();*/
+        }
 
 
 
 
 
-    function PBindDropDown(data, id) {
+        // Function to get the base64 representation of a file
+        function getBase64(file) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    resolve(reader.result);
+                };
+                reader.onerror = reject;
+            });
+        }
 
-        var ddlhtml = "<option>----------Select Post----------</option>";
-        $.each(data, function (index, ddl) {
-            ddlhtml += "<option value=" + ddl.value + ">" + ddl.text + "</option>";
-        });
-        $(id).html(ddlhtml);
-        /* $(id).select2();*/
-    }
-
-
-
-
-
-    // Function to get the base64 representation of a file
-    function getBase64(file) {
-        return new Promise(function (resolve, reject) {
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function () {
-                resolve(reader.result);
-            };
-            reader.onerror = reject;
-        });
-    }
-
-    $(document).ready(function () {
+        $(document).ready(function () {
 
 
 
-        $('.save').on("click", function () {
+            $('.save').on("click", function () {
 
 
 
-            // Replace the condition below with your actual form validation logic
-            var validated = validateForm()
-            if (validated == true) {
-                showLoadingOverlay();
+                // Replace the condition below with your actual form validation logic
+                var validated = validateForm()
+                if (validated == true) {
+                    showLoadingOverlay();
 
 
 
-                var USERF01ViewModel = JSON.stringify({
-                    'objAtrmsPersonalDtl': PersonalDtlArray(),
-                    'listAtrmsQualificationDtl': QualificationListArray(),
-                    'listAtrmsDocumentsDtlMain': AttachmentListArray()
-                });
-
-                $.ajax({
-                    type: "POST",
-                    url: window.location.href + "/M1/USERF01/Create",
-                    data: USERF01ViewModel,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json"
-                })
-                    .done(function (response) {
-                        hideLoadingOverlay();
-                        if (response.atId) {
-                            // Display a success message with ATID
-                            Swal.fire({
-                                icon: "success",
-                                title: "<span style='color: green;'>Congratulations! Your Form has been Successfully Submitted...</span>",
-                                html: "Saved Successfully. Your Registration No Is: <span style='color: green;'>" + response.atId + "</span><br><span style='color: red; font-weight: bold;'>Click On OK Button then Generate Your Application Form</span>"
-                            });
-
-
-                            // Redirect to the index page after a short delay (e.g., 3000 milliseconds)
-                            setTimeout(function () {
-                                if (response.report != null) {
-                                    GetIndex(response.report);
-                                }
-                                else {
-                                    GetIndex('M1/USERF01/Index?AtId=' + response.atId);
-                                }
-
-
-                            }, 3000);
-                        } else {
-                            // Display an error message if ATID is not available
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error...",
-                                text: response.errorMessage || "Failed to generate ATID. Please try again."
-                            });
-                        }
-                    })
-
-
-                    .fail(function (xhr, status, error) {
-                        console.error(xhr, status, error);
-
-                        var errorMessage = "An error occurred while saving data. Please try again.";
-
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-
-                        // Display an error message
-                        alert(errorMessage);
-                        $('.loading-spinner').hide();
+                    var USERF01ViewModel = JSON.stringify({
+                        'objAtrmsPersonalDtl': PersonalDtlArray(),
+                        'listAtrmsQualificationDtl': QualificationListArray(),
+                        'listAtrmsDocumentsDtlMain': AttachmentListArray()
                     });
 
+                    $.ajax({
+                        type: "POST",
+                        url: window.location.href + "/M1/USERF01/Create",
+                        data: USERF01ViewModel,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json"
+                    })
+                        .done(function (response) {
+                            hideLoadingOverlay();
+                            if (response.atId) {
+                                // Display a success message with ATID
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "<span style='color: green;'>Congratulations! Your Form has been Successfully Submitted...</span>",
+                                    html: "Saved Successfully. Your Registration No Is: <span style='color: green;'>" + response.atId + "</span><br><span style='color: red; font-weight: bold;'>Click On OK Button then Generate Your Application Form</span>"
+                                });
+
+
+                                // Redirect to the index page after a short delay (e.g., 3000 milliseconds)
+                                setTimeout(function () {
+                                    if (response.report != null) {
+                                        GetIndex(response.report);
+                                    }
+                                    else {
+                                        GetIndex('M1/USERF01/Index?AtId=' + response.atId);
+                                    }
+
+
+                                }, 3000);
+                            } else {
+                                // Display an error message if ATID is not available
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error...",
+                                    text: response.errorMessage || "Failed to generate ATID. Please try again."
+                                });
+                            }
+                        })
+
+
+                        .fail(function (xhr, status, error) {
+                            console.error(xhr, status, error);
+
+                            var errorMessage = "An error occurred while saving data. Please try again.";
+
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+
+                            // Display an error message
+                            alert(errorMessage);
+                            $('.loading-spinner').hide();
+                        });
 
 
 
-            }
-            else {
-                // If the form is not valid, display an error message
-                alert("Please fill in all required fields before saving.");
-            }
-        });
 
-        function validateForm() {
+                }
+                else {
+                    // If the form is not valid, display an error message
+                    alert("Please fill in all required fields before saving.");
+                }
+            });
 
-            var isValid = true;
+            function validateForm() {
 
-
-
-            // Validate email
-            var emailValidationResult = validateEmailid();
-            if (!emailValidationResult) {
-                console.log("emailValidationResult");
-                isValid = false;
-            }
-            // Validate email
-            var emailValidationResult = validateAlternateEmailid();
-            if (!emailValidationResult) {
-                console.log("emailValidationResult");
-                isValid = false;
-            }
-
-
-            // Validate Date Of Birth
-            var dateOfBirthValidationResult = validateDateOfBirth();
-            if (!dateOfBirthValidationResult) {
-                console.log("dateOfBirthValidationResult");
-                isValid = false;
-            }
-
-            var aadharValidationResult = validateAadharNumber();
-            if (!aadharValidationResult) {
-                console.log("aadharValidationResult");
-                isValid = false;
-            }
+                var isValid = true;
 
 
 
-            // Validate PIN code
-            var pincodeValidationResult = validatePincode();
-            if (!pincodeValidationResult) {
-                console.log("PIN code validation failed");
-                isValid = false;
-            }
-
-
-
-
-            // Validate mobile number
-            var mobileValidationResult = validateMobileNumber();
-            if (!mobileValidationResult) {
-                console.log("mobileValidationResult");
-                isValid = false;
-            }
-            // Validate mobile number
-            var mobileValidationResult = validateAlternateMobileNumber();
-            if (!mobileValidationResult) {
-                console.log("mobileValidationResult");
-                isValid = false;
-            }
-
-
-            // Check if the IffcoEmployee field is filled
-            if ($('#IffcoEmployee').val() === 'YES') {
-
-                var relativeempidResult = validateRelativeEmpId();
-                if (!relativeempidResult) {
-                    console.log("relativeempidResult");
+                // Validate email
+                var emailValidationResult = validateEmailid();
+                if (!emailValidationResult) {
+                    console.log("emailValidationResult");
                     isValid = false;
-
                 }
+                // Validate email
+                var emailValidationResult = validateAlternateEmailid();
+                if (!emailValidationResult) {
+                    console.log("emailValidationResult");
+                    isValid = false;
+                }
+
+
+                // Validate Date Of Birth
+                var dateOfBirthValidationResult = validateDateOfBirth();
+                if (!dateOfBirthValidationResult) {
+                    console.log("dateOfBirthValidationResult");
+                    isValid = false;
+                }
+
+                var aadharValidationResult = validateAadharNumber();
+                if (!aadharValidationResult) {
+                    console.log("aadharValidationResult");
+                    isValid = false;
+                }
+
+
+
+                // Validate PIN code
+                var pincodeValidationResult = validatePincode();
+                if (!pincodeValidationResult) {
+                    console.log("PIN code validation failed");
+                    isValid = false;
+                }
+
+
+
+
+                // Validate mobile number
+                var mobileValidationResult = validateMobileNumber();
+                if (!mobileValidationResult) {
+                    console.log("mobileValidationResult");
+                    isValid = false;
+                }
+                // Validate mobile number
+                var mobileValidationResult = validateAlternateMobileNumber();
+                if (!mobileValidationResult) {
+                    console.log("mobileValidationResult");
+                    isValid = false;
+                }
+
+
+                // Check if the IffcoEmployee field is filled
+                if ($('#IffcoEmployee').val() === 'YES') {
+
+                    var relativeempidResult = validateRelativeEmpId();
+                    if (!relativeempidResult) {
+                        console.log("relativeempidResult");
+                        isValid = false;
+
+                    }
+                }
+
+
+                // Check if the PostName-Create field is filled
+                if ($('#imageFile').val() === '') {
+                    console.log("imageFile");
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please Upload Image.'
+                    });
+                    isValid = false;
+                }
+
+                if ($('#pdfFile').val() === '') {
+                    console.log("pdfFile");
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please Upload Document PDF.'
+                    });
+                    isValid = false;
+                }
+
+
+                if (!$('#checkcr').prop('checked')) {
+                    console.log("checkcr");
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please review the Declaration section and click on the "Check" button.'
+
+                    });
+                    isValid = false;
+                }
+
+
+
+
+                return isValid;
             }
 
 
-            // Check if the PostName-Create field is filled
-            if ($('#imageFile').val() === '') {
-                console.log("imageFile");
-                isValid = false;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'Please Upload Image.'
-                });
-                isValid = false;
-            }
-
-            if ($('#pdfFile').val() === '') {
-                console.log("pdfFile");
-                isValid = false;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'Please Upload Document PDF.'
-                });
-                isValid = false;
-            }
-
-
-            if (!$('#checkcr').prop('checked')) {
-                console.log("checkcr");
-                isValid = false;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'Please review the Declaration section and click on the "Check" button.'
-
-                });
-                isValid = false;
-            }
+        });
 
 
 
 
-            return isValid;
+
+
+
+
+
+
+
+        // Redirect to the specified URL
+        function GetIndex(url) {
+            window.location.href = url;
+        }
+
+        function PersonalDtlArray() {
+            IDs = {}
+
+            IDs.unitCode = $('#UnitCode').val();
+            IDs.postAppliedDescription = $('#PostName-Create').val();
+            IDs.postAppliedCode = $('#PostAppliedCode').val();
+            IDs.recCode = $('#RecCode').val();
+            IDs.qualification = $('#HqualName-Create').val();
+            IDs.atId = $('#AT_ID').val();
+            IDs.firstName = $('#txtName').val();
+            IDs.middleName = $('#MIDDLE_NAME').val();
+            IDs.lastName = $('#txtLASTNAME').val();
+            IDs.fatherName = $('#FATHER_NAME').val();
+            IDs.fatherOccupation = $('#FATHER_OCCUPATION').val();
+            IDs.motherName = $('#MOTHER_NAME').val();
+            IDs.motherOccupation = $('#MOTHER_OCCUPATION').val();
+            IDs.religion = $('#Religion').val();
+            IDs.landLoser = $('#LandLoser').val();
+            IDs.dateOfBirth = $('#DATE_OF_BIRTH').val();
+            IDs.birthPlace = $('#BIRTH_PLACE').val();
+            IDs.gender = $('#GENDER').val();
+            IDs.nationality = $('#NATIONALITY').val();
+            IDs.category = $('#CATEGORY').val();
+            IDs.identificationMark = $('#IDENTIFICATION_MARK').val();
+            IDs.aadharNo = $('#AADHAR_NO').val();
+            IDs.emailId = $('#EMAIL_ID').val();
+            IDs.alternateEmailId = $('#ALTERNATE_EMAIL_ID').val();
+            IDs.mobileNumber = $('#MOBILE_NUMBER').val();
+            IDs.alternateNumber = $('#ALTERNATE_NUMBER').val();
+            IDs.maritalStatus = $('#MARITAL_STATUS').val();
+            IDs.cAddress = $('#C_ADDRESS').val();
+            IDs.pAddress = $('#P_ADDRESS').val();
+            IDs.houseNo = $('#HOUSE_NO').val();
+            IDs.street = $('#STREET').val();
+            IDs.area = $('#AREA').val();
+            IDs.state = $('#StateName-Create').val();
+            IDs.district = $('#DistrictName-Create').val();
+            IDs.city = $('#CITY').val();
+            IDs.hometown = $('#HOMETOWN').val();
+            IDs.pincode = $('#PINCODE').val();
+            IDs.country = $('#COUNTRY').val();
+            IDs.exApperentice = $('#ExApperentice').val();
+            IDs.regNoEmpExchange = $('#RegNoEmpExchange').val();
+            IDs.nameEmpExchange = $('#NameEmpExchange').val();
+            IDs.mhrdNats = $('#MhrdNats').val();
+            IDs.iffcoEmployee = $('#IffcoEmployee').val();
+            IDs.regNumberMhrdNats = $('#RegNumberMhrdNats').val();
+            IDs.relativeEmpId = $('#RelativeEmpId ').val();
+            IDs.relativeName = $('#RelativeName').val();
+            IDs.relativeUnit = $('#RelativeUnit').val();
+            IDs.relativePost = $('#RelativePost').val();
+            IDs.relativeRelation = $('#RelativeRelation ').val();
+            IDs.submitDate = $('#txtSubmitDate').val();
+
+
+            return IDs
+        }
+
+        function QualificationListArray() {
+            var qualifications = [];
+
+            $("#educationTableBody .form-row").each(function () {
+                var row = $(this);
+
+                var qualification = {
+                    sno: row.closest('tr').find('.Sno').val(),
+                    qualification: row.closest('tr').find('.Qualification').val(),
+                    subject: row.closest('tr').find('.Subject').val(),
+                    nameOfBoard: row.closest('tr').find('.NameOfBoard').val(),
+                    yearOfPassing: row.closest('tr').find('.YearOfPassing').val(),
+                    rollNo: row.closest('tr').find('.RollNo').val(),
+                    marksObtained: row.closest('tr').find('.MarksObtained').val(),
+                    totalMarks: row.closest('tr').find('.TotalMarks').val(),
+                    percentage: row.closest('tr').find('.Percentage').val()
+                };
+
+
+                qualifications.push(qualification);
+            });
+
+            updatePercentages();
+
+            return qualifications;
+        }
+        function AttachmentListArray() {
+            var IDs = new Array();
+            $("#HrmsHrdGrid TBODY TR").each(function () {
+                var row = $(this);
+
+                var type = row.find('td:eq(3) i').text();
+                if (type.includes("Ready")) {
+                    var uploadFile = {};
+                    uploadFile.fileName = $('#FIRST_NAME').val();
+                    //uploadFile.atId = $('#AT_ID').val();
+                    uploadFile.name = row.find('td:eq(0)').html();
+                    uploadFile.fileSize = row.find('td:eq(1)').text(); // Corrected this line
+                    uploadFile.mimeType = row.find('td:eq(2) input').val();
+                    uploadFile.uploadFile = row.find('td:eq(3) input').val();
+
+                    IDs.push(uploadFile);
+                }
+            });
+            console.log(IDs);
+
+            return IDs;
         }
 
 
-    });
+        //function AttachmentListArray() {
+        //    var IDs = new Array();
+        //    $("#HrmsHrdGrid TBODY TR").each(function () {
+        //        var row = $(this);
+        //        debugger;
+        //        var type = row.find('td:eq(3)').text();
+        //        if (type.includes("Ready")) {
+        //            var uploadFile = {};
+        //            uploadFile.fileName = $('#FIRST_NAME').val();
+        //            //uploadFile.atId = $('#AT_ID').val();
+        //            uploadFile.name = row.find('td:eq(0)').html();
+        //            uploadFile.fileSize = row.find('td:eq(1) input').val();
+        //            uploadFile.mimeType = row.find('td:eq(2) input').val();
+        //            uploadFile.uploadFile = row.find('td:eq(3) input').val();
+
+
+        //            IDs.push(uploadFile);
+        //        }
+        //    });
+        //    console.log(IDs)
+
+        //    return IDs
+        //}
+
+        function validateInput(inputField, regex) {
+            // Get the current value of the input field
+            var inputValue = inputField.value;
+
+            // Remove any non-alphabetic and non-allowed symbols
+            var cleanedValue = inputValue.replace(regex, '');
+
+            // Update the input field value with the cleaned value
+            inputField.value = cleanedValue;
+        }
+
+        $("#PostName-Create").on("change", function () {
+
+
+            var selOption = $(this).val();
+            //console.log(selOption);
+            var arr = selOption.split(',');
+            var a = arr[0];
+            var b = arr[1];
+            //console.log(a);
+            //console.log(b);
+
+            var selectedOption = $(this).find("option:selected");
+
+            // Split the value of the selected option by comma
+            var optionValues = selectedOption.val().split(',');
+
+            // Update the hidden fields with the selected values
+            $("#PostAppliedCode").val(a);
+            $("#RecCode").val(b);
+
+            // Serialize form data
+            var formData = $("form").serialize();
+
+            // Make AJAX request
+            $.ajax({
+                type: "POST",
+                url: window.location.href + '/M1/USERF01/AddNewRow',
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+
+                    var data = response.listAtrmsQualificationDtl;
+
+                    // Clear existing table rows
+                    $('#educationTableBody').empty();
+
+                    for (var i = 0; i < data.length; i++) {
+                        var markup = '<tr class="form-row">';
+                        markup += '<td><input type="number" class="sno form-control" value="' + data[i].sno + '"readonly></td>';
+                        markup += '<td><input type="text" class="qualification form-control" value="' + data[i].qualification + '"readonly></td>';
+                        markup += '<td><input type="text" class="subject form-control" style="width: 200px;" oninput="validateSubject(this)"></td>';
+
+                        markup += '<td><input type="text" class="nameOfBoard form-control" style="width: 100px;"  oninput="validateNameOfBoard(this)"></td>';
+                        markup += '<td>';
+
+                        if (data[i].qualification === '10TH' || data[i].qualification === '12TH') {
+                            // If qualification is '10TH' or '12TH', show only manual input for the year
+
+                            //markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4">';
+                            //markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4">';
+                            markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');">';
 
 
 
@@ -3361,736 +3583,527 @@
 
 
 
-
-
-
-    // Redirect to the specified URL
-    function GetIndex(url) {
-        window.location.href = url;
-    }
-
-    function PersonalDtlArray() {
-        IDs = {}
-
-        IDs.unitCode = $('#UnitCode').val();
-        IDs.postAppliedDescription = $('#PostName-Create').val();
-        IDs.postAppliedCode = $('#PostAppliedCode').val();
-        IDs.recCode = $('#RecCode').val();
-        IDs.qualification = $('#HqualName-Create').val();
-        IDs.atId = $('#AT_ID').val();
-        IDs.firstName = $('#txtName').val();
-        IDs.middleName = $('#MIDDLE_NAME').val();
-        IDs.lastName = $('#txtLASTNAME').val();
-        IDs.fatherName = $('#FATHER_NAME').val();
-        IDs.fatherOccupation = $('#FATHER_OCCUPATION').val();
-        IDs.motherName = $('#MOTHER_NAME').val();
-        IDs.motherOccupation = $('#MOTHER_OCCUPATION').val();
-        IDs.religion = $('#Religion').val();
-        IDs.landLoser = $('#LandLoser').val();
-        IDs.dateOfBirth = $('#DATE_OF_BIRTH').val();
-        IDs.birthPlace = $('#BIRTH_PLACE').val();
-        IDs.gender = $('#GENDER').val();
-        IDs.nationality = $('#NATIONALITY').val();
-        IDs.category = $('#CATEGORY').val();
-        IDs.identificationMark = $('#IDENTIFICATION_MARK').val();
-        IDs.aadharNo = $('#AADHAR_NO').val();
-        IDs.emailId = $('#EMAIL_ID').val();
-        IDs.alternateEmailId = $('#ALTERNATE_EMAIL_ID').val();
-        IDs.mobileNumber = $('#MOBILE_NUMBER').val();
-        IDs.alternateNumber = $('#ALTERNATE_NUMBER').val();
-        IDs.maritalStatus = $('#MARITAL_STATUS').val();
-        IDs.cAddress = $('#C_ADDRESS').val();
-        IDs.pAddress = $('#P_ADDRESS').val();
-        IDs.houseNo = $('#HOUSE_NO').val();
-        IDs.street = $('#STREET').val();
-        IDs.area = $('#AREA').val();
-        IDs.state = $('#StateName-Create').val();
-        IDs.district = $('#DistrictName-Create').val();
-        IDs.city = $('#CITY').val();
-        IDs.hometown = $('#HOMETOWN').val();
-        IDs.pincode = $('#PINCODE').val();
-        IDs.country = $('#COUNTRY').val();
-        IDs.exApperentice = $('#ExApperentice').val();
-        IDs.regNoEmpExchange = $('#RegNoEmpExchange').val();
-        IDs.nameEmpExchange = $('#NameEmpExchange').val();
-        IDs.mhrdNats = $('#MhrdNats').val();
-        IDs.iffcoEmployee = $('#IffcoEmployee').val();
-        IDs.regNumberMhrdNats = $('#RegNumberMhrdNats').val();
-        IDs.relativeEmpId = $('#RelativeEmpId ').val();
-        IDs.relativeName = $('#RelativeName').val();
-        IDs.relativeUnit = $('#RelativeUnit').val();
-        IDs.relativePost = $('#RelativePost').val();
-        IDs.relativeRelation = $('#RelativeRelation ').val();
-        IDs.submitDate = $('#txtSubmitDate').val();
-
-
-        return IDs
-    }
-
-    function QualificationListArray() {
-        var qualifications = [];
-
-        $("#educationTableBody .form-row").each(function () {
-            var row = $(this);
-
-            var qualification = {
-                sno: row.closest('tr').find('.Sno').val(),
-                qualification: row.closest('tr').find('.Qualification').val(),
-                subject: row.closest('tr').find('.Subject').val(),
-                nameOfBoard: row.closest('tr').find('.NameOfBoard').val(),
-                yearOfPassing: row.closest('tr').find('.YearOfPassing').val(),
-                rollNo: row.closest('tr').find('.RollNo').val(),
-                marksObtained: row.closest('tr').find('.MarksObtained').val(),
-                totalMarks: row.closest('tr').find('.TotalMarks').val(),
-                percentage: row.closest('tr').find('.Percentage').val()
-            };
-
-
-            qualifications.push(qualification);
-        });
-
-        updatePercentages();
-
-        return qualifications;
-    }
-    function AttachmentListArray() {
-        var IDs = new Array();
-        $("#HrmsHrdGrid TBODY TR").each(function () {
-            var row = $(this);
-
-            var type = row.find('td:eq(3) i').text();
-            if (type.includes("Ready")) {
-                var uploadFile = {};
-                uploadFile.fileName = $('#FIRST_NAME').val();
-                //uploadFile.atId = $('#AT_ID').val();
-                uploadFile.name = row.find('td:eq(0)').html();
-                uploadFile.fileSize = row.find('td:eq(1)').text(); // Corrected this line
-                uploadFile.mimeType = row.find('td:eq(2) input').val();
-                uploadFile.uploadFile = row.find('td:eq(3) input').val();
-
-                IDs.push(uploadFile);
-            }
-        });
-        console.log(IDs);
-
-        return IDs;
-    }
-
-
-    //function AttachmentListArray() {
-    //    var IDs = new Array();
-    //    $("#HrmsHrdGrid TBODY TR").each(function () {
-    //        var row = $(this);
-    //        debugger;
-    //        var type = row.find('td:eq(3)').text();
-    //        if (type.includes("Ready")) {
-    //            var uploadFile = {};
-    //            uploadFile.fileName = $('#FIRST_NAME').val();
-    //            //uploadFile.atId = $('#AT_ID').val();
-    //            uploadFile.name = row.find('td:eq(0)').html();
-    //            uploadFile.fileSize = row.find('td:eq(1) input').val();
-    //            uploadFile.mimeType = row.find('td:eq(2) input').val();
-    //            uploadFile.uploadFile = row.find('td:eq(3) input').val();
-
-
-    //            IDs.push(uploadFile);
-    //        }
-    //    });
-    //    console.log(IDs)
-
-    //    return IDs
-    //}
-
-    function validateInput(inputField, regex) {
-        // Get the current value of the input field
-        var inputValue = inputField.value;
-
-        // Remove any non-alphabetic and non-allowed symbols
-        var cleanedValue = inputValue.replace(regex, '');
-
-        // Update the input field value with the cleaned value
-        inputField.value = cleanedValue;
-    }
-
-    $("#PostName-Create").on("change", function () {
-
-
-        var selOption = $(this).val();
-        //console.log(selOption);
-        var arr = selOption.split(',');
-        var a = arr[0];
-        var b = arr[1];
-        //console.log(a);
-        //console.log(b);
-
-        var selectedOption = $(this).find("option:selected");
-
-        // Split the value of the selected option by comma
-        var optionValues = selectedOption.val().split(',');
-
-        // Update the hidden fields with the selected values
-        $("#PostAppliedCode").val(a);
-        $("#RecCode").val(b);
-
-        // Serialize form data
-        var formData = $("form").serialize();
-
-        // Make AJAX request
-        $.ajax({
-            type: "POST",
-            url: window.location.href + '/M1/USERF01/AddNewRow',
-            data: formData,
-            dataType: "json",
-            success: function (response) {
-
-                var data = response.listAtrmsQualificationDtl;
-
-                // Clear existing table rows
-                $('#educationTableBody').empty();
-
-                for (var i = 0; i < data.length; i++) {
-                    var markup = '<tr class="form-row">';
-                    markup += '<td><input type="number" class="sno form-control" value="' + data[i].sno + '"readonly></td>';
-                    markup += '<td><input type="text" class="qualification form-control" value="' + data[i].qualification + '"readonly></td>';
-                    markup += '<td><input type="text" class="subject form-control" style="width: 200px;" oninput="validateSubject(this)"></td>';
-
-                    markup += '<td><input type="text" class="nameOfBoard form-control" style="width: 100px;"  oninput="validateNameOfBoard(this)"></td>';
-                    markup += '<td>';
-
-                    if (data[i].qualification === '10TH' || data[i].qualification === '12TH') {
-                        // If qualification is '10TH' or '12TH', show only manual input for the year
-
-                        //markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4">';
-                        //markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4">';
-                        markup += '<input type="text" class="yearOfPassing form-control" placeholder="Enter year" required maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, \'\');">';
-
-
-
-
-
-
-
-
-                    } else {
-                        // For other qualifications, show the select dropdown
-                        markup += '<select class="yearOfPassing form-control">';
-                        // Add a default "--select--" option
-                        markup += '<option value="">--select--</option>';
-                        // Show specific years for other qualifications
-                        for (var year = (data[i].qualification === 'DIPLOMA' ? 2019 : 2021); year <= (data[i].qualification === 'DIPLOMA' ? 2023 : 2023); year++) {
-                            markup += '<option value="' + year + '">' + year + '</option>';
+                        } else {
+                            // For other qualifications, show the select dropdown
+                            markup += '<select class="yearOfPassing form-control">';
+                            // Add a default "--select--" option
+                            markup += '<option value="">--select--</option>';
+                            // Show specific years for other qualifications
+                            for (var year = (data[i].qualification === 'DIPLOMA' ? 2019 : 2021); year <= (data[i].qualification === 'DIPLOMA' ? 2023 : 2023); year++) {
+                                markup += '<option value="' + year + '">' + year + '</option>';
+                            }
+                            markup += '</select>';
                         }
-                        markup += '</select>';
+
+                        markup += '</td>';
+                        markup += '<td><input type="text" class="rollNo form-control" style="width: 150px;" oninput="validateRollNo(this)"></td>';
+
+
+                        markup += '<td><input type="number" class="marksObtained form-control"></td>';
+                        markup += '<td><input type="number" class="totalMarks form-control"></td>';
+                        markup += '<td><input type="number" class="percentage form-control" readonly></td>';
+                        markup += '</tr>';
+
+                        $('#educationTableBody').append(markup);
                     }
 
-                    markup += '</td>';
-                    markup += '<td><input type="text" class="rollNo form-control" style="width: 150px;" oninput="validateRollNo(this)"></td>';
+                    // Update percentages after adding rows
+                    updatePercentages();
 
-
-                    markup += '<td><input type="number" class="marksObtained form-control"></td>';
-                    markup += '<td><input type="number" class="totalMarks form-control"></td>';
-                    markup += '<td><input type="number" class="percentage form-control" readonly></td>';
-                    markup += '</tr>';
-
-                    $('#educationTableBody').append(markup);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX request failed:", status, error);
                 }
-
-                // Update percentages after adding rows
-                updatePercentages();
-
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX request failed:", status, error);
-            }
+            });
         });
-    });
-    //function validateYearOfPassing(input) {
-    //    var year = input.value;
-    //    if (!(/^\d{4}$/.test(year))) {
-    //        console.error("Year of Passing must be a 4-digit number.");
-    //        input.value = ""; // Clear the input field
-    //    }
-    //}
+        //function validateYearOfPassing(input) {
+        //    var year = input.value;
+        //    if (!(/^\d{4}$/.test(year))) {
+        //        console.error("Year of Passing must be a 4-digit number.");
+        //        input.value = ""; // Clear the input field
+        //    }
+        //}
 
 
 
 
-    function validateRollNo(input) {
-        // Remove non-numeric characters
-        var sanitizedValue = input.value.replace(/\D/g, '');
+        function validateRollNo(input) {
+            // Remove non-numeric characters
+            var sanitizedValue = input.value.replace(/\D/g, '');
 
-        // Limit to 15 digits
-        if (sanitizedValue.length > 15) {
-            sanitizedValue = sanitizedValue.slice(0, 15);
+            // Limit to 15 digits
+            if (sanitizedValue.length > 15) {
+                sanitizedValue = sanitizedValue.slice(0, 15);
+            }
+
+            // Update the input value
+            input.value = sanitizedValue;
+        }
+        function validateSubject(input) {
+            // Allow uppercase letters, commas, and spaces
+            var cleanedValue = input.value.replace(/[^a-zA-Z, ]/g, '').toUpperCase();
+
+            // Update the input value with cleaned value
+            input.value = cleanedValue;
+        }
+        function validateNameOfBoard(input) {
+            // Allow uppercase letters, commas, and spaces
+            var cleanedValue = input.value.replace(/[^a-zA-Z ]/g, '').toUpperCase();
+
+            // Update the input value with cleaned value
+            input.value = cleanedValue;
         }
 
-        // Update the input value
-        input.value = sanitizedValue;
-    }
-    function validateSubject(input) {
-        // Allow uppercase letters, commas, and spaces
-        var cleanedValue = input.value.replace(/[^a-zA-Z, ]/g, '').toUpperCase();
-
-        // Update the input value with cleaned value
-        input.value = cleanedValue;
-    }
-    function validateNameOfBoard(input) {
-        // Allow uppercase letters, commas, and spaces
-        var cleanedValue = input.value.replace(/[^a-zA-Z ]/g, '').toUpperCase();
-
-        // Update the input value with cleaned value
-        input.value = cleanedValue;
-    }
 
 
+        // Event delegation for dynamically added elements
+        $('#educationTableBody').on('change', '.marksObtained, .totalMarks', function () {
+            var row = $(this).closest('.form-row');
+            updatePercentageForRow(row);
+        });
 
-    // Event delegation for dynamically added elements
-    $('#educationTableBody').on('change', '.marksObtained, .totalMarks', function () {
-        var row = $(this).closest('.form-row');
-        updatePercentageForRow(row);
-    });
+        function calculatePercentage(row) {
+            var marksObtained1 = row.find('.marksObtained').val();
+            var totalMarks1 = row.find('.totalMarks').val();
+            var qualification = row.find('.qualification').val();
+            var category = $('#CATEGORY').val();
 
-    function calculatePercentage(row) {
-        var marksObtained1 = row.find('.marksObtained').val();
-        var totalMarks1 = row.find('.totalMarks').val();
-        var qualification = row.find('.qualification').val();
-        var category = $('#CATEGORY').val();
+            // Validate input
+            if (!marksObtained1 || !totalMarks1 || isNaN(parseFloat(marksObtained1)) || isNaN(parseFloat(totalMarks1))) {
+                return 0;
+            }
 
-        // Validate input
-        if (!marksObtained1 || !totalMarks1 || isNaN(parseFloat(marksObtained1)) || isNaN(parseFloat(totalMarks1))) {
-            return 0;
-        }
+            var marksObtained = parseFloat(marksObtained1) || 0;
+            var totalMarks = parseFloat(totalMarks1) || 1; // Avoid division by zero
 
-        var marksObtained = parseFloat(marksObtained1) || 0;
-        var totalMarks = parseFloat(totalMarks1) || 1; // Avoid division by zero
+            if (totalMarks <= marksObtained) {
+                showError("Total marks should be greater than marks obtained.", row);
+                return 0;
+            }
 
-        if (totalMarks <= marksObtained) {
-            showError("Total marks should be greater than marks obtained.", row);
-            return 0;
-        }
+            if (marksObtained < 0) {
+                showError("Marks obtained cannot be negative.", row);
+                return 0;
+            }
 
-        if (marksObtained < 0) {
-            showError("Marks obtained cannot be negative.", row);
-            return 0;
-        }
+            // Create FormData and append additional form data
+            var formData = new FormData();
+            formData.append('marksObtained', marksObtained);
+            formData.append('totalMarks', totalMarks);
+            formData.append('qualification', qualification);
+            formData.append('category', category);
 
-        // Create FormData and append additional form data
-        var formData = new FormData();
-        formData.append('marksObtained', marksObtained);
-        formData.append('totalMarks', totalMarks);
-        formData.append('qualification', qualification);
-        formData.append('category', category);
-
-        $.ajax({
-            type: "POST",
-            url: window.location.href + "/M1/USERF01/CalculatePercentage",
-            contentType: false,
-            processData: false,
-            data: formData,
-            success: function (result) {
-                if (result.success) {
-                    row.find('.percentage').val(result.percentage.toFixed(2));
-                } else {
-                    showError(result.message, row);
+            $.ajax({
+                type: "POST",
+                url: window.location.href + "/M1/USERF01/CalculatePercentage",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    if (result.success) {
+                        row.find('.percentage').val(result.percentage.toFixed(2));
+                    } else {
+                        showError(result.message, row);
+                    }
+                },
+                error: function () {
+                    showError("An error occurred while calculating percentage.", row);
                 }
-            },
-            error: function () {
-                showError("An error occurred while calculating percentage.", row);
-            }
-        });
-    }
+            });
+        }
 
-    function showError(message, row) {
-        // Implement your error handling logic, e.g., displaying an error message to the user
-        console.error(message);
-    }
+        function showError(message, row) {
+            // Implement your error handling logic, e.g., displaying an error message to the user
+            console.error(message);
+        }
 
 
-    // You might want to handle the case where Obtlength < 3 or Totlength < 3
+        // You might want to handle the case where Obtlength < 3 or Totlength < 3
 
-    // return isNaN(percentage) ? 0 : percentage.toFixed(2);
+        // return isNaN(percentage) ? 0 : percentage.toFixed(2);
 
 
-    function showError(message, row) {
-        Swal.fire({
-            icon: "error",
-            title: "Error...",
-            text: message
-        });
-        row.find('.marksObtained').val('');
-        row.find('.totalMarks').val('');
-        row.find('.percentage').val('');
-    }
+        function showError(message, row) {
+            Swal.fire({
+                icon: "error",
+                title: "Error...",
+                text: message
+            });
+            row.find('.marksObtained').val('');
+            row.find('.totalMarks').val('');
+            row.find('.percentage').val('');
+        }
 
 
 
 
 
-    function updatePercentageForRow(row) {
-        var percentage = calculatePercentage(row);
-        row.find('.percentage').val(percentage);
-    }
+        function updatePercentageForRow(row) {
+            var percentage = calculatePercentage(row);
+            row.find('.percentage').val(percentage);
+        }
 
-    function updatePercentages() {
-        $("#educationTableBody .form-row").each(function () {
-            updatePercentageForRow($(this));
-        });
-    }
-
-
-
-
-    const currentDate = new Date().toISOString().split('T')[0];
-
-    // Set the current date as the default value for the input field
-    document.getElementById('txtSubmitDate').value = currentDate;
-
-
-    //function updateDateRange() {
-    //    var category = $("#CATEGORY").val();
-    //    var dateInput = $("#DATE_OF_BIRTH");
-    //    var isLandLooser = $("#LandLoser").val() === "YES";
-    //    debugger;
-    //    // Reset the dateInput value to an empty string
-    //    dateInput.val('');
+        function updatePercentages() {
+            $("#educationTableBody .form-row").each(function () {
+                updatePercentageForRow($(this));
+            });
+        }
 
 
 
-    //    //ajax
-    //    //receive date min and max.
-    //    //var mindate = new Date(data.minDate);
-    //    // dateInput.attr("min", data.minDate);
-    //    // dateInput.attr("max", data.maxDate);
+
+        const currentDate = new Date().toISOString().split('T')[0];
+
+        // Set the current date as the default value for the input field
+        document.getElementById('txtSubmitDate').value = currentDate;
 
 
-    //    switch (category) {
-    //        case "General":
-    //            if (isLandLooser) {
-    //                dateInput.attr("min", "1992-09-30");
-    //                dateInput.attr("max", "2004-09-30");
-    //            } else {
-    //                dateInput.attr("min", "1995-09-30");
-    //                dateInput.attr("max", "2004-09-30");
-    //            }
-    //            break;
-    //        case "OBC":
-    //            if (isLandLooser) {
-    //                dateInput.attr("min", "1989-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            } else {
-    //                dateInput.attr("min", "1992-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            }
-    //            break;
-    //        case "SC":
-    //            if (isLandLooser) {
-    //                dateInput.attr("min", "1987-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            } else {
-    //                dateInput.attr("min", "1990-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            }
-    //            break;
-    //        case "ST":
-    //            if (isLandLooser) {
-    //                dateInput.attr("min", "1987-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            } else {
-    //                dateInput.attr("min", "1990-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            }
-    //            break;
-    //        case "OTHER":
-    //            if (isLandLooser) {
-    //                dateInput.attr("min", "1987-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            } else {
-    //                dateInput.attr("min", "1990-09-30");
-    //                dateInput.attr("max", "2004-10-01");
-    //            }
-    //            break;
+        //function updateDateRange() {
+        //    var category = $("#CATEGORY").val();
+        //    var dateInput = $("#DATE_OF_BIRTH");
+        //    var isLandLooser = $("#LandLoser").val() === "YES";
+        //    debugger;
+        //    // Reset the dateInput value to an empty string
+        //    dateInput.val('');
 
 
-    //    }
-    //}
 
-    //function updateDateRange(row) {
-    //    var category = $("#CATEGORY").val();
-    //    var isLandLooser = $("#LandLoser").val();
-
-    //    debugger;
-    //    // Check if both category and isLandLooser are not empty
-    //    if (category && isLandLooser) {
-    //        // Create FormData and append additional form data
-    //        var formData = new FormData();
-    //        formData.append('Category', category);
-    //        formData.append('LandLoser', isLandLooser);
-
-    //        $.ajax({
-    //            type: "POST",
-    //            url: window.location.href + "/M1/USERF01/updateDateRange",
-    //            contentType: false,
-    //            processData: false,
-    //            data: formData,
-    //            success: function (result) {
-    //                if (result.success) {
-    //                    debugger;
-    //                    var MinDate = new Date(result.dateOfBirthData.minDate);
-    //                    var year = MinDate.getFullYear();
-    //                    var month = MinDate.getMonth();
-    //                    month = month + 1;
-    //                    if (month < 10) {
-    //                        month = "0" + month.toString();
-    //                    }
-    //                    var day = MinDate.getDate();
-    //                    if (day < 10) {
-    //                        day = "0" + day.toString();
-    //                    }
-    //                    var Min = year.toString() + "-" + month + "-" + day.toString();
+        //    //ajax
+        //    //receive date min and max.
+        //    //var mindate = new Date(data.minDate);
+        //    // dateInput.attr("min", data.minDate);
+        //    // dateInput.attr("max", data.maxDate);
 
 
-    //                    var MaxDate = new Date(result.dateOfBirthData.maxDate);
+        //    switch (category) {
+        //        case "General":
+        //            if (isLandLooser) {
+        //                dateInput.attr("min", "1992-09-30");
+        //                dateInput.attr("max", "2004-09-30");
+        //            } else {
+        //                dateInput.attr("min", "1995-09-30");
+        //                dateInput.attr("max", "2004-09-30");
+        //            }
+        //            break;
+        //        case "OBC":
+        //            if (isLandLooser) {
+        //                dateInput.attr("min", "1989-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            } else {
+        //                dateInput.attr("min", "1992-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            }
+        //            break;
+        //        case "SC":
+        //            if (isLandLooser) {
+        //                dateInput.attr("min", "1987-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            } else {
+        //                dateInput.attr("min", "1990-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            }
+        //            break;
+        //        case "ST":
+        //            if (isLandLooser) {
+        //                dateInput.attr("min", "1987-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            } else {
+        //                dateInput.attr("min", "1990-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            }
+        //            break;
+        //        case "OTHER":
+        //            if (isLandLooser) {
+        //                dateInput.attr("min", "1987-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            } else {
+        //                dateInput.attr("min", "1990-09-30");
+        //                dateInput.attr("max", "2004-10-01");
+        //            }
+        //            break;
 
-    //                    var year = MaxDate.getFullYear();
-    //                    var month = MaxDate.getMonth();
-    //                    month = month + 1;
-    //                    if (month < 10) {
-    //                        month = "0" + month.toString();
-    //                    }
-    //                    var day = MaxDate.getDate();
-    //                    if (day < 10) {
-    //                        day = "0" + day.toString();
-    //                    }
-    //                    var Max = year.toString() + "-" + month + "-" + day.toString();
-    //                    $("#DATE_OF_BIRTH").attr("max", Max);
-    //                    $("#DATE_OF_BIRTH").attr("min", Min);
-    //                } else {
-    //                    showError(result.message, row);
-    //                }
-    //            },
-    //            error: function (error) {
-    //                showError("An error occurred while getting the date of birth data.", row);
-    //            }
-    //        });
-    //    } else {
-    //        // Handle the case when category or isLandLooser is empty
-    //        showError("Please provide both category and land looser values.", row);
-    //    }
-    //}
 
-    function updateDateRange(row) {
-        var category = $("#CATEGORY").val();
-        var isLandLooser = $("#LandLoser").val();
-        $("#DATE_OF_BIRTH").val('');
+        //    }
+        //}
 
-        // Create FormData and append additional form data
-        var formData = new FormData();
-        formData.append('Category', category);
-        formData.append('LandLoser', isLandLooser);
+        //function updateDateRange(row) {
+        //    var category = $("#CATEGORY").val();
+        //    var isLandLooser = $("#LandLoser").val();
 
-        $.ajax({
-            type: "POST",
-            url: window.location.href + "/M1/USERF01/updateDateRange",
-            contentType: false,
-            processData: false,
-            data: formData,
-            success: function (result) {
-                if (result.success) {
+        //    debugger;
+        //    // Check if both category and isLandLooser are not empty
+        //    if (category && isLandLooser) {
+        //        // Create FormData and append additional form data
+        //        var formData = new FormData();
+        //        formData.append('Category', category);
+        //        formData.append('LandLoser', isLandLooser);
 
-                    var MinDate = new Date(result.dateOfBirthData.minDate);
-                    var year = MinDate.getFullYear();
-                    var month = MinDate.getMonth();
-                    month = month + 1;
-                    if (month < 10) {
-                        month = "0" + month.toString();
+        //        $.ajax({
+        //            type: "POST",
+        //            url: window.location.href + "/M1/USERF01/updateDateRange",
+        //            contentType: false,
+        //            processData: false,
+        //            data: formData,
+        //            success: function (result) {
+        //                if (result.success) {
+        //                    debugger;
+        //                    var MinDate = new Date(result.dateOfBirthData.minDate);
+        //                    var year = MinDate.getFullYear();
+        //                    var month = MinDate.getMonth();
+        //                    month = month + 1;
+        //                    if (month < 10) {
+        //                        month = "0" + month.toString();
+        //                    }
+        //                    var day = MinDate.getDate();
+        //                    if (day < 10) {
+        //                        day = "0" + day.toString();
+        //                    }
+        //                    var Min = year.toString() + "-" + month + "-" + day.toString();
+
+
+        //                    var MaxDate = new Date(result.dateOfBirthData.maxDate);
+
+        //                    var year = MaxDate.getFullYear();
+        //                    var month = MaxDate.getMonth();
+        //                    month = month + 1;
+        //                    if (month < 10) {
+        //                        month = "0" + month.toString();
+        //                    }
+        //                    var day = MaxDate.getDate();
+        //                    if (day < 10) {
+        //                        day = "0" + day.toString();
+        //                    }
+        //                    var Max = year.toString() + "-" + month + "-" + day.toString();
+        //                    $("#DATE_OF_BIRTH").attr("max", Max);
+        //                    $("#DATE_OF_BIRTH").attr("min", Min);
+        //                } else {
+        //                    showError(result.message, row);
+        //                }
+        //            },
+        //            error: function (error) {
+        //                showError("An error occurred while getting the date of birth data.", row);
+        //            }
+        //        });
+        //    } else {
+        //        // Handle the case when category or isLandLooser is empty
+        //        showError("Please provide both category and land looser values.", row);
+        //    }
+        //}
+
+        function updateDateRange(row) {
+            var category = $("#CATEGORY").val();
+            var isLandLooser = $("#LandLoser").val();
+            $("#DATE_OF_BIRTH").val('');
+
+            // Create FormData and append additional form data
+            var formData = new FormData();
+            formData.append('Category', category);
+            formData.append('LandLoser', isLandLooser);
+
+            $.ajax({
+                type: "POST",
+                url: window.location.href + "/M1/USERF01/updateDateRange",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (result) {
+                    if (result.success) {
+
+                        var MinDate = new Date(result.dateOfBirthData.minDate);
+                        var year = MinDate.getFullYear();
+                        var month = MinDate.getMonth();
+                        month = month + 1;
+                        if (month < 10) {
+                            month = "0" + month.toString();
+                        }
+                        var day = MinDate.getDate();
+                        if (day < 10) {
+                            day = "0" + day.toString();
+                        }
+                        var Min = year.toString() + "-" + month + "-" + day.toString();
+
+
+                        var MaxDate = new Date(result.dateOfBirthData.maxDate);
+
+                        var year = MaxDate.getFullYear();
+                        var month = MaxDate.getMonth();
+                        month = month + 1;
+                        if (month < 10) {
+                            month = "0" + month.toString();
+                        }
+                        var day = MaxDate.getDate();
+                        if (day < 10) {
+                            day = "0" + day.toString();
+                        }
+                        var Max = year.toString() + "-" + month + "-" + day.toString();
+                        $("#DATE_OF_BIRTH").attr("max", Min);
+                        $("#DATE_OF_BIRTH").attr("min", Max);
+                    } else {
+                        showError(result.message, row);
                     }
-                    var day = MinDate.getDate();
-                    if (day < 10) {
-                        day = "0" + day.toString();
-                    }
-                    var Min = year.toString() + "-" + month + "-" + day.toString();
-
-
-                    var MaxDate = new Date(result.dateOfBirthData.maxDate);
-
-                    var year = MaxDate.getFullYear();
-                    var month = MaxDate.getMonth();
-                    month = month + 1;
-                    if (month < 10) {
-                        month = "0" + month.toString();
-                    }
-                    var day = MaxDate.getDate();
-                    if (day < 10) {
-                        day = "0" + day.toString();
-                    }
-                    var Max = year.toString() + "-" + month + "-" + day.toString();
-                    $("#DATE_OF_BIRTH").attr("max", Min);
-                    $("#DATE_OF_BIRTH").attr("min", Max);
-                } else {
-                    showError(result.message, row);
+                },
+                error: function (error) {
+                    showError("An error occurred while getting the date of birth data.", row);
                 }
-            },
-            error: function (error) {
-                showError("An error occurred while getting the date of birth data.", row);
-            }
-        });
-    }
+            });
+        }
 
 
-    //function ageMatching(row) {
+        //function ageMatching(row) {
 
-    //    var category = $("#CATEGORY").val();
-    //    var isLandLooser = $("#LandLoser").val();
-    //    var dateOfBirth = $("#DATE_OF_BIRTH").val();
+        //    var category = $("#CATEGORY").val();
+        //    var isLandLooser = $("#LandLoser").val();
+        //    var dateOfBirth = $("#DATE_OF_BIRTH").val();
 
-    //    debugger;
-    //    // Create FormData and append additional form data
-    //    var formData = new FormData();
-    //    formData.append('category', category);
-    //    formData.append('LandLoser', isLandLooser);
-    //    formData.append('dob', dateOfBirth);
+        //    debugger;
+        //    // Create FormData and append additional form data
+        //    var formData = new FormData();
+        //    formData.append('category', category);
+        //    formData.append('LandLoser', isLandLooser);
+        //    formData.append('dob', dateOfBirth);
 
-    //    $.ajax({
-    //        type: "POST",
-    //        url: window.location.href + "/M1/USERF01/ageMatching",
-    //        contentType: false,
-    //        processData: false,
-    //        data: formData,
-    //        success: function (result) {
-    //            if (result.success) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: window.location.href + "/M1/USERF01/ageMatching",
+        //        contentType: false,
+        //        processData: false,
+        //        data: formData,
+        //        success: function (result) {
+        //            if (result.success) {
 
-    //                // Process the result if needed
-    //            } else {
-    //                showError(result.message, row);
-    //            }
-    //        },
-    //        error: function (error) {
-    //            showError("An error occurred while getting the date of birth data.", row);
-    //        }
-    //    });
-    //}
-    // Add an event listener to the date of birth input field
-    document.getElementById("DATE_OF_BIRTH").addEventListener("change", function () {
-        // Get values of category and LandLoser
-        var category = document.getElementById("CATEGORY").value;
-        var LandLoser = document.getElementById("LandLoser").value;
-        var dob = this.value; // Get the entered date of birth
+        //                // Process the result if needed
+        //            } else {
+        //                showError(result.message, row);
+        //            }
+        //        },
+        //        error: function (error) {
+        //            showError("An error occurred while getting the date of birth data.", row);
+        //        }
+        //    });
+        //}
+        // Add an event listener to the date of birth input field
+        document.getElementById("DATE_OF_BIRTH").addEventListener("change", function () {
+            // Get values of category and LandLoser
+            var category = document.getElementById("CATEGORY").value;
+            var LandLoser = document.getElementById("LandLoser").value;
+            var dob = this.value; // Get the entered date of birth
 
-        // Trigger AJAX call
-        $.ajax({
-            url: window.location.href + "/M1/USERF01/ageMatching", // Replace with the actual URL of your controller action
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                category: category,
-                LandLoser: LandLoser,
-                dob: dob
-            },
-            success: function (response) {
-                // Handle the response
-                if (response.success) {
-                    // Update UI based on response data
-                    // For example, you can access dateOfBirthData from response
-                    console.log(response.dateOfBirthData);
-                } else {
-                    // Handle error case
-                    console.error(response.message);
+            // Trigger AJAX call
+            $.ajax({
+                url: window.location.href + "/M1/USERF01/ageMatching", // Replace with the actual URL of your controller action
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    category: category,
+                    LandLoser: LandLoser,
+                    dob: dob
+                },
+                success: function (response) {
+                    // Handle the response
+                    if (response.success) {
+                        // Update UI based on response data
+                        // For example, you can access dateOfBirthData from response
+                        console.log(response.dateOfBirthData);
+                    } else {
+                        // Handle error case
+                        console.error(response.message);
+                        // Clear the date of birth input field
+                        document.getElementById("DATE_OF_BIRTH").value = "";
+                        // Display error message through an alert
+                        alert(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                    console.error(error);
                     // Clear the date of birth input field
                     document.getElementById("DATE_OF_BIRTH").value = "";
                     // Display error message through an alert
-                    alert(response.message);
+                    alert("Your Age not Matched.");
                 }
-            },
-            error: function (xhr, status, error) {
-                // Handle AJAX error
-                console.error(error);
-                // Clear the date of birth input field
-                document.getElementById("DATE_OF_BIRTH").value = "";
-                // Display error message through an alert
-                alert("Your Age not Matched.");
+            });
+        });
+
+
+
+        $("#LandLoser", "#CATEGORY").change(function () {
+            updateDateRange();
+        });
+
+
+
+        // Reset button functionality For image reset on screeen
+        $(document).on("click", "#resetButton", function () {
+            // Clear file inputs
+            $("#imageFile, #pdfFile").val('');
+
+            // Clear uploaded files data
+            uploadedFiles = { image: null, pdf: null };
+
+            // Clear the table
+            $("#HrmsHrdGrid tbody").empty();
+        });
+
+
+
+        function printData() {
+            // Clone the previewContainer to avoid modifying the original content
+            var printContent = previewContainer.cloneNode(true);
+
+            // Remove the print button from the cloned content
+            var printButton = printContent.querySelector("button");
+            if (printButton) {
+                printButton.remove();
             }
+
+            // Create a new window for printing
+            var printWindow = window.open("", "_blank");
+            if (printWindow) {
+                // Append the cloned content to the new window
+                printWindow.document.body.appendChild(printContent);
+
+                // Trigger the print function for the new window
+                printWindow.print();
+            }
+        }
+
+
+        function updateDateOfBirth() {
+
+            var category = document.getElementById("CATEGORY").value;
+            var landLoser = document.getElementById("LandLoser").value;
+            var dateOfBirthInput = document.getElementById("DATE_OF_BIRTH");
+
+            if (category !== "" && landLoser !== "") {
+                // Both Category and LandLoser are selected, enable Date of Birth input
+                dateOfBirthInput.removeAttribute("disabled");
+            } else {
+                // Either Category or LandLoser is not selected, disable Date of Birth input
+                dateOfBirthInput.setAttribute("disabled", "true"); // or use an empty string: dateOfBirthInput.setAttribute("disabled", "");
+            }
+        }
+
+
+
+
+
+        // Attach the updateDateOfBirth function to the change events of Category and LandLoser select elements
+        document.getElementById("CATEGORY").addEventListener("change", updateDateOfBirth);
+        document.getElementById("LandLoser").addEventListener("change", updateDateOfBirth);
+
+        // Call the function initially
+        updateDateOfBirth();
+
+
+
+        $(document).ready(function () {
+            // Disable keyboard input on date input field
+            $("#DATE_OF_BIRTH").on("keydown", function (e) {
+                e.preventDefault();
+            });
         });
-    });
-
-
-
-    $("#LandLoser", "#CATEGORY").change(function () {
-        updateDateRange();
-    });
-
-
-
-    // Reset button functionality For image reset on screeen
-    $(document).on("click", "#resetButton", function () {
-        // Clear file inputs
-        $("#imageFile, #pdfFile").val('');
-
-        // Clear uploaded files data
-        uploadedFiles = { image: null, pdf: null };
-
-        // Clear the table
-        $("#HrmsHrdGrid tbody").empty();
-    });
-
-
-
-    function printData() {
-        // Clone the previewContainer to avoid modifying the original content
-        var printContent = previewContainer.cloneNode(true);
-
-        // Remove the print button from the cloned content
-        var printButton = printContent.querySelector("button");
-        if (printButton) {
-            printButton.remove();
-        }
-
-        // Create a new window for printing
-        var printWindow = window.open("", "_blank");
-        if (printWindow) {
-            // Append the cloned content to the new window
-            printWindow.document.body.appendChild(printContent);
-
-            // Trigger the print function for the new window
-            printWindow.print();
-        }
-    }
-
-
-    function updateDateOfBirth() {
-
-        var category = document.getElementById("CATEGORY").value;
-        var landLoser = document.getElementById("LandLoser").value;
-        var dateOfBirthInput = document.getElementById("DATE_OF_BIRTH");
-
-        if (category !== "" && landLoser !== "") {
-            // Both Category and LandLoser are selected, enable Date of Birth input
-            dateOfBirthInput.removeAttribute("disabled");
-        } else {
-            // Either Category or LandLoser is not selected, disable Date of Birth input
-            dateOfBirthInput.setAttribute("disabled", "true"); // or use an empty string: dateOfBirthInput.setAttribute("disabled", "");
-        }
-    }
-
-
-
-
-
-    // Attach the updateDateOfBirth function to the change events of Category and LandLoser select elements
-    document.getElementById("CATEGORY").addEventListener("change", updateDateOfBirth);
-    document.getElementById("LandLoser").addEventListener("change", updateDateOfBirth);
-
-    // Call the function initially
-    updateDateOfBirth();
-
-
-
-    $(document).ready(function () {
-        // Disable keyboard input on date input field
-        $("#DATE_OF_BIRTH").on("keydown", function (e) {
-            e.preventDefault();
-        });
-    });
 
 
 
 </script>
+

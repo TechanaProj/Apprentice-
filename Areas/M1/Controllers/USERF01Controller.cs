@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using USERFORM.CommonFunctions;
-
+using Microsoft.AspNetCore.Http;
 using USERFORM.Models;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using USERFORM.ViewModels;
@@ -296,8 +296,6 @@ namespace USERFORM.Areas.M1.Controllers
 
         //    return Json(new { success = true, message = "Success: ", dateOfBirthData = obj });
         //}
-
-
         public IActionResult AgeMatching(string category, string LandLoser, string dob)
         {
             if (string.IsNullOrEmpty(dob))
@@ -352,6 +350,7 @@ namespace USERFORM.Areas.M1.Controllers
             }
         }
 
+
         // GET: RController/CREATE
         [HttpGet]
         public ActionResult Create(DropDownListBindWeb dropDownListBindWeb)
@@ -383,7 +382,8 @@ namespace USERFORM.Areas.M1.Controllers
                 OtpFlag = otpFlag
             };
 
-
+            HttpContext.Session.SetString("OtpFlag", otpFlag);
+            //ViewBag.OtpFlag = otpFlag;
 
 
             if (recCodeGen != null && recCodeGen <= DateTime.Now)
@@ -1001,6 +1001,11 @@ namespace USERFORM.Areas.M1.Controllers
                     {
                         if ((currentTime - otpTimestamp).TotalMinutes <= 5)
                         {
+                            HttpContext.Session.Clear();
+                            HttpContext.Session.Remove("OtpFlag");
+                            var x = HttpContext.Session.GetString("OtpFlag");
+                            HttpContext.Session.SetString("OtpFlag", "Y");
+                            //ViewBag.OtpFlag = "Y";
                             return Ok("OTP verification successful.");
                         }
                         else
@@ -1022,6 +1027,21 @@ namespace USERFORM.Areas.M1.Controllers
             return BadRequest("Mobile number and OTP are required.");
         }
 
+        public JsonResult CheckVerifyFlag()
+        {
+            var OtpFlag = HttpContext.Session.GetString("OtpFlag");
+            var OtpFlagRet = "";
+            if (OtpFlag == "Y")
+            {
+                OtpFlagRet = "Y";
+            }
+            else
+            {
+                OtpFlagRet = "N";
+            }
 
+            return Json(new { OtpFlagRet = OtpFlagRet });
+        }
     }
 }
+

@@ -23,7 +23,6 @@ namespace USERFORM
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSession();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -31,14 +30,18 @@ namespace USERFORM
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            
+
+            services.AddSession(options => {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(20);//You can set Time
+            });
             services.AddScoped<ModelContext>();
             services.AddScoped<USERFORM.Models.ModelContext>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseSession();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -49,6 +52,7 @@ namespace USERFORM
                 app.UseHsts();
             }
 
+            app.UseSession();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

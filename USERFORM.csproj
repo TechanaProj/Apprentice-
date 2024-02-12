@@ -12,6 +12,7 @@
     <None Remove="appsettings.json~RFa52a8ef.TMP" />
     <None Remove="Areas\M1\Controllers\USERF01Controller.cs~RF158f6610.TMP" />
     <None Remove="Areas\M1\Controllers\USERF01Controller.cs~RF574436b.TMP" />
+    <None Remove="Areas\M1\Views\USERF01\Create.cshtml~RF1e485c5e.TMP" />
     <None Remove="Areas\M1\Views\USERF01\Create.cshtml~RF61e7137.TMP" />
   </ItemGroup>
 

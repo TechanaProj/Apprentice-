@@ -20,6 +20,7 @@ using System.Net;
 using System.IO;
 using Devart.Data.Oracle;
 using System.Data;
+using System.Globalization;
 
 namespace USERFORM.Areas.M1.Controllers
 {
@@ -297,6 +298,59 @@ namespace USERFORM.Areas.M1.Controllers
         //}
 
 
+        public IActionResult AgeMatching(string category, string LandLoser, string dob)
+        {
+            if (string.IsNullOrEmpty(dob))
+            {
+                return BadRequest("Date of birth is missing.");
+            }
+
+            if (!DateTime.TryParseExact(dob, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateOfBirth))
+            {
+                return BadRequest("Invalid date of birth format. Please use the format yyyy-MM-dd.");
+            }
+
+            var recCode = _context.RecCodeGenerationMsts.Where(x => x.RecStatus == "A").Select(x => x.RecCode).FirstOrDefault();
+
+            var obj = new RecCategoryMsts();
+
+            if (LandLoser == "YES")
+            {
+                LandLoser = "Y";
+                obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "Y" && x.Landloser == LandLoser && x.ExApp == "N");
+            }
+            else if (LandLoser == "NO")
+            {
+                LandLoser = "N";
+                obj = _context.RecCategoryMsts.SingleOrDefault(x => x.RecCode == recCode && x.Category == category && x.Deceased == "N" && x.Landloser == LandLoser && x.ExApp == "N");
+            }
+
+            if (obj != null)
+            {
+                int age = obj.OnDate.Value.Year - dateOfBirth.Year;
+                if (dateOfBirth > obj.OnDate.Value.AddYears(-age))
+                {
+                    age--;
+                }
+
+                // Check if the calculated age is within the allowed range
+                if (age >= obj.MinAge && age <= obj.MaxAge)
+                {
+                    // Age is within the allowed range
+                    return Json(new { success = true, message = "Success: ", dateOfBirthData = obj });
+                }
+                else
+                {
+                    // Age is not within the allowed range
+                    return BadRequest("Age is not within the allowed range.");
+                }
+            }
+            else
+            {
+                // Object not found, handle accordingly
+                return BadRequest("Object not found.");
+            }
+        }
 
         // GET: RController/CREATE
         [HttpGet]
@@ -328,6 +382,8 @@ namespace USERFORM.Areas.M1.Controllers
                 Status = "Create",
                 OtpFlag = otpFlag
             };
+
+
 
 
             if (recCodeGen != null && recCodeGen <= DateTime.Now)
@@ -969,4 +1025,3 @@ namespace USERFORM.Areas.M1.Controllers
 
     }
 }
-

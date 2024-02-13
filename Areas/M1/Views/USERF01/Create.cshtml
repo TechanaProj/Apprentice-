@@ -2196,8 +2196,8 @@
             for (let i = 0; i < inputs.length; i++) {
                 const isAlternateEmail = inputs[i].id === 'ALTERNATE_EMAIL_ID';
                 const isAlternateNumber = inputs[i].id === 'ALTERNATE_NUMBER';
-                const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';
-                const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';
+               /* const isIffcoEmployee = inputs[i].id === 'IffcoEmployee';*/
+             /*   const isRegNumberMhrdNats = inputs[i].id === 'RegNumberMhrdNats';*/
                 const isRelativeEmpId = inputs[i].id === 'RelativeEmpId';
                 const isRelativeName = inputs[i].id === 'RelativeName';
                 const isRelativeUnit = inputs[i].id === 'RelativeUnit';
@@ -2211,7 +2211,7 @@
 
 
                 // Skip validation for Alternate Email, Alternate Number, and IffcoEmployee fields
-                if (isAlternateEmail || isAlternateNumber || isIffcoEmployee || isRegNumberMhrdNats || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice || isMIDDLE_NAME || istxtLASTNAME || isRegNoEmpExchange || isNameEmpExchange) {
+                if (isAlternateEmail || isAlternateNumber  || isRelativeEmpId || isRelativeName || isRelativeUnit || isRelativePost || isRelativeRelation || isExApperentice || isMIDDLE_NAME || istxtLASTNAME || isRegNoEmpExchange || isNameEmpExchange) {
                     continue;
                 }
 
